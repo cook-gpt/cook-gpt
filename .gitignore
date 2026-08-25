@@ -1,20 +1,4 @@
-# cook-gpt/cook-gpt — @open-templates global gitignore
-# Personalized on init from specs/shared/templates/gitignore
-
-# Dependencies
-node_modules/
-.pnp
-.pnp.js
-
-# Build output
-dist/
-build/
-.output/
-.wrangler/
-
-# Testing
-coverage/
-.nyc_output
+# cook-gpt — SwiftUI iOS app + repository tooling
 
 # Environment & secrets
 .env
@@ -30,19 +14,6 @@ pnpm-debug.log*
 bun-debug.log*
 lerna-debug.log*
 
-# Runtime
-pids
-*.pid
-*.seed
-*.pid.lock
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
 # OS
 .DS_Store
 .DS_Store?
@@ -52,7 +23,27 @@ pids
 ehthumbs.db
 Thumbs.db
 
-# Caches
+# IDE (non-Xcode)
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temp
+tmp/
+temp/
+
+# Node / web tooling (docs, automation)
+node_modules/
+.pnp
+.pnp.js
+dist/
+build/
+.output/
+.wrangler/
+coverage/
+.nyc_output
 .npm
 .eslintcache
 .cache
@@ -62,11 +53,46 @@ Thumbs.db
 .rts2_cache_cjs/
 .rts2_cache_es/
 .rts2_cache_umd/
-
-# Package artifacts
 *.tgz
 .yarn-integrity
 
-# Temp
-tmp/
-temp/
+# Xcode — user-specific
+**/xcuserdata/
+*.xcuserstate
+*.xcscmblueprint
+
+# Xcode — build products
+DerivedData/
+*.hmap
+*.ipa
+*.dSYM
+*.dSYM.zip
+*.app.dSYM
+*.appex.dSYM
+*.framework.dSYM
+*.xctest.dSYM
+
+# Xcode — local build folders
+**/Build/
+**/build/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved
+
+# CocoaPods
+Pods/
+
+# Carthage
+Carthage/Build/
+
+# fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+
+# Playgrounds
+timeline.xctimeline
+playground.xctimeline

@@ -14,8 +14,13 @@ OKF knowledge bundle for the cook-gpt iOS app — recipe guidance, health diets,
 ## Features
 
 * [01 — Purpose](specs/features/01-purpose.md) - app goals
-* [03 — GitHub automation](specs/features/03-github-automation.md) - Dependabot, CODEOWNERS, issue templates
-* [04 — Extension guidelines](specs/features/04-extension-guidelines.md) - adding application code
+* [05 — Platform and architecture](specs/features/05-platform-and-architecture.md) - iOS 26.6, SwiftUI, SwiftData
+* [06 — App shell](specs/features/06-app-shell.md) - tab navigation
+* [07 — Data models](specs/features/07-data-models.md) - SwiftData domain
+* [08 — Recipes](specs/features/08-recipes.md) - browse and cooking mode
+* [09 — Diet and nutrition](specs/features/09-diet-and-nutrition.md) - goals and meal logging
+* [10 — Groceries and pantry](specs/features/10-groceries-and-pantry.md) - shopping and inventory
+* [11 — MVP implementation](specs/features/11-mvp-implementation.md) - v0.2.0 scope
 
 ## Skills
 
