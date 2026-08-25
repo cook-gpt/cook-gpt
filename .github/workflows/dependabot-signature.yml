@@ -1,0 +1,39 @@
+name: Dependabot Commit Signer
+
+on:
+  pull_request_target:
+    types: [opened, reopened]
+
+jobs:
+  append-signature:
+    name: Sign Commit Message
+    if: github.actor == 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout Dependabot Branch
+        uses: actions/checkout@v7
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Configure Git Identity
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Inject Valid Co-authored Trailer
+        env:
+          OWNER_NAME: ${{ github.repository_owner }}
+          OWNER_ID: ${{ github.event.repository.owner.id }}
+        run: |
+          ORIGINAL_MSG=$(git log -1 --pretty=%B)
+          COAUTHOR_EMAIL="${OWNER_ID}+${OWNER_NAME}@users.noreply.github.com"
+          TRAILER="Co-authored-by: ${OWNER_NAME} <${COAUTHOR_EMAIL}>"
+          printf "%s\n\n%s\n" "$ORIGINAL_MSG" "$TRAILER" > .git/commit_msg.tmp
+          git commit --amend -F .git/commit_msg.tmp
+          git push origin HEAD:${{ github.event.pull_request.head.ref }} --force

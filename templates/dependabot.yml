@@ -1,0 +1,29 @@
+version: 2
+updates:
+  - package-ecosystem: package-bundler
+    directory: "/"
+    schedule:
+      interval: "daily"
+    # assignees:
+    #   - owner-username
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    allow:
+      - dependency-type: "direct"
+      - dependency-type: "indirect"
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
+          - "version-update:semver-patch"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # assignees:
+    #   - owner-username
+    commit-message:
+      prefix: "ci"
+      include: "scope"

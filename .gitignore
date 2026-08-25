@@ -1,0 +1,120 @@
+# --- Secrets and credentials (never commit) ---
+.env
+.env.*
+!.env.example
+!.env.*.example
+.dev.vars
+*.pem
+*.key
+*.p12
+*.pfx
+credentials.json
+credentials*.json
+secrets.json
+secrets*.yaml
+secrets*.yml
+service-account*.json
+**/service-account*.json
+.aws/
+.gcp/
+.azure/
+.netrc
+.npmrc
+.pypirc
+.doppler.yaml
+.doppler/
+
+# --- Local overrides ---
+*.local
+.local/
+
+# --- Dependencies (common ecosystems) ---
+node_modules/
+vendor/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.Python
+pip-wheel-metadata/
+poetry.lock.bak
+
+# --- Build and output ---
+dist/
+build/
+out/
+target/
+*.egg-info/
+.next/
+.nuxt/
+.svelte-kit/
+coverage/
+.nyc_output/
+htmlcov/
+*.tsbuildinfo
+
+# --- Caches ---
+.cache/
+.parcel-cache/
+.turbo/
+.eslintcache
+.stylelintcache
+.rpt2_cache/
+.rts2_cache*/
+.npm/
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp
+.pnp.js
+
+# --- Logs and runtime ---
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+bun-debug.log*
+lerna-debug.log*
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# --- IDE and editors ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+
+# --- OS ---
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+
+# --- Archives and temp ---
+*.tgz
+tmp/
+temp/
+*.tmp
+*.bak
+
+# --- Infrastructure state (if added later) ---
+.terraform/
+*.tfstate
+*.tfstate.*
+.terraform.lock.hcl
+
+# --- Wrangler / Cloudflare (if used) ---
+.wrangler/
