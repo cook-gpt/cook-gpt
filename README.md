@@ -1,33 +1,42 @@
-# github-repo-template
+# cook-gpt
 
-A **minimal GitHub repository template** from [@open-templates](https://github.com/open-templates). Community docs, Dependabot, CODEOWNERS, and issue/PR scaffolding — no application code until you add it.
+An app that guides you through **cooking recipes**, **health diets**, and **groceries management**.
+
+Built as a native **SwiftUI** iOS app by [xarlizard](https://github.com/xarlizard).
+
+## Features (planned)
+
+- Step-by-step recipe guidance
+- Diet and nutrition tracking
+- Grocery lists and pantry management
 
 ## Quick start
 
-1. Click **Use this template** on GitHub.
-2. Clone and copy personalized files from [`templates/`](templates/):
+Requires **Xcode 16+** and **iOS 18+**.
 
 ```bash
-git clone https://github.com/open-templates/github-repo-template.git my-new-repo
-cd my-new-repo
-./scripts/init-from-template.sh
+git clone https://github.com/cook-gpt/cook-gpt.git
+cd cook-gpt
 ```
 
-The hosted repo keeps **@open-templates** branding in root markdown until you run init. See [docs/init-from-template.md](docs/init-from-template.md).
+Open `Cook GPT/Cook GPT.xcodeproj` in Xcode, select a simulator or device, and press **Run** (⌘R).
 
-### GitHub automation (included)
+## Repository layout
 
-| File | Purpose |
+| Path | Purpose |
 |------|---------|
-| [`.github/dependabot.yml`](.github/dependabot.yml) | Dependency update PRs |
-| [`.github/workflows/dependabot-signature.yml`](.github/workflows/dependabot-signature.yml) | `Co-authored-by` via `github.repository_owner` at runtime |
-| [`.github/CODEOWNERS`](.github/CODEOWNERS) | Review ownership |
+| `Cook GPT/` | SwiftUI iOS application |
+| `specs/features/` | Numbered feature specs (OKF) |
+| `.agents/skills/` | Agent recreation guides |
+| `docs/` | GitHub workflow reference |
 
-Full reference: **[docs/README.md](docs/README.md)** · [INSTRUCTIONS.md](INSTRUCTIONS.md) · [index.md](index.md) · [.agents/skills/](.agents/skills/)
+See [INSTRUCTIONS.md](INSTRUCTIONS.md) · [index.md](index.md) · [.agents/skills/](.agents/skills/)
 
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+Maintained by [xarlizard](https://github.com/xarlizard).
 
 ---
 

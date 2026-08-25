@@ -1,3 +1,3 @@
 # Local modules
 
-* [init-from-template](init-from-template.md)
+No local modules yet. Add guides here when you document reusable patterns for cook-gpt.

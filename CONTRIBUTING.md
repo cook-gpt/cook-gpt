@@ -1,45 +1,24 @@
 # Contributing
 
-Thanks for helping improve this project.
+Thanks for contributing to **cook-gpt**.
 
-## Code of Conduct
-
-Participation means agreeing to [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
-
-## Local setup
+## Setup
 
 ```bash
-git clone https://github.com/open-templates/github-repo-template.git
-cd github-repo-template
+git clone https://github.com/cook-gpt/cook-gpt.git
+cd cook-gpt
 ```
 
-Add stack-specific setup steps here once the project grows beyond the empty template.
-
-## What to work on
-
-- Start from the template and open focused PRs
-- Prefer one feature or fix per PR for clearer CHANGELOG batches
+Open `Cook GPT/Cook GPT.xcodeproj` in Xcode 16+ to build and run the iOS app.
 
 ## Pull requests
 
 1. Branch from `main`.
-2. Keep changes small and focused.
-3. Run any checks you add (this template ships without CI workflows).
-4. Open a PR using the repository pull request template.
-
-## Commit style
-
-[Conventional commits](https://www.conventionalcommits.org/) are preferred so releases can be batched into [CHANGELOG.md](CHANGELOG.md):
-
-- `feat: add user profile endpoint`
-- `fix: handle missing env variable`
-- `docs: update setup section`
-
-See [INSTRUCTIONS.md](INSTRUCTIONS.md) for feature-based CHANGELOG workflow.
+2. Open a PR using the repository template.
 
 ## License
 
-By contributing, you agree your changes are licensed under MIT (see [LICENSE](LICENSE)).
+By contributing, you agree your changes are licensed under MIT.
 
 ---
 

@@ -13,9 +13,9 @@ Uses GitHub Actions context (same pattern as [npm-package-template](https://gith
 - `github.repository_owner` — login name
 - `github.event.repository.owner.id` — noreply email id
 
-## Customize after using the template
+## Customization
 
-Update [CODEOWNERS](../.github/CODEOWNERS) via [init-from-template.sh](../scripts/init-from-template.sh). The workflow picks up the repo owner automatically.
+Edit [CODEOWNERS](../.github/CODEOWNERS) to set code review ownership. The workflow picks up the repository owner automatically at runtime.
 
 ---
 
