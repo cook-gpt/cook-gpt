@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "home": "Home",
+    "docs": "Docs"
+  },
+  "language": "Taal",
+  "actions": {
+    "darkMode": "Donkere modus",
+    "lightMode": "Lichte modus"
+  },
+  "download": {
+    "label": "Download in de App Store",
+    "hint": "Gratis voor iPhone en iPad"
+  },
+  "home": {
+    "badge": "iOS-app",
+    "title": "Je favoriete maaltijdplanner",
+    "subtitle": "CookGPT combineert recepten, weekplanning en boodschappenlijsten — met stap-timers op je vergrendelscherm tijdens het koken.",
+    "heroAlt": "CookGPT-app met het receptenscherm op iPhone",
+    "featuresTitle": "Alles wat je nodig hebt in de keuken",
+    "features": {
+      "recipes": {
+        "title": "Receptenbibliotheek",
+        "description": "Blader, markeer favorieten, filter op categorie, schaal porties en deel recepten."
+      },
+      "meals": {
+        "title": "Maaltijdplanner",
+        "description": "Plan lunch en diner per dag, week of maand — of plan de week automatisch."
+      },
+      "groceries": {
+        "title": "Boodschappenlijsten",
+        "description": "Genereer een lijst van geplande maaltijden of geselecteerde recepten."
+      },
+      "timers": {
+        "title": "Kooktimers",
+        "description": "Stap-timers met Live Activities op vergrendelscherm en Dynamic Island."
+      },
+      "planning": {
+        "title": "Dieetbewuste planning",
+        "description": "Plan maaltijden voor gebalanceerd, vegetarisch, veganistisch of eiwitrijk."
+      },
+      "privacy": {
+        "title": "Op je apparaat",
+        "description": "Je recepten en planning blijven lokaal. Geen account nodig."
+      }
+    },
+    "openSource": "Open source op GitHub"
+  },
+  "docs": {
+    "title": "Documentatie",
+    "subtitle": "Aan de slag met CookGPT op iPhone of iPad.",
+    "installTitle": "Installeren",
+    "installSteps": [
+      "Download CookGPT uit de App Store.",
+      "Open de app — voorbeeldrecepten en een maaltijdschema zijn inbegrepen.",
+      "Verken Recepten, Maaltijden, Boodschappen en Instellingen via de tabbalk."
+    ],
+    "quickStartTitle": "Snel starten",
+    "quickStartSteps": [
+      "Blader door recepten en tik erop voor ingrediënten en stappen.",
+      "Start een timer — die verschijnt op je vergrendelscherm tijdens het koken.",
+      "Open Maaltijden om je week te plannen of automatisch in te vullen.",
+      "Genereer een boodschappenlijst vanuit geplande maaltijden bij Boodschappen."
+    ],
+    "featuresTitle": "App-functies",
+    "features": {
+      "recipes": "Recepten — categorieën, favorieten, sorteren, delen en eigen recepten",
+      "meals": "Maaltijden — dag/week/maandweergave, handmatig en automatisch plannen",
+      "groceries": "Boodschappen — dynamische lijsten vanuit je maaltijdplan",
+      "settings": "Instellingen — thema, categorieën, eenheden, ontbijt en data resetten"
+    },
+    "repoDocsTitle": "Repository",
+    "repoDocsDescription": "CookGPT is open source. Ontwikkelsetup en bijdragerichtlijnen staan op GitHub.",
+    "links": {
+      "readme": "README",
+      "contributing": "Bijdragen",
+      "changelog": "Wijzigingslog",
+      "security": "Beveiligingsbeleid"
+    }
+  }
+}

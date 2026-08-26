@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "docs": "Docs"
+  },
+  "language": "Langue",
+  "actions": {
+    "darkMode": "Mode sombre",
+    "lightMode": "Mode clair"
+  },
+  "download": {
+    "label": "Télécharger sur l'App Store",
+    "hint": "Gratuit pour iPhone et iPad"
+  },
+  "home": {
+    "badge": "App iOS",
+    "title": "Votre planificateur de repas préféré",
+    "subtitle": "CookGPT réunit recettes, planification hebdomadaire et listes de courses — avec des minuteurs sur l'écran de verrouillage pendant que vous cuisinez.",
+    "heroAlt": "App CookGPT affichant l'écran des recettes sur iPhone",
+    "featuresTitle": "Tout ce qu'il faut en cuisine",
+    "features": {
+      "recipes": {
+        "title": "Bibliothèque de recettes",
+        "description": "Parcourez, favorisez, filtrez par catégorie, ajustez les portions et partagez."
+      },
+      "meals": {
+        "title": "Planificateur de repas",
+        "description": "Planifiez déjeuner et dîner par jour, semaine ou mois — ou planifiez la semaine automatiquement."
+      },
+      "groceries": {
+        "title": "Listes de courses",
+        "description": "Générez une liste à partir des repas planifiés ou des recettes sélectionnées."
+      },
+      "timers": {
+        "title": "Minuteurs de cuisine",
+        "description": "Minuteurs par étape avec Live Activities sur l'écran de verrouillage et Dynamic Island."
+      },
+      "planning": {
+        "title": "Planification par régime",
+        "description": "Planifiez des repas équilibrés, végétariens, végans ou riches en protéines."
+      },
+      "privacy": {
+        "title": "Sur votre appareil",
+        "description": "Vos recettes et plans restent locaux. Aucun compte requis."
+      }
+    },
+    "openSource": "Open source sur GitHub"
+  },
+  "docs": {
+    "title": "Documentation",
+    "subtitle": "Commencez avec CookGPT sur iPhone ou iPad.",
+    "installTitle": "Installer",
+    "installSteps": [
+      "Téléchargez CookGPT depuis l'App Store.",
+      "Ouvrez l'app — des recettes d'exemple et un planning sont inclus.",
+      "Explorez Recettes, Repas, Courses et Réglages depuis la barre d'onglets."
+    ],
+    "quickStartTitle": "Démarrage rapide",
+    "quickStartSteps": [
+      "Parcourez les recettes et touchez-en une pour voir ingrédients et étapes.",
+      "Lancez un minuteur — il apparaît sur l'écran de verrouillage pendant la cuisson.",
+      "Ouvrez Repas pour planifier ou générer votre semaine automatiquement.",
+      "Générez une liste de courses depuis vos repas planifiés dans Courses."
+    ],
+    "featuresTitle": "Fonctionnalités",
+    "features": {
+      "recipes": "Recettes — catégories, favoris, tri, partage et recettes personnalisées",
+      "meals": "Repas — vues jour/semaine/mois, planification manuelle et automatique",
+      "groceries": "Courses — listes dynamiques à partir de votre planning",
+      "settings": "Réglages — thème, catégories, unités, petit-déjeuner et réinitialisation"
+    },
+    "repoDocsTitle": "Dépôt",
+    "repoDocsDescription": "CookGPT est open source. La configuration de développement et les guides de contribution sont sur GitHub.",
+    "links": {
+      "readme": "README",
+      "contributing": "Contribuer",
+      "changelog": "Journal des modifications",
+      "security": "Politique de sécurité"
+    }
+  }
+}

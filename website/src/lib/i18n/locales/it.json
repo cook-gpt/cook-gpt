@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "home": "Home",
+    "docs": "Docs"
+  },
+  "language": "Lingua",
+  "actions": {
+    "darkMode": "Modalità scura",
+    "lightMode": "Modalità chiara"
+  },
+  "download": {
+    "label": "Scarica su App Store",
+    "hint": "Gratis per iPhone e iPad"
+  },
+  "home": {
+    "badge": "App iOS",
+    "title": "Il tuo pianificatore pasti preferito",
+    "subtitle": "CookGPT unisce ricette, pianificazione settimanale e liste della spesa — con timer sullo schermo di blocco mentre cucini.",
+    "heroAlt": "App CookGPT con la schermata ricette su iPhone",
+    "featuresTitle": "Tutto ciò che serve in cucina",
+    "features": {
+      "recipes": {
+        "title": "Libreria ricette",
+        "description": "Sfoglia, preferisci, filtra per categoria, scala le porzioni e condividi."
+      },
+      "meals": {
+        "title": "Pianificatore pasti",
+        "description": "Programma pranzo e cena per giorno, settimana o mese — o pianifica la settimana automaticamente."
+      },
+      "groceries": {
+        "title": "Liste della spesa",
+        "description": "Genera una lista dalla pianificazione o dalle ricette selezionate."
+      },
+      "timers": {
+        "title": "Timer di cottura",
+        "description": "Timer per passaggio con Live Activities su schermo di blocco e Dynamic Island."
+      },
+      "planning": {
+        "title": "Pianificazione per dieta",
+        "description": "Pianifica pasti bilanciati, vegetariani, vegani o ad alto contenuto proteico."
+      },
+      "privacy": {
+        "title": "Sul tuo dispositivo",
+        "description": "Ricette e piani restano locali. Nessun account richiesto."
+      }
+    },
+    "openSource": "Open source su GitHub"
+  },
+  "docs": {
+    "title": "Documentazione",
+    "subtitle": "Inizia con CookGPT su iPhone o iPad.",
+    "installTitle": "Installazione",
+    "installSteps": [
+      "Scarica CookGPT dall'App Store.",
+      "Apri l'app — include ricette di esempio e un calendario pasti.",
+      "Esplora Ricette, Pasti, Spesa e Impostazioni dalla barra delle schede."
+    ],
+    "quickStartTitle": "Avvio rapido",
+    "quickStartSteps": [
+      "Sfoglia le ricette e toccane una per ingredienti e passaggi.",
+      "Avvia un timer — appare sullo schermo di blocco mentre cucini.",
+      "Apri Pasti per programmare o pianificare automaticamente la settimana.",
+      "Genera una lista della spesa dai pasti pianificati in Spesa."
+    ],
+    "featuresTitle": "Funzionalità",
+    "features": {
+      "recipes": "Ricette — categorie, preferiti, ordinamento, condivisione e ricette personalizzate",
+      "meals": "Pasti — viste giorno/settimana/mese, pianificazione manuale e automatica",
+      "groceries": "Spesa — liste dinamiche dal piano pasti",
+      "settings": "Impostazioni — tema, categorie, unità, colazione e ripristino dati"
+    },
+    "repoDocsTitle": "Repository",
+    "repoDocsDescription": "CookGPT è open source. Setup di sviluppo e guide alla contribuzione sono su GitHub.",
+    "links": {
+      "readme": "README",
+      "contributing": "Contribuire",
+      "changelog": "Changelog",
+      "security": "Politica di sicurezza"
+    }
+  }
+}

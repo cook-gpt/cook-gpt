@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "home": "首页",
+    "docs": "文档"
+  },
+  "language": "语言",
+  "actions": {
+    "darkMode": "深色模式",
+    "lightMode": "浅色模式"
+  },
+  "download": {
+    "label": "在 App Store 下载",
+    "hint": "iPhone 和 iPad 免费"
+  },
+  "home": {
+    "badge": "iOS 应用",
+    "title": "你最喜欢的餐食规划助手",
+    "subtitle": "CookGPT 集食谱、每周餐食规划和购物清单于一体 — 烹饪时锁屏显示步骤计时器。",
+    "heroAlt": "CookGPT 应用在 iPhone 上显示食谱界面",
+    "featuresTitle": "厨房所需一应俱全",
+    "features": {
+      "recipes": {
+        "title": "食谱库",
+        "description": "浏览、收藏、按分类筛选、调整份量并分享食谱。"
+      },
+      "meals": {
+        "title": "餐食规划",
+        "description": "按天、周或月安排午餐和晚餐 — 或自动规划整周。"
+      },
+      "groceries": {
+        "title": "购物清单",
+        "description": "根据已规划的餐食或所选食谱生成购物清单。"
+      },
+      "timers": {
+        "title": "烹饪计时器",
+        "description": "步骤计时器，支持锁屏和灵动岛 Live Activities。"
+      },
+      "planning": {
+        "title": "按饮食规划",
+        "description": "规划均衡、素食、纯素或高蛋白饮食。"
+      },
+      "privacy": {
+        "title": "本地存储",
+        "description": "食谱和计划保存在设备上，无需账户。"
+      }
+    },
+    "openSource": "GitHub 开源"
+  },
+  "docs": {
+    "title": "文档",
+    "subtitle": "在 iPhone 或 iPad 上开始使用 CookGPT。",
+    "installTitle": "安装",
+    "installSteps": [
+      "从 App Store 下载 CookGPT。",
+      "打开应用 — 包含示例食谱和餐食日程。",
+      "通过标签栏浏览食谱、餐食、购物和设置。"
+    ],
+    "quickStartTitle": "快速入门",
+    "quickStartSteps": [
+      "浏览食谱并点击查看食材和步骤。",
+      "启动计时器 — 烹饪时显示在锁屏上。",
+      "打开餐食页面手动或自动规划一周。",
+      "在购物页面根据已规划的餐食生成购物清单。"
+    ],
+    "featuresTitle": "应用功能",
+    "features": {
+      "recipes": "食谱 — 分类、收藏、排序、分享和自定义食谱",
+      "meals": "餐食 — 日/周/月视图、手动和自动规划",
+      "groceries": "购物 — 根据餐食计划生成动态清单",
+      "settings": "设置 — 主题、分类、单位、早餐选项和数据重置"
+    },
+    "repoDocsTitle": "代码仓库",
+    "repoDocsDescription": "CookGPT 是开源项目，开发设置和贡献指南见 GitHub。",
+    "links": {
+      "readme": "README",
+      "contributing": "贡献指南",
+      "changelog": "更新日志",
+      "security": "安全政策"
+    }
+  }
+}

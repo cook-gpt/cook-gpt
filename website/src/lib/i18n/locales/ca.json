@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "home": "Inici",
+    "docs": "Docs"
+  },
+  "language": "Idioma",
+  "actions": {
+    "darkMode": "Mode fosc",
+    "lightMode": "Mode clar"
+  },
+  "download": {
+    "label": "Descarrega a l'App Store",
+    "hint": "Gratuït per a iPhone i iPad"
+  },
+  "home": {
+    "badge": "App per a iOS",
+    "title": "El teu planificador de menjars favorit",
+    "subtitle": "CookGPT reuneix receptes, planificació setmanal i llistes de la compra — amb temporitzadors a la pantalla de bloqueig mentre cuines.",
+    "heroAlt": "App CookGPT mostrant la pantalla de receptes a l'iPhone",
+    "featuresTitle": "Tot el que necessites a la cuina",
+    "features": {
+      "recipes": {
+        "title": "Biblioteca de receptes",
+        "description": "Explora, marca favorites, filtra per categoria, escala racions i comparteix."
+      },
+      "meals": {
+        "title": "Planificador de menjars",
+        "description": "Programa dinar i sopar per dia, setmana o mes — o planifica la setmana automàticament."
+      },
+      "groceries": {
+        "title": "Llistes de la compra",
+        "description": "Genera una llista a partir dels menjars programats o receptes seleccionades."
+      },
+      "timers": {
+        "title": "Temporitzadors de cuina",
+        "description": "Temporitzadors per pas amb Live Activities a la pantalla de bloqueig i Dynamic Island."
+      },
+      "planning": {
+        "title": "Planificació per dieta",
+        "description": "Planifica menjars equilibrats, vegetarians, vegans o alts en proteïnes."
+      },
+      "privacy": {
+        "title": "Al teu dispositiu",
+        "description": "Les teves receptes i plans es guarden localment. Sense compte necessari."
+      }
+    },
+    "openSource": "Codi obert a GitHub"
+  },
+  "docs": {
+    "title": "Documentació",
+    "subtitle": "Comença amb CookGPT a iPhone o iPad.",
+    "installTitle": "Instal·lar",
+    "installSteps": [
+      "Descarrega CookGPT des de l'App Store.",
+      "Obre l'app — inclou receptes d'exemple i un calendari de menjars.",
+      "Explora Receptes, Menjars, Compra i Configuració des de la barra de pestanyes."
+    ],
+    "quickStartTitle": "Inici ràpid",
+    "quickStartSteps": [
+      "Explora receptes i toca'n una per veure ingredients i passos.",
+      "Inicia un temporitzador — apareix a la pantalla de bloqueig mentre cuines.",
+      "Obre Menjars per programar o planificar la setmana automàticament.",
+      "Genera una llista de la compra des dels menjars planificats a Compra."
+    ],
+    "featuresTitle": "Funcions de l'app",
+    "features": {
+      "recipes": "Receptes — categories, favorites, ordenació, compartir i receptes personalitzades",
+      "meals": "Menjars — vistes dia/setmana/mes, programació manual i automàtica",
+      "groceries": "Compra — llistes dinàmiques del teu pla de menjars",
+      "settings": "Configuració — tema, categories, unitats, esmorzar i restablir dades"
+    },
+    "repoDocsTitle": "Repositori",
+    "repoDocsDescription": "CookGPT és de codi obert. La configuració de desenvolupament i les guies de contribució són a GitHub.",
+    "links": {
+      "readme": "README",
+      "contributing": "Contribuir",
+      "changelog": "Registre de canvis",
+      "security": "Política de seguretat"
+    }
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "home": "Inicio",
+    "docs": "Docs"
+  },
+  "language": "Idioma",
+  "actions": {
+    "darkMode": "Modo oscuro",
+    "lightMode": "Modo claro"
+  },
+  "download": {
+    "label": "Descargar en el App Store",
+    "hint": "Gratis para iPhone y iPad"
+  },
+  "home": {
+    "badge": "App para iOS",
+    "title": "Tu planificador de comidas favorito",
+    "subtitle": "CookGPT reúne recetas, planificación semanal de comidas y listas de la compra — con temporizadores en la pantalla de bloqueo mientras cocinas.",
+    "heroAlt": "App CookGPT mostrando la pantalla de recetas en iPhone",
+    "featuresTitle": "Todo lo que necesitas en la cocina",
+    "features": {
+      "recipes": {
+        "title": "Biblioteca de recetas",
+        "description": "Explora, marca favoritas, filtra por categoría, escala raciones y comparte recetas."
+      },
+      "meals": {
+        "title": "Planificador de comidas",
+        "description": "Programa almuerzo y cena por día, semana o mes — o planifica la semana automáticamente."
+      },
+      "groceries": {
+        "title": "Listas de la compra",
+        "description": "Genera una lista de la compra a partir de comidas programadas o recetas seleccionadas."
+      },
+      "timers": {
+        "title": "Temporizadores de cocina",
+        "description": "Temporizadores por paso con Live Activities en la pantalla de bloqueo y Dynamic Island."
+      },
+      "planning": {
+        "title": "Planificación por dieta",
+        "description": "Planifica comidas equilibradas, vegetarianas, veganas o altas en proteínas."
+      },
+      "privacy": {
+        "title": "En tu dispositivo",
+        "description": "Tus recetas y planes se guardan localmente. Sin cuenta necesaria."
+      }
+    },
+    "openSource": "Código abierto en GitHub"
+  },
+  "docs": {
+    "title": "Documentación",
+    "subtitle": "Empieza con CookGPT en iPhone o iPad.",
+    "installTitle": "Instalar",
+    "installSteps": [
+      "Descarga CookGPT desde el App Store.",
+      "Abre la app — incluye recetas de ejemplo y un calendario de comidas.",
+      "Explora Recetas, Comidas, Compras y Ajustes desde la barra de pestañas."
+    ],
+    "quickStartTitle": "Inicio rápido",
+    "quickStartSteps": [
+      "Explora recetas y toca una para ver ingredientes y pasos.",
+      "Inicia un temporizador — aparece en la pantalla de bloqueo mientras cocinas.",
+      "Abre Comidas para programar o planificar tu semana automáticamente.",
+      "Genera una lista de la compra desde tus comidas planificadas en Compras."
+    ],
+    "featuresTitle": "Funciones de la app",
+    "features": {
+      "recipes": "Recetas — categorías, favoritos, ordenación, compartir y recetas personalizadas",
+      "meals": "Comidas — vistas día/semana/mes, programación manual y planificación automática",
+      "groceries": "Compras — listas dinámicas a partir de tu plan de comidas",
+      "settings": "Ajustes — tema, categorías, unidades, desayuno y restablecer datos"
+    },
+    "repoDocsTitle": "Repositorio",
+    "repoDocsDescription": "CookGPT es de código abierto. La configuración de desarrollo y las guías de contribución están en GitHub.",
+    "links": {
+      "readme": "README",
+      "contributing": "Contribuir",
+      "changelog": "Registro de cambios",
+      "security": "Política de seguridad"
+    }
+  }
+}

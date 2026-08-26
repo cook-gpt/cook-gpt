@@ -1,0 +1,81 @@
+{
+  "nav": {
+    "home": "Home",
+    "docs": "Docs"
+  },
+  "language": "Language",
+  "actions": {
+    "darkMode": "Dark mode",
+    "lightMode": "Light mode"
+  },
+  "download": {
+    "label": "Download on the App Store",
+    "hint": "Free for iPhone and iPad"
+  },
+  "home": {
+    "badge": "iOS app",
+    "title": "Your favourite meals scheduler",
+    "subtitle": "CookGPT brings recipes, weekly meal planning, and smart grocery lists together — with step timers on your Lock Screen while you cook.",
+    "heroAlt": "CookGPT app showing the recipes screen on iPhone",
+    "featuresTitle": "Everything you need in the kitchen",
+    "features": {
+      "recipes": {
+        "title": "Recipe library",
+        "description": "Browse, favorite, filter by category, scale servings, and share recipes."
+      },
+      "meals": {
+        "title": "Meal planner",
+        "description": "Schedule lunch and dinner by day, week, or month — or auto-plan a full week."
+      },
+      "groceries": {
+        "title": "Shopping lists",
+        "description": "Generate a grocery list from scheduled meals or selected recipes."
+      },
+      "timers": {
+        "title": "Cooking timers",
+        "description": "Step timers with Live Activities on Lock Screen and Dynamic Island."
+      },
+      "planning": {
+        "title": "Diet-aware planning",
+        "description": "Plan meals for balanced, vegetarian, vegan, or high-protein diets."
+      },
+      "privacy": {
+        "title": "On your device",
+        "description": "Your recipes and plans stay local. No account required."
+      }
+    },
+    "openSource": "Open source on GitHub"
+  },
+  "docs": {
+    "title": "Documentation",
+    "subtitle": "Get started with CookGPT on iPhone or iPad.",
+    "installTitle": "Install",
+    "installSteps": [
+      "Download CookGPT from the App Store.",
+      "Open the app — sample recipes and a meal schedule are included.",
+      "Explore Recipes, Meals, Groceries, and Settings from the tab bar."
+    ],
+    "quickStartTitle": "Quick start",
+    "quickStartSteps": [
+      "Browse recipes and tap one to see ingredients and steps.",
+      "Start a step timer — it appears on your Lock Screen while you cook.",
+      "Open Meals to schedule or auto-plan your week.",
+      "Generate a grocery list from your planned meals in Groceries."
+    ],
+    "featuresTitle": "App features",
+    "features": {
+      "recipes": "Recipes — categories, favorites, sorting, sharing, and custom recipes",
+      "meals": "Meals — day/week/month views, manual scheduling, and auto meal planning",
+      "groceries": "Groceries — dynamic shopping lists from your meal plan",
+      "settings": "Settings — theme, categories, units, breakfast planning, and data reset"
+    },
+    "repoDocsTitle": "Repository",
+    "repoDocsDescription": "CookGPT is open source. Development setup and contribution guides live on GitHub.",
+    "links": {
+      "readme": "README",
+      "contributing": "Contributing",
+      "changelog": "Changelog",
+      "security": "Security policy"
+    }
+  }
+}
