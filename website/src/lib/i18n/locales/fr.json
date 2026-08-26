@@ -40,9 +40,9 @@
         "title": "Planification par régime",
         "description": "Planifiez des repas équilibrés, végétariens, végans ou riches en protéines."
       },
-      "privacy": {
-        "title": "Sur votre appareil",
-        "description": "Vos recettes et plans restent locaux. Aucun compte requis."
+      "editable-recipes": {
+        "title": "Recettes modifiables",
+        "description": "Ajoutez vos propres recettes avec ingrédients, étapes et minuteurs par étape."
       }
     },
     "featuresEyebrow": "Conçu pour cuisiner à la maison",

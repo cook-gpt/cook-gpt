@@ -40,9 +40,9 @@
         "title": "Ernährungsbewusste Planung",
         "description": "Mahlzeiten für ausgewogene, vegetarische, vegane oder proteinreiche Ernährung planen."
       },
-      "privacy": {
-        "title": "Auf deinem Gerät",
-        "description": "Rezepte und Pläne bleiben lokal. Kein Konto erforderlich."
+      "editable-recipes": {
+        "title": "Bearbeitbare Rezepte",
+        "description": "Eigene Rezepte mit Zutaten, Schritten und Timern pro Schritt hinzufügen."
       }
     },
     "featuresEyebrow": "Für Hobbyköche gemacht",

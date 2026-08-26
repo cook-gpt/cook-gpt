@@ -40,9 +40,9 @@
         "title": "Planificació per dieta",
         "description": "Planifica menjars equilibrats, vegetarians, vegans o alts en proteïnes."
       },
-      "privacy": {
-        "title": "Al teu dispositiu",
-        "description": "Les teves receptes i plans es guarden localment. Sense compte necessari."
+      "editable-recipes": {
+        "title": "Receptes editables",
+        "description": "Afegeix les teves receptes amb ingredients, passos i temporitzadors per pas."
       }
     },
     "featuresEyebrow": "Dissenyat per cuinar a casa",

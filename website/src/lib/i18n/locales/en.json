@@ -41,9 +41,9 @@
         "title": "Diet-aware planning",
         "description": "Plan meals for balanced, vegetarian, vegan, or high-protein diets."
       },
-      "privacy": {
-        "title": "On your device",
-        "description": "Your recipes and plans stay local. No account required."
+      "editable-recipes": {
+        "title": "Editable recipes",
+        "description": "Add your own recipes with ingredients, steps, and per-step timers."
       }
     },
     "ctaTitle": "Start planning your next meal",

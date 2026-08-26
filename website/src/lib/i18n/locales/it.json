@@ -40,9 +40,9 @@
         "title": "Pianificazione per dieta",
         "description": "Pianifica pasti bilanciati, vegetariani, vegani o ad alto contenuto proteico."
       },
-      "privacy": {
-        "title": "Sul tuo dispositivo",
-        "description": "Ricette e piani restano locali. Nessun account richiesto."
+      "editable-recipes": {
+        "title": "Ricette modificabili",
+        "description": "Aggiungi le tue ricette con ingredienti, passaggi e timer per ogni passaggio."
       }
     },
     "featuresEyebrow": "Pensato per chi cucina a casa",

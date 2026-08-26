@@ -2,13 +2,15 @@ import { useTranslation } from 'react-i18next';
 import {
   BookOpen,
   CalendarDays,
-  Lock,
   ShoppingCart,
+  SquarePen,
   Timer,
   UtensilsCrossed,
   type LucideIcon,
 } from 'lucide-react';
+import { FeatureShowcaseVisual } from '@/components/FeatureShowcaseVisual';
 import { cn } from '@/utils/cn';
+import type { FeatureShowcaseKey } from '@/utils/featureShowcaseAssets';
 
 const features = [
   { key: 'recipes', icon: BookOpen },
@@ -16,8 +18,8 @@ const features = [
   { key: 'groceries', icon: ShoppingCart },
   { key: 'timers', icon: Timer },
   { key: 'planning', icon: UtensilsCrossed },
-  { key: 'privacy', icon: Lock },
-] as const satisfies ReadonlyArray<{ key: string; icon: LucideIcon }>;
+  { key: 'editable-recipes', icon: SquarePen },
+] as const satisfies ReadonlyArray<{ key: FeatureShowcaseKey; icon: LucideIcon }>;
 
 export function FeatureShowcase() {
   const { t } = useTranslation();
@@ -69,9 +71,11 @@ export function FeatureShowcase() {
                     alignEnd ? 'md:justify-start' : 'md:justify-end',
                   )}
                 >
-                  <div className="landing-feature-visual" aria-hidden>
-                    <Icon className="size-12 text-foreground/70 md:size-14" strokeWidth={1.25} />
-                  </div>
+                  <FeatureShowcaseVisual
+                    featureKey={key}
+                    icon={Icon}
+                    alt={t(`home.features.${key}.title`)}
+                  />
                 </div>
               </div>
             </li>

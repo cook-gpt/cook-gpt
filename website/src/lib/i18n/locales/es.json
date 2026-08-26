@@ -41,9 +41,9 @@
         "title": "Planificación por dieta",
         "description": "Planifica comidas equilibradas, vegetarianas, veganas o altas en proteínas."
       },
-      "privacy": {
-        "title": "En tu dispositivo",
-        "description": "Tus recetas y planes se guardan localmente. Sin cuenta necesaria."
+      "editable-recipes": {
+        "title": "Recetas editables",
+        "description": "Añade tus propias recetas con ingredientes, pasos y temporizadores por paso."
       }
     },
     "ctaTitle": "Empieza a planificar tu próxima comida",

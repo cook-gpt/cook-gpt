@@ -40,9 +40,9 @@
         "title": "按饮食规划",
         "description": "规划均衡、素食、纯素或高蛋白饮食。"
       },
-      "privacy": {
-        "title": "本地存储",
-        "description": "食谱和计划保存在设备上，无需账户。"
+      "editable-recipes": {
+        "title": "可编辑食谱",
+        "description": "添加自定义食谱，包含食材、步骤和分步计时器。"
       }
     },
     "featuresEyebrow": "为家庭烹饪而设计",

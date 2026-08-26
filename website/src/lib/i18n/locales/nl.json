@@ -40,9 +40,9 @@
         "title": "Dieetbewuste planning",
         "description": "Plan maaltijden voor gebalanceerd, vegetarisch, veganistisch of eiwitrijk."
       },
-      "privacy": {
-        "title": "Op je apparaat",
-        "description": "Je recepten en planning blijven lokaal. Geen account nodig."
+      "editable-recipes": {
+        "title": "Bewerkbare recepten",
+        "description": "Voeg je eigen recepten toe met ingrediënten, stappen en timers per stap."
       }
     },
     "featuresEyebrow": "Gemaakt voor thuiskoks",
