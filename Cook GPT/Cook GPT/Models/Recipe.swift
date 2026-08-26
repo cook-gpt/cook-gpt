@@ -57,4 +57,17 @@ final class Recipe {
         guard servings > 0, self.servings > 0 else { return baseQuantity }
         return baseQuantity * Double(servings) / Double(self.servings)
     }
+
+    func hasCategory(_ categoryID: String) -> Bool {
+        tags.contains(categoryID)
+    }
+
+    func setCategory(_ categoryID: String, enabled: Bool) {
+        if enabled {
+            guard !hasCategory(categoryID) else { return }
+            tags.append(categoryID)
+        } else {
+            tags.removeAll { $0 == categoryID }
+        }
+    }
 }

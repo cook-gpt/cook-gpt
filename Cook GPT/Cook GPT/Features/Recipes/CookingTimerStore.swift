@@ -137,18 +137,17 @@ final class CookingTimerStore {
     }
 
     func stop(stepID: UUID) {
-        guard let timer = timer(for: stepID) else { return }
+        guard timer(for: stepID) != nil else { return }
         timers.removeAll { $0.stepID == stepID }
         persist()
         Task { await CookingTimerLiveActivityManager.end(stepID: stepID) }
     }
 
     func stop(timerID: UUID) {
-        if let timer = timers.first(where: { $0.id == timerID }) {
-            timers.removeAll { $0.id == timerID }
-            persist()
-            Task { await CookingTimerLiveActivityManager.end(timerID: timerID) }
-        }
+        guard timers.contains(where: { $0.id == timerID }) else { return }
+        timers.removeAll { $0.id == timerID }
+        persist()
+        Task { await CookingTimerLiveActivityManager.end(timerID: timerID) }
     }
 
     func stopAll(for recipeID: UUID) {
@@ -180,6 +179,14 @@ final class CookingTimerStore {
         let restored = timers
         Task {
             await CookingTimerLiveActivityManager.restore(timers: restored)
+        }
+    }
+
+    func clearAll() {
+        timers = []
+        UserDefaults.standard.removeObject(forKey: persistenceKey)
+        Task {
+            await CookingTimerLiveActivityManager.endAll()
         }
     }
 

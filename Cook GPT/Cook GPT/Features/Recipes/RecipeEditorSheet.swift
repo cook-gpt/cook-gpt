@@ -1,9 +1,11 @@
 import SwiftUI
 import SwiftData
 
-struct AddRecipeSheet: View {
+struct RecipeEditorSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+
+    var recipe: Recipe?
 
     @State private var title = ""
     @State private var summary = ""
@@ -11,8 +13,12 @@ struct AddRecipeSheet: View {
     @State private var prepMinutes = 15
     @State private var cookMinutes = 30
     @State private var difficulty: RecipeDifficulty = .medium
+    @State private var selectedCategoryIDs: Set<String> = []
     @State private var ingredients: [DraftIngredient] = [DraftIngredient()]
     @State private var steps: [DraftStep] = [DraftStep()]
+    @State private var didInitialize = false
+
+    private var isEditing: Bool { recipe != nil }
 
     var body: some View {
         NavigationStack {
@@ -33,6 +39,8 @@ struct AddRecipeSheet: View {
                     }
                 }
 
+                RecipeCategoryToggleSection(selectedCategoryIDs: $selectedCategoryIDs)
+
                 Section {
                     ForEach($ingredients) { $ingredient in
                         VStack(alignment: .leading, spacing: 8) {
@@ -44,9 +52,7 @@ struct AddRecipeSheet: View {
                                     in: 0.1...1000,
                                     step: 0.5
                                 )
-                                TextField("Unit", text: $ingredient.unit)
-                                    .textFieldStyle(.roundedBorder)
-                                    .frame(maxWidth: 80)
+                                IngredientUnitPicker(unit: $ingredient.unit)
                             }
                         }
                         .padding(.vertical, 2)
@@ -86,18 +92,45 @@ struct AddRecipeSheet: View {
                     Text("Steps")
                 }
             }
-            .navigationTitle("Add recipe")
+            .navigationTitle(isEditing ? "Edit recipe" : "Add recipe")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Add") { save() }
+                    Button(isEditing ? "Save" : "Add") { save() }
                         .disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             }
+            .onAppear(perform: initializeIfNeeded)
         }
+    }
+
+    private func initializeIfNeeded() {
+        guard !didInitialize, let recipe else { return }
+        didInitialize = true
+        title = recipe.title
+        summary = recipe.summary
+        servings = recipe.servings
+        prepMinutes = recipe.prepMinutes
+        cookMinutes = recipe.cookMinutes
+        difficulty = recipe.difficulty
+        selectedCategoryIDs = Set(recipe.tags)
+
+        let loadedIngredients = recipe.ingredients.map {
+            DraftIngredient(name: $0.displayName, quantity: $0.quantity, unit: $0.unit)
+        }
+        ingredients = loadedIngredients.isEmpty ? [DraftIngredient()] : loadedIngredients
+
+        let loadedSteps = recipe.sortedSteps.map {
+            DraftStep(
+                instruction: $0.instruction,
+                hasTimer: $0.timerSeconds != nil,
+                timerMinutes: max(1, ($0.timerSeconds ?? 60) / 60)
+            )
+        }
+        steps = loadedSteps.isEmpty ? [DraftStep()] : loadedSteps
     }
 
     private func deleteIngredients(at offsets: IndexSet) {
@@ -115,16 +148,54 @@ struct AddRecipeSheet: View {
     }
 
     private func save() {
-        let recipe = Recipe(
-            title: title.trimmingCharacters(in: .whitespacesAndNewlines),
-            summary: summary.trimmingCharacters(in: .whitespacesAndNewlines),
-            servings: servings,
-            prepMinutes: prepMinutes,
-            cookMinutes: cookMinutes,
-            difficulty: difficulty
-        )
-        modelContext.insert(recipe)
+        let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedSummary = summary.trimmingCharacters(in: .whitespacesAndNewlines)
+        let tags = selectedCategoryIDs.sorted()
 
+        let targetRecipe: Recipe
+        if let recipe {
+            targetRecipe = recipe
+            targetRecipe.title = trimmedTitle
+            targetRecipe.summary = trimmedSummary
+            targetRecipe.servings = servings
+            targetRecipe.prepMinutes = prepMinutes
+            targetRecipe.cookMinutes = cookMinutes
+            targetRecipe.difficulty = difficulty
+            targetRecipe.tags = tags
+            replaceIngredients(for: targetRecipe)
+            replaceSteps(for: targetRecipe)
+        } else {
+            targetRecipe = Recipe(
+                title: trimmedTitle,
+                summary: trimmedSummary,
+                servings: servings,
+                prepMinutes: prepMinutes,
+                cookMinutes: cookMinutes,
+                difficulty: difficulty,
+                tags: tags
+            )
+            modelContext.insert(targetRecipe)
+            appendIngredients(to: targetRecipe)
+            appendSteps(to: targetRecipe)
+        }
+
+        try? modelContext.save()
+        dismiss()
+    }
+
+    private func replaceIngredients(for recipe: Recipe) {
+        recipe.ingredients.forEach { modelContext.delete($0) }
+        recipe.ingredients = []
+        appendIngredients(to: recipe)
+    }
+
+    private func replaceSteps(for recipe: Recipe) {
+        recipe.steps.forEach { modelContext.delete($0) }
+        recipe.steps = []
+        appendSteps(to: recipe)
+    }
+
+    private func appendIngredients(to recipe: Recipe) {
         let savedIngredients = ingredients.compactMap { draft -> RecipeIngredient? in
             let name = draft.name.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !name.isEmpty else { return nil }
@@ -132,7 +203,7 @@ struct AddRecipeSheet: View {
             let ingredient = findOrCreateIngredient(named: name)
             let recipeIngredient = RecipeIngredient(
                 quantity: draft.quantity,
-                unit: draft.unit.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "pcs" : draft.unit,
+                unit: draft.unit.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "g" : draft.unit,
                 ingredient: ingredient,
                 recipe: recipe
             )
@@ -140,7 +211,9 @@ struct AddRecipeSheet: View {
             return recipeIngredient
         }
         recipe.ingredients = savedIngredients
+    }
 
+    private func appendSteps(to recipe: Recipe) {
         var stepOrder = 0
         let savedSteps = steps.compactMap { draft -> RecipeStep? in
             let instruction = draft.instruction.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -157,9 +230,6 @@ struct AddRecipeSheet: View {
             return step
         }
         recipe.steps = savedSteps
-
-        try? modelContext.save()
-        dismiss()
     }
 
     private func findOrCreateIngredient(named name: String) -> Ingredient {
@@ -179,7 +249,7 @@ private struct DraftIngredient: Identifiable {
     let id = UUID()
     var name = ""
     var quantity = 1.0
-    var unit = "pcs"
+    var unit = "g"
 }
 
 private struct DraftStep: Identifiable {

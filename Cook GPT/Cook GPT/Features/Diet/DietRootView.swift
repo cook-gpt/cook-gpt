@@ -5,121 +5,273 @@ struct DietRootView: View {
     @Query(filter: #Predicate<DietProfile> { $0.isActive == true })
     private var activeProfiles: [DietProfile]
 
-    @Query(sort: \MealLogEntry.date, order: .reverse)
-    private var mealEntries: [MealLogEntry]
+    @Query(sort: \ScheduledMeal.day) private var scheduledMeals: [ScheduledMeal]
+    @Environment(\.modelContext) private var modelContext
 
-    @State private var isLoggingMeal = false
+    @State private var viewMode: ScheduleViewMode = .week
+    @State private var selectedDate = Date()
+    @State private var isSchedulingMeal = false
+    @State private var isPlanningMeals = false
+    @State private var mealToEdit: ScheduledMeal?
 
     private var activeProfile: DietProfile? {
         activeProfiles.first
     }
 
-    private var todaysEntries: [MealLogEntry] {
-        mealEntries.filter { Calendar.current.isDateInToday($0.date) }
-    }
-
-    private var todaysCalories: Int {
-        todaysEntries.reduce(0) { $0 + $1.calories }
+    private var visibleMeals: [ScheduledMeal] {
+        switch viewMode {
+        case .day:
+            return scheduledMeals.filter { MealScheduleCalendar.isSameDay($0.day, selectedDate) }
+        case .week:
+            let days = Set(MealScheduleCalendar.daysInWeek(containing: selectedDate).map(MealScheduleCalendar.startOfDay))
+            return scheduledMeals.filter { days.contains(MealScheduleCalendar.startOfDay($0.day)) }
+        case .month:
+            let days = Set(MealScheduleCalendar.daysInMonth(containing: selectedDate).map(MealScheduleCalendar.startOfDay))
+            return scheduledMeals.filter { days.contains(MealScheduleCalendar.startOfDay($0.day)) }
+        }
     }
 
     var body: some View {
         Group {
-            if let profile = activeProfile {
-                List {
-                    Section("Active profile") {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Text(profile.name)
-                                .font(.title2.bold())
-                            Text("Daily goal: \(profile.dailyCalorieGoal) kcal")
-                                .foregroundStyle(.secondary)
-                            HStack {
-                                macroChip("Protein", grams: profile.proteinGrams)
-                                macroChip("Carbs", grams: profile.carbGrams)
-                                macroChip("Fat", grams: profile.fatGrams)
-                            }
+            if activeProfile == nil {
+                EmptyStateView(
+                    systemImage: "calendar",
+                    title: "No diet profile",
+                    subtitle: "A diet profile is created on first launch."
+                )
+            } else {
+                VStack(spacing: 0) {
+                    Picker("View", selection: $viewMode) {
+                        ForEach(ScheduleViewMode.allCases, id: \.self) { mode in
+                            Text(mode.label).tag(mode)
                         }
-                        .padding(.vertical, 4)
                     }
+                    .pickerStyle(.segmented)
+                    .padding()
 
-                    Section("Today's progress") {
-                        ProgressView(
-                            value: Double(todaysCalories),
-                            total: Double(max(profile.dailyCalorieGoal, 1))
-                        )
-                        Text("\(todaysCalories) / \(profile.dailyCalorieGoal) kcal logged")
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
-                    }
+                    periodHeader
 
-                    Section("Today's meals") {
-                        if todaysEntries.isEmpty {
-                            Text("No meals logged yet.")
-                                .foregroundStyle(.secondary)
-                        } else {
-                            ForEach(todaysEntries) { entry in
-                                MealLogRowView(entry: entry)
-                            }
+                    Group {
+                        switch viewMode {
+                        case .day:
+                            dayScheduleView
+                        case .week:
+                            weekScheduleView
+                        case .month:
+                            monthScheduleView
                         }
                     }
                 }
-            } else {
-                EmptyStateView(
-                    systemImage: "heart.text.square",
-                    title: "No diet profile",
-                    subtitle: "An active diet profile will appear after seeding."
-                )
             }
         }
-        .navigationTitle("Diet")
+        .navigationTitle("Meals")
         .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button("Plan meals") {
+                    isPlanningMeals = true
+                }
+                .disabled(activeProfile == nil)
+            }
             ToolbarItem(placement: .primaryAction) {
                 Button {
-                    isLoggingMeal = true
+                    isSchedulingMeal = true
                 } label: {
                     Image(systemName: "plus")
                 }
                 .disabled(activeProfile == nil)
             }
         }
-        .sheet(isPresented: $isLoggingMeal) {
-            LogMealSheet()
+        .sheet(isPresented: $isSchedulingMeal) {
+            ScheduleMealSheet(defaultDate: selectedDate)
+        }
+        .sheet(item: $mealToEdit) { meal in
+            ScheduleMealSheet(existingMeal: meal)
+        }
+        .sheet(isPresented: $isPlanningMeals) {
+            if let profile = activeProfile {
+                PlanMealsSheet(profile: profile)
+            }
         }
     }
 
-    private func macroChip(_ label: String, grams: Int) -> some View {
-        VStack(spacing: 2) {
-            Text(label)
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-            Text("\(grams)g")
-                .font(.caption.weight(.semibold))
+    @ViewBuilder
+    private var periodHeader: some View {
+        HStack {
+            Button {
+                shiftPeriod(by: -1)
+            } label: {
+                Image(systemName: "chevron.left")
+            }
+
+            Spacer()
+
+            Text(periodTitle)
+                .font(.headline)
+
+            Spacer()
+
+            Button {
+                shiftPeriod(by: 1)
+            } label: {
+                Image(systemName: "chevron.right")
+            }
         }
-        .frame(maxWidth: .infinity)
-        .padding(8)
-        .background(.quaternary)
-        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .padding(.horizontal)
+        .padding(.bottom, 8)
+    }
+
+    private var periodTitle: String {
+        switch viewMode {
+        case .day:
+            return MealScheduleCalendar.dayTitle(selectedDate)
+        case .week:
+            return MealScheduleCalendar.weekRangeTitle(containing: selectedDate)
+        case .month:
+            return MealScheduleCalendar.monthTitle(for: selectedDate)
+        }
+    }
+
+    @ViewBuilder
+    private var dayScheduleView: some View {
+        List {
+            if let profile = activeProfile {
+                Section("Diet") {
+                    LabeledContent("Type", value: profile.dietType.label)
+                }
+            }
+
+            ForEach(MealSlot.allCases, id: \.self) { slot in
+                Section(slot.label) {
+                    if let meal = visibleMeals.first(where: { $0.mealSlot == slot }) {
+                        ScheduledMealRow(meal: meal)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                mealToEdit = meal
+                            }
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                Button(role: .destructive) {
+                                    deleteMeal(meal)
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                            }
+                    } else {
+                        Text("Nothing scheduled")
+                            .foregroundStyle(.secondary)
+                    }
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var weekScheduleView: some View {
+        List {
+            ForEach(MealScheduleCalendar.daysInWeek(containing: selectedDate), id: \.self) { day in
+                Section(MealScheduleCalendar.dayTitle(day)) {
+                    let dayMeals = scheduledMeals.filter { MealScheduleCalendar.isSameDay($0.day, day) }
+                    if dayMeals.isEmpty {
+                        Text("Nothing scheduled")
+                            .foregroundStyle(.secondary)
+                    } else {
+                        ForEach(dayMeals, id: \.id) { meal in
+                            ScheduledMealRow(meal: meal)
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    mealToEdit = meal
+                                }
+                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                    Button(role: .destructive) {
+                                        deleteMeal(meal)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var monthScheduleView: some View {
+        List {
+            ForEach(groupedMonthDays, id: \.day) { group in
+                Section(MealScheduleCalendar.dayTitle(group.day)) {
+                    if group.meals.isEmpty {
+                        Text("Nothing scheduled")
+                            .foregroundStyle(.secondary)
+                    } else {
+                        ForEach(group.meals, id: \.id) { meal in
+                            ScheduledMealRow(meal: meal)
+                                .contentShape(Rectangle())
+                                .onTapGesture {
+                                    mealToEdit = meal
+                                }
+                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                    Button(role: .destructive) {
+                                        deleteMeal(meal)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
+                                }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private var groupedMonthDays: [(day: Date, meals: [ScheduledMeal])] {
+        MealScheduleCalendar.daysInMonth(containing: selectedDate).map { day in
+            let meals = scheduledMeals.filter { MealScheduleCalendar.isSameDay($0.day, day) }
+            return (day: day, meals: meals)
+        }
+    }
+
+    private func shiftPeriod(by value: Int) {
+        let component: Calendar.Component
+        switch viewMode {
+        case .day: component = .day
+        case .week: component = .weekOfYear
+        case .month: component = .month
+        }
+
+        if let newDate = MealScheduleCalendar.calendar.date(byAdding: component, value: value, to: selectedDate) {
+            selectedDate = newDate
+        }
+    }
+
+    private func deleteMeal(_ meal: ScheduledMeal) {
+        modelContext.delete(meal)
+        try? modelContext.save()
     }
 }
 
-private struct MealLogRowView: View {
-    let entry: MealLogEntry
+private struct ScheduledMealRow: View {
+    let meal: ScheduledMeal
 
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
             HStack {
-                Text(entry.mealType.label)
-                    .font(.headline)
+                Text(meal.mealSlot.label)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
                 Spacer()
-                Text("\(entry.calories) kcal")
+                Text("\(meal.servings) servings")
+                    .font(.caption)
                     .foregroundStyle(.secondary)
             }
-            if let recipe = entry.recipe {
+
+            if let recipe = meal.recipe {
                 Text(recipe.title)
-                    .font(.subheadline)
+                    .font(.headline)
+                Text("\(recipe.totalMinutes) min · \(recipe.difficulty.label)")
+                    .font(.caption)
                     .foregroundStyle(.secondary)
-            } else if !entry.note.isEmpty {
-                Text(entry.note)
-                    .font(.subheadline)
+            } else {
+                Text("No recipe")
                     .foregroundStyle(.secondary)
             }
         }

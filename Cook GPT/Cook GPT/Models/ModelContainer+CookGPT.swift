@@ -3,7 +3,7 @@ import SwiftData
 
 enum CookGPTModelContainer {
     /// Bump when SwiftData models change incompatibly.
-    static let schemaVersion = 5
+    static let schemaVersion = 6
 
     private static let seedFlagKey = "didSeedSampleData"
     private static let recipeStructureVersionKey = "sampleRecipeStructureVersion"
@@ -15,10 +15,9 @@ enum CookGPTModelContainer {
         RecipeIngredient.self,
         RecipeStep.self,
         DietProfile.self,
-        MealLogEntry.self,
+        ScheduledMeal.self,
         GroceryList.self,
         GroceryItem.self,
-        PantryItem.self,
     ])
 
     static func make() throws -> ModelContainer {

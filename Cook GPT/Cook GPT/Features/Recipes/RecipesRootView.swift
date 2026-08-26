@@ -21,7 +21,10 @@ struct RecipesRootView: View {
     @Environment(CookingSessionManager.self) private var cookingSession
 
     @State private var isAddingRecipe = false
+    @State private var recipeToEdit: Recipe?
+    @State private var recipeForCategories: Recipe?
     @State private var sortOption: RecipeSortOption = .alphabetical
+    @State private var selectedCategoryFilter: String?
 
     private var sortedRecipes: [Recipe] {
         switch sortOption {
@@ -46,36 +49,75 @@ struct RecipesRootView: View {
         }
     }
 
+    private var filteredRecipes: [Recipe] {
+        guard let selectedCategoryFilter else { return sortedRecipes }
+        return sortedRecipes.filter { $0.hasCategory(selectedCategoryFilter) }
+    }
+
     var body: some View {
         Group {
             if recipes.isEmpty {
                 EmptyStateView(
                     systemImage: "book.closed",
                     title: "No recipes yet",
-                    subtitle: "Sample recipes will appear on first launch."
+                    subtitle: "Tap + to add your first recipe."
                 )
             } else {
                 List {
-                    ForEach(sortedRecipes) { recipe in
-                        NavigationLink(value: recipe) {
-                            RecipeRowView(
-                                recipe: recipe,
-                                isInProgress: cookingSession.isInProgress(recipe: recipe)
-                            )
-                        }
-                        .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                            Button {
-                                toggleFavorite(recipe)
-                            } label: {
-                                Label(
-                                    recipe.isFavorite ? "Unfavorite" : "Favorite",
-                                    systemImage: recipe.isFavorite ? "star.slash.fill" : "star.fill"
+                    Section {
+                        RecipeCategoryFilterBar(selectedCategoryID: $selectedCategoryFilter)
+                            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+                            .listRowBackground(Color.clear)
+                    }
+
+                    if filteredRecipes.isEmpty {
+                        ContentUnavailableView(
+                            "No recipes in this category",
+                            systemImage: "tag.slash",
+                            description: Text("Try another category or add tags to your recipes.")
+                        )
+                    } else {
+                        ForEach(filteredRecipes) { recipe in
+                            NavigationLink(value: recipe) {
+                                RecipeRowView(
+                                    recipe: recipe,
+                                    isInProgress: cookingSession.isInProgress(recipe: recipe)
                                 )
                             }
-                            .tint(.yellow)
+                            .swipeActions(edge: .leading, allowsFullSwipe: true) {
+                                Button {
+                                    toggleFavorite(recipe)
+                                } label: {
+                                    Label(
+                                        recipe.isFavorite ? "Unfavorite" : "Favorite",
+                                        systemImage: recipe.isFavorite ? "star.slash.fill" : "star.fill"
+                                    )
+                                }
+                                .tint(.yellow)
+
+                                Button {
+                                    recipeForCategories = recipe
+                                } label: {
+                                    Label("Categories", systemImage: "tag")
+                                }
+                                .tint(.blue)
+                            }
+                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+                                Button(role: .destructive) {
+                                    deleteRecipe(recipe)
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
+
+                                Button {
+                                    recipeToEdit = recipe
+                                } label: {
+                                    Label("Edit", systemImage: "pencil")
+                                }
+                                .tint(.indigo)
+                            }
                         }
                     }
-                    .onDelete(perform: deleteRecipes)
                 }
             }
         }
@@ -101,7 +143,13 @@ struct RecipesRootView: View {
             }
         }
         .sheet(isPresented: $isAddingRecipe) {
-            AddRecipeSheet()
+            RecipeEditorSheet()
+        }
+        .sheet(item: $recipeToEdit) { recipe in
+            RecipeEditorSheet(recipe: recipe)
+        }
+        .sheet(item: $recipeForCategories) { recipe in
+            RecipeCategoryPickerSheet(recipe: recipe)
         }
         .navigationDestination(for: Recipe.self) { recipe in
             RecipeDetailView(recipe: recipe)
@@ -113,12 +161,9 @@ struct RecipesRootView: View {
         try? modelContext.save()
     }
 
-    private func deleteRecipes(at offsets: IndexSet) {
-        for index in offsets {
-            let recipe = sortedRecipes[index]
-            cookingSession.timerStore.stopAll(for: recipe.id)
-            modelContext.delete(recipe)
-        }
+    private func deleteRecipe(_ recipe: Recipe) {
+        cookingSession.timerStore.stopAll(for: recipe.id)
+        modelContext.delete(recipe)
         try? modelContext.save()
     }
 }
@@ -126,6 +171,7 @@ struct RecipesRootView: View {
 private struct RecipeRowView: View {
     let recipe: Recipe
     var isInProgress: Bool = false
+    @Environment(AppSettingsStore.self) private var settings
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
@@ -157,6 +203,21 @@ private struct RecipeRowView: View {
             }
             .font(.caption)
             .foregroundStyle(.secondary)
+
+            if !recipe.tags.isEmpty {
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 6) {
+                        ForEach(settings.labels(forTagIDs: recipe.tags), id: \.self) { label in
+                            Text(label)
+                                .font(.caption2)
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 3)
+                                .background(.quaternary)
+                                .clipShape(Capsule())
+                        }
+                    }
+                }
+            }
         }
         .padding(.vertical, 4)
     }
@@ -167,5 +228,6 @@ private struct RecipeRowView: View {
         RecipesRootView()
     }
     .environment(CookingSessionManager.shared)
+    .environment(AppSettingsStore.shared)
     .modelContainer(try! CookGPTModelContainer.make())
 }

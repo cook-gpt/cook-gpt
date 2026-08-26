@@ -76,6 +76,13 @@ enum CookingTimerLiveActivityManager {
         }
     }
 
+    static func endAll() async {
+        activitiesByStepID.removeAll()
+        for activity in Activity<CookingTimerAttributes>.activities {
+            await activity.end(nil, dismissalPolicy: .immediate)
+        }
+    }
+
     private static func contentState(
         for timer: CookingTimerStore.RunningTimer,
         recipeTitle: String

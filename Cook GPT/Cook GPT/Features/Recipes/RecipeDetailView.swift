@@ -1,14 +1,21 @@
 import SwiftUI
+import SwiftData
 
 struct RecipeDetailView: View {
     let recipe: Recipe
 
     @Environment(CookingSessionManager.self) private var cookingSession
+    @Environment(AppSettingsStore.self) private var settings
     @State private var selectedServings: Int
+    @State private var isEditingRecipe = false
 
     init(recipe: Recipe) {
         self.recipe = recipe
         _selectedServings = State(initialValue: recipe.servings)
+    }
+
+    private var shareText: String {
+        RecipeShareFormatter.text(for: recipe, servings: selectedServings)
     }
 
     var body: some View {
@@ -27,8 +34,8 @@ struct RecipeDetailView: View {
                 if !recipe.tags.isEmpty {
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack {
-                            ForEach(recipe.tags, id: \.self) { tag in
-                                Text(tag)
+                            ForEach(settings.labels(forTagIDs: recipe.tags), id: \.self) { label in
+                                Text(label)
                                     .font(.caption)
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 4)
@@ -67,6 +74,25 @@ struct RecipeDetailView: View {
             }
         }
         .navigationTitle(recipe.title)
+        .toolbar {
+            ToolbarItemGroup(placement: .primaryAction) {
+                ShareLink(
+                    item: shareText,
+                    subject: Text(recipe.title),
+                    message: Text(shareText)
+                ) {
+                    Image(systemName: "square.and.arrow.up")
+                }
+                .accessibilityLabel("Share recipe")
+
+                Button("Edit") {
+                    isEditingRecipe = true
+                }
+            }
+        }
+        .sheet(isPresented: $isEditingRecipe) {
+            RecipeEditorSheet(recipe: recipe)
+        }
     }
 }
 

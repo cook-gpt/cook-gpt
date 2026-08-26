@@ -26,14 +26,3 @@ enum RecipeDifficulty: String, Codable, CaseIterable {
         }
     }
 }
-
-enum MealType: String, Codable, CaseIterable {
-    case breakfast
-    case lunch
-    case dinner
-    case snack
-
-    var label: String {
-        rawValue.capitalized
-    }
-}

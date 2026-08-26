@@ -15,4 +15,8 @@ final class CookingSessionManager {
     func isInProgress(recipe: Recipe) -> Bool {
         !timerStore.timers(for: recipe.id).isEmpty
     }
+
+    func reset() {
+        timerStore.clearAll()
+    }
 }

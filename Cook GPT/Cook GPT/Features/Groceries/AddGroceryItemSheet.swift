@@ -4,19 +4,20 @@ import SwiftData
 struct AddGroceryItemSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    @Environment(AppSettingsStore.self) private var settings
 
     let list: GroceryList
 
     @State private var name = ""
     @State private var quantity = 1.0
-    @State private var unit = "pcs"
+    @State private var unit = "g"
 
     var body: some View {
         NavigationStack {
             Form {
                 TextField("Name", text: $name)
                 Stepper("Quantity: \(QuantityFormatter.string(quantity))", value: $quantity, in: 0.1...100, step: 0.5)
-                TextField("Unit", text: $unit)
+                IngredientUnitPicker(unit: $unit)
             }
             .navigationTitle("Add item")
             .navigationBarTitleDisplayMode(.inline)
@@ -28,6 +29,9 @@ struct AddGroceryItemSheet: View {
                     Button("Add") { save() }
                         .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
                 }
+            }
+            .onAppear {
+                unit = settings.allUnits.first ?? "g"
             }
         }
     }

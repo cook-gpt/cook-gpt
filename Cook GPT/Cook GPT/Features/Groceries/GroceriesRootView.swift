@@ -2,112 +2,101 @@ import SwiftUI
 import SwiftData
 
 struct GroceriesRootView: View {
-    private enum Segment: String, CaseIterable {
-        case shopping = "Shopping"
-        case pantry = "Pantry"
-    }
-
     @Query(sort: \GroceryList.name) private var groceryLists: [GroceryList]
-    @Query(sort: \PantryItem.name) private var pantryItems: [PantryItem]
     @Environment(\.modelContext) private var modelContext
 
-    @State private var segment: Segment = .shopping
-    @State private var isAddingGrocery = false
-    @State private var isAddingPantry = false
+    @State private var isGeneratingList = false
+    @State private var isAddingItem = false
 
     private var primaryList: GroceryList? {
         groceryLists.first
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            Picker("Section", selection: $segment) {
-                ForEach(Segment.allCases, id: \.self) { item in
-                    Text(item.rawValue).tag(item)
-                }
-            }
-            .pickerStyle(.segmented)
-            .padding()
+        Group {
+            if let list = primaryList {
+                let items = sortedItems(for: list)
+                let remaining = items.filter { !$0.isChecked }.count
+                let total = items.count
 
-            switch segment {
-            case .shopping:
-                shoppingContent
-            case .pantry:
-                pantryContent
+                List {
+                    if total > 0 {
+                        Section {
+                            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                                Text("\(remaining)/\(total)")
+                                    .font(.title2.bold().monospacedDigit())
+                                Text("left")
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+                            }
+                            .padding(.vertical, 4)
+                        }
+                    }
+
+                    if items.isEmpty {
+                        ContentUnavailableView(
+                            "No items yet",
+                            systemImage: "cart",
+                            description: Text("Generate a list from scheduled meals or selected recipes.")
+                        )
+                    } else {
+                        ForEach(items, id: \.persistentModelID) { item in
+                            GroceryItemRow(item: item)
+                        }
+                        .onDelete { offsets in
+                            deleteItems(at: offsets, in: items)
+                        }
+                    }
+                }
+            } else {
+                EmptyStateView(
+                    systemImage: "cart",
+                    title: "No shopping list",
+                    subtitle: "A default list is created on first launch."
+                )
             }
         }
         .navigationTitle("Groceries")
         .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                Button("Generate") {
+                    isGeneratingList = true
+                }
+                .disabled(primaryList == nil)
+            }
             ToolbarItem(placement: .primaryAction) {
                 Button {
-                    switch segment {
-                    case .shopping: isAddingGrocery = true
-                    case .pantry: isAddingPantry = true
-                    }
+                    isAddingItem = true
                 } label: {
                     Image(systemName: "plus")
                 }
+                .disabled(primaryList == nil)
             }
         }
-        .sheet(isPresented: $isAddingGrocery) {
+        .sheet(isPresented: $isGeneratingList) {
+            if let list = primaryList {
+                GenerateShoppingListSheet(list: list) {}
+            }
+        }
+        .sheet(isPresented: $isAddingItem) {
             if let list = primaryList {
                 AddGroceryItemSheet(list: list)
             }
         }
-        .sheet(isPresented: $isAddingPantry) {
-            AddPantryItemSheet()
-        }
     }
 
-    @ViewBuilder
-    private var shoppingContent: some View {
-        if let list = primaryList {
-            List {
-                ForEach(list.items, id: \.persistentModelID) { item in
-                    GroceryItemRow(item: item)
-                }
-                .onDelete { offsets in
-                    deleteGroceryItems(at: offsets, in: list)
-                }
+    private func sortedItems(for list: GroceryList) -> [GroceryItem] {
+        list.items.sorted { lhs, rhs in
+            if lhs.isChecked != rhs.isChecked {
+                return lhs.isChecked && !rhs.isChecked
             }
-        } else {
-            EmptyStateView(
-                systemImage: "cart",
-                title: "No grocery list",
-                subtitle: "A default list is created on first launch."
-            )
+            return lhs.name.localizedCaseInsensitiveCompare(rhs.name) == .orderedAscending
         }
     }
 
-    @ViewBuilder
-    private var pantryContent: some View {
-        if pantryItems.isEmpty {
-            EmptyStateView(
-                systemImage: "archivebox",
-                title: "Pantry is empty",
-                subtitle: "Add items to track what you have at home."
-            )
-        } else {
-            List {
-                ForEach(pantryItems) { item in
-                    PantryItemRow(item: item)
-                }
-                .onDelete(perform: deletePantryItems)
-            }
-        }
-    }
-
-    private func deleteGroceryItems(at offsets: IndexSet, in list: GroceryList) {
-        let items = list.items
+    private func deleteItems(at offsets: IndexSet, in items: [GroceryItem]) {
         for index in offsets {
             modelContext.delete(items[index])
-        }
-        try? modelContext.save()
-    }
-
-    private func deletePantryItems(at offsets: IndexSet) {
-        for index in offsets {
-            modelContext.delete(pantryItems[index])
         }
         try? modelContext.save()
     }
@@ -134,26 +123,6 @@ private struct GroceryItemRow: View {
             }
         }
         .buttonStyle(.plain)
-    }
-}
-
-private struct PantryItemRow: View {
-    let item: PantryItem
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(item.name)
-                .font(.headline)
-            Text("\(QuantityFormatter.string(item.quantity)) \(item.unit)")
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-            if let expiresOn = item.expiresOn {
-                Text(expiresOn, format: .relative(presentation: .named))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-        }
-        .padding(.vertical, 2)
     }
 }
 

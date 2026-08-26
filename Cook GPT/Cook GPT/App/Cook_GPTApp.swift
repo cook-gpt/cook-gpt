@@ -17,6 +17,7 @@ struct Cook_GPTApp: App {
         WindowGroup {
             ContentView()
                 .environment(CookingSessionManager.shared)
+                .environment(AppSettingsStore.shared)
                 .onAppear {
                     let context = modelContainer.mainContext
                     SampleDataSeeder.seedIfNeeded(context: context)

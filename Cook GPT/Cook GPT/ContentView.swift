@@ -2,6 +2,8 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
+    @Environment(AppSettingsStore.self) private var settings
+
     var body: some View {
         TabView {
             Tab("Recipes", systemImage: "book.closed") {
@@ -10,7 +12,7 @@ struct ContentView: View {
                 }
             }
 
-            Tab("Diet", systemImage: "heart.text.square") {
+            Tab("Meals", systemImage: "calendar") {
                 NavigationStack {
                     DietRootView()
                 }
@@ -21,12 +23,20 @@ struct ContentView: View {
                     GroceriesRootView()
                 }
             }
+
+            Tab("Settings", systemImage: "gearshape") {
+                NavigationStack {
+                    SettingsRootView()
+                }
+            }
         }
+        .preferredColorScheme(settings.appTheme.colorScheme)
     }
 }
 
 #Preview {
     ContentView()
         .environment(CookingSessionManager.shared)
+        .environment(AppSettingsStore.shared)
         .modelContainer(try! CookGPTModelContainer.make())
 }
