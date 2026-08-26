@@ -26,6 +26,17 @@ struct SettingsRootView: View {
                 .pickerStyle(.segmented)
             }
 
+            Section("Timers") {
+                NavigationLink {
+                    TimerAlarmSoundPickerView()
+                } label: {
+                    LabeledContent("Alarm sound", value: settings.timerAlarmSound.label)
+                }
+                Text("Uses the same alarm names as the iPhone Clock app. Previews and timer audio require a physical device.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+
             Section("Meal planner") {
                 Toggle("Include breakfast", isOn: $settings.includeBreakfastInMealPrep)
                 Text("When enabled, auto meal planning also schedules breakfast. Breakfast and dessert recipes are never used by the planner.")

@@ -1,6 +1,10 @@
+export const GITHUB_ORG = 'cook-gpt';
+
 export const GITHUB_REPO = 'cook-gpt/cook-gpt';
 
 export const GITHUB_OWNER = 'xarlizard';
+
+export const GITHUB_ORG_URL = `https://github.com/${GITHUB_ORG}`;
 
 export const REPO_URL = `https://github.com/${GITHUB_REPO}`;
 

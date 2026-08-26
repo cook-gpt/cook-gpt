@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Outlet } from 'react-router';
 import { AppHeader } from '@/components/AppHeader';
-import { GitHubFooter } from '@/components/GitHubFooter';
+import { SiteFooter } from '@/components/SiteFooter';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { useTheme } from '@/contexts/ThemeContext';
 
@@ -18,10 +18,10 @@ export default function App() {
           darkMode={darkMode}
           onThemeToggle={toggleTheme}
         />
-        <div className="flex flex-1 flex-col overflow-auto p-4 sm:p-6">
+        <div className="flex flex-1 flex-col">
           <Outlet />
         </div>
-        <GitHubFooter />
+        <SiteFooter />
       </div>
     </TooltipProvider>
   );

@@ -1,7 +1,8 @@
 {
   "nav": {
     "home": "Home",
-    "docs": "Docs"
+    "docs": "Docs",
+    "privacy": "Privacy"
   },
   "language": "Language",
   "actions": {
@@ -17,6 +18,7 @@
     "title": "Your favourite meals scheduler",
     "subtitle": "CookGPT brings recipes, weekly meal planning, and smart grocery lists together — with step timers on your Lock Screen while you cook.",
     "heroAlt": "CookGPT app showing the recipes screen on iPhone",
+    "featuresEyebrow": "Designed for home cooks",
     "featuresTitle": "Everything you need in the kitchen",
     "features": {
       "recipes": {
@@ -44,9 +46,59 @@
         "description": "Your recipes and plans stay local. No account required."
       }
     },
-    "openSource": "Open source on GitHub"
+    "ctaTitle": "Start planning your next meal",
+    "ctaSubtitle": "Download CookGPT free on the App Store for iPhone and iPad."
+  },
+  "footer": {
+    "tagline": "Recipes, meal planning, and groceries — designed for iOS.",
+    "openSource": "Open source on GitHub",
+    "copyright": "Copyright © {{year}} CookGPT. All rights reserved.",
+    "columns": {
+      "product": "Product",
+      "legal": "Legal",
+      "openSource": "Open Source"
+    },
+    "links": {
+      "org": "GitHub organization",
+      "repo": "Repository",
+      "author": "@{{author}}"
+    }
+  },
+  "privacy": {
+    "eyebrow": "Legal",
+    "title": "Privacy Policy",
+    "updated": "Last updated: August 2026",
+    "intro": "CookGPT is built to keep your data on your device. We do not operate servers that collect your recipes, meal plans, or grocery lists.",
+    "contact": "Questions? Reach the author on GitHub:",
+    "sections": [
+      {
+        "title": "Summary",
+        "body": "CookGPT does not require an account. We do not sell your data. We do not use analytics, advertising networks, crash reporting SDKs, or third-party trackers in the app or on this website."
+      },
+      {
+        "title": "Data stored on your device",
+        "body": "Recipes, meal schedules, grocery lists, and app settings are stored locally on your iPhone or iPad using Apple's on-device storage frameworks. This data never leaves your device unless you explicitly share it through iOS share sheets."
+      },
+      {
+        "title": "This website",
+        "body": "This landing page does not use cookies, analytics, or embedded third-party widgets. We do not collect personal information when you browse cook-gpt.pages.dev."
+      },
+      {
+        "title": "Third parties",
+        "body": "The App Store download link sends you to Apple. GitHub links on this site send you to GitHub. We do not integrate any other third-party services."
+      },
+      {
+        "title": "Open source",
+        "body": "CookGPT is open source. You can review the application code on GitHub to verify how data is handled."
+      },
+      {
+        "title": "Changes",
+        "body": "If this policy changes, we will update this page. Continued use of the app or website after changes constitutes acceptance of the updated policy."
+      }
+    ]
   },
   "docs": {
+    "eyebrow": "Guide",
     "title": "Documentation",
     "subtitle": "Get started with CookGPT on iPhone or iPad.",
     "installTitle": "Install",
@@ -76,6 +128,7 @@
       "contributing": "Contributing",
       "changelog": "Changelog",
       "security": "Security policy"
-    }
+    },
+    "viewOnGitHub": "View repository on GitHub"
   }
 }

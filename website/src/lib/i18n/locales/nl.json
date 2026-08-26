@@ -1,7 +1,8 @@
 {
   "nav": {
     "home": "Home",
-    "docs": "Docs"
+    "docs": "Docs",
+    "privacy": "Privacy"
   },
   "language": "Taal",
   "actions": {
@@ -44,9 +45,12 @@
         "description": "Je recepten en planning blijven lokaal. Geen account nodig."
       }
     },
-    "openSource": "Open source op GitHub"
+    "featuresEyebrow": "Gemaakt voor thuiskoks",
+    "ctaTitle": "Begin met het plannen van je volgende maaltijd",
+    "ctaSubtitle": "Download CookGPT gratis in de App Store voor iPhone en iPad."
   },
   "docs": {
+    "eyebrow": "Gids",
     "title": "Documentatie",
     "subtitle": "Aan de slag met CookGPT op iPhone of iPad.",
     "installTitle": "Installeren",
@@ -76,6 +80,55 @@
       "contributing": "Bijdragen",
       "changelog": "Wijzigingslog",
       "security": "Beveiligingsbeleid"
+    },
+    "viewOnGitHub": "Repository op GitHub bekijken"
+  },
+  "footer": {
+    "tagline": "Recepten, maaltijdplanning en boodschappen — voor iOS.",
+    "openSource": "Open source op GitHub",
+    "copyright": "Copyright © {{year}} CookGPT. Alle rechten voorbehouden.",
+    "columns": {
+      "product": "Product",
+      "legal": "Juridisch",
+      "openSource": "Open source"
+    },
+    "links": {
+      "org": "GitHub-organisatie",
+      "repo": "Repository",
+      "author": "@{{author}}"
     }
+  },
+  "privacy": {
+    "eyebrow": "Juridisch",
+    "title": "Privacybeleid",
+    "updated": "Laatst bijgewerkt: augustus 2026",
+    "intro": "CookGPT bewaart je gegevens op je apparaat. We verzamelen geen recepten, maaltijdplannen of boodschappenlijsten op servers.",
+    "contact": "Vragen? Neem contact op via GitHub:",
+    "sections": [
+      {
+        "title": "Samenvatting",
+        "body": "Geen account nodig. We verkopen geen data. Geen analytics, advertenties, crash-SDK's of trackers."
+      },
+      {
+        "title": "Gegevens op je apparaat",
+        "body": "Recepten, planningen, lijsten en instellingen blijven lokaal op je iPhone of iPad."
+      },
+      {
+        "title": "Deze website",
+        "body": "Geen cookies, analytics of widgets van derden op cook-gpt.pages.dev."
+      },
+      {
+        "title": "Derden",
+        "body": "App Store-link gaat naar Apple. GitHub-links gaan naar GitHub."
+      },
+      {
+        "title": "Open source",
+        "body": "CookGPT is open source. Bekijk de code op GitHub."
+      },
+      {
+        "title": "Wijzigingen",
+        "body": "Bij wijzigingen wordt deze pagina bijgewerkt."
+      }
+    ]
   }
 }

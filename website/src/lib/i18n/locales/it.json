@@ -1,7 +1,8 @@
 {
   "nav": {
     "home": "Home",
-    "docs": "Docs"
+    "docs": "Docs",
+    "privacy": "Privacy"
   },
   "language": "Lingua",
   "actions": {
@@ -44,9 +45,12 @@
         "description": "Ricette e piani restano locali. Nessun account richiesto."
       }
     },
-    "openSource": "Open source su GitHub"
+    "featuresEyebrow": "Pensato per chi cucina a casa",
+    "ctaTitle": "Inizia a pianificare il prossimo pasto",
+    "ctaSubtitle": "Scarica CookGPT gratis sull'App Store per iPhone e iPad."
   },
   "docs": {
+    "eyebrow": "Guida",
     "title": "Documentazione",
     "subtitle": "Inizia con CookGPT su iPhone o iPad.",
     "installTitle": "Installazione",
@@ -76,6 +80,55 @@
       "contributing": "Contribuire",
       "changelog": "Changelog",
       "security": "Politica di sicurezza"
+    },
+    "viewOnGitHub": "Visualizza repository su GitHub"
+  },
+  "footer": {
+    "tagline": "Ricette, pianificazione pasti e spesa — progettato per iOS.",
+    "openSource": "Open source su GitHub",
+    "copyright": "Copyright © {{year}} CookGPT. Tutti i diritti riservati.",
+    "columns": {
+      "product": "Prodotto",
+      "legal": "Legale",
+      "openSource": "Open source"
+    },
+    "links": {
+      "org": "Organizzazione GitHub",
+      "repo": "Repository",
+      "author": "@{{author}}"
     }
+  },
+  "privacy": {
+    "eyebrow": "Legale",
+    "title": "Informativa sulla privacy",
+    "updated": "Ultimo aggiornamento: agosto 2026",
+    "intro": "CookGPT è progettato per tenere i dati sul dispositivo. Non raccogliamo ricette, piani o liste della spesa su server.",
+    "contact": "Domande? Contatta l'autore su GitHub:",
+    "sections": [
+      {
+        "title": "Riepilogo",
+        "body": "Nessun account richiesto. Non vendiamo dati. Niente analytics, pubblicità, SDK crash o tracker."
+      },
+      {
+        "title": "Dati sul dispositivo",
+        "body": "Ricette, piani, liste e impostazioni restano sul dispositivo salvo condivisione esplicita tramite iOS."
+      },
+      {
+        "title": "Questo sito",
+        "body": "Nessun cookie, analytics o widget di terze parti su cook-gpt.pages.dev."
+      },
+      {
+        "title": "Terze parti",
+        "body": "App Store porta ad Apple. GitHub porta a GitHub. Nessun altro servizio."
+      },
+      {
+        "title": "Open source",
+        "body": "CookGPT è open source. Verifica il codice su GitHub."
+      },
+      {
+        "title": "Modifiche",
+        "body": "Eventuali modifiche saranno pubblicate qui. L'uso continuato implica accettazione."
+      }
+    ]
   }
 }

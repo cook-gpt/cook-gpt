@@ -39,6 +39,7 @@ final class AppSettingsStore {
         static let appTheme = "appSettings.appTheme"
         static let defaultPlannerServings = "appSettings.defaultPlannerServings"
         static let includeBreakfastInMealPrep = "appSettings.includeBreakfastInMealPrep"
+        static let timerAlarmSound = "appSettings.timerAlarmSound"
         static let customCategories = "appSettings.customCategories"
         static let customUnits = "appSettings.customUnits"
     }
@@ -53,6 +54,13 @@ final class AppSettingsStore {
 
     var includeBreakfastInMealPrep = false {
         didSet { UserDefaults.standard.set(includeBreakfastInMealPrep, forKey: Keys.includeBreakfastInMealPrep) }
+    }
+
+    var timerAlarmSound: TimerAlarmSound = .defaultSound {
+        didSet {
+            UserDefaults.standard.set(timerAlarmSound.rawValue, forKey: Keys.timerAlarmSound)
+            TimerAlarmSoundInstaller.ensureInstalled(timerAlarmSound)
+        }
     }
 
     private(set) var customCategories: [AppCategory] = [] {
@@ -85,6 +93,13 @@ final class AppSettingsStore {
         let storedServings = UserDefaults.standard.integer(forKey: Keys.defaultPlannerServings)
         defaultPlannerServings = storedServings > 0 ? storedServings : 1
         includeBreakfastInMealPrep = UserDefaults.standard.bool(forKey: Keys.includeBreakfastInMealPrep)
+        if let rawSound = UserDefaults.standard.string(forKey: Keys.timerAlarmSound),
+           let sound = TimerAlarmSound(rawValue: rawSound) {
+            timerAlarmSound = sound
+        } else {
+            timerAlarmSound = .defaultSound
+        }
+        TimerAlarmSoundInstaller.ensureInstalled(timerAlarmSound)
         customCategories = Self.sanitizeCustomCategories(Self.loadCustomCategories())
         customUnits = Self.sanitizeCustomUnits(Self.loadCustomUnits())
     }
@@ -93,6 +108,7 @@ final class AppSettingsStore {
         appTheme = .system
         defaultPlannerServings = 1
         includeBreakfastInMealPrep = false
+        timerAlarmSound = .defaultSound
         customCategories = []
         customUnits = []
     }

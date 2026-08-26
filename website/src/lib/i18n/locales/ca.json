@@ -1,7 +1,8 @@
 {
   "nav": {
     "home": "Inici",
-    "docs": "Docs"
+    "docs": "Docs",
+    "privacy": "Privacitat"
   },
   "language": "Idioma",
   "actions": {
@@ -44,9 +45,12 @@
         "description": "Les teves receptes i plans es guarden localment. Sense compte necessari."
       }
     },
-    "openSource": "Codi obert a GitHub"
+    "featuresEyebrow": "Dissenyat per cuinar a casa",
+    "ctaTitle": "Comença a planificar el proper àpat",
+    "ctaSubtitle": "Descarrega CookGPT gratis a l'App Store per a iPhone i iPad."
   },
   "docs": {
+    "eyebrow": "Guia",
     "title": "Documentació",
     "subtitle": "Comença amb CookGPT a iPhone o iPad.",
     "installTitle": "Instal·lar",
@@ -76,6 +80,55 @@
       "contributing": "Contribuir",
       "changelog": "Registre de canvis",
       "security": "Política de seguretat"
+    },
+    "viewOnGitHub": "Veure el repositori a GitHub"
+  },
+  "footer": {
+    "tagline": "Receptes, planificació de menjars i compra — dissenyat per a iOS.",
+    "openSource": "Codi obert a GitHub",
+    "copyright": "Copyright © {{year}} CookGPT. Tots els drets reservats.",
+    "columns": {
+      "product": "Producte",
+      "legal": "Legal",
+      "openSource": "Codi obert"
+    },
+    "links": {
+      "org": "Organització a GitHub",
+      "repo": "Repositori",
+      "author": "@{{author}}"
     }
+  },
+  "privacy": {
+    "eyebrow": "Legal",
+    "title": "Política de privacitat",
+    "updated": "Darrera actualització: agost de 2026",
+    "intro": "CookGPT guarda les dades al dispositiu. No recollim receptes, plans ni llistes de la compra en servidors.",
+    "contact": "Preguntes? Contacta l'autor a GitHub:",
+    "sections": [
+      {
+        "title": "Resum",
+        "body": "No cal compte. No venem dades. Sense analítiques, publicitat ni rastrejadors."
+      },
+      {
+        "title": "Dades al dispositiu",
+        "body": "Receptes, plans, llistes i ajustos es guarden localment al iPhone o iPad."
+      },
+      {
+        "title": "Aquest lloc web",
+        "body": "Sense cookies ni analítiques a cook-gpt.pages.dev."
+      },
+      {
+        "title": "Tercers",
+        "body": "L'enllaç de l'App Store porta a Apple. Els enllaços de GitHub porten a GitHub."
+      },
+      {
+        "title": "Codi obert",
+        "body": "CookGPT és de codi obert. Revisa el codi a GitHub."
+      },
+      {
+        "title": "Canvis",
+        "body": "Si canvia la política, actualitzarem aquesta pàgina."
+      }
+    ]
   }
 }

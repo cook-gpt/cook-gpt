@@ -114,6 +114,7 @@ final class CookingTimerStore {
             )
         )
         persistAndSyncLiveActivity(stepID: stepID)
+        scheduleCompletionNotification(stepID: stepID)
     }
 
     func pause(stepID: UUID) {
@@ -123,6 +124,7 @@ final class CookingTimerStore {
         timer.phase = .paused
         timer.endsAt = nil
         timers[index] = timer
+        TimerCompletionNotifier.cancel(stepID: stepID)
         persistAndSyncLiveActivity(stepID: stepID)
     }
 
@@ -134,17 +136,26 @@ final class CookingTimerStore {
         timer.endsAt = .now.addingTimeInterval(TimeInterval(timer.remainingSeconds))
         timers[index] = timer
         persistAndSyncLiveActivity(stepID: stepID)
+        scheduleCompletionNotification(stepID: stepID)
+    }
+
+    func complete(stepID: UUID) {
+        guard let timer = timer(for: stepID), timer.isFinished else { return }
+        TimerAlarmSoundPlayer.play(AppSettingsStore.shared.timerAlarmSound)
+        stop(stepID: stepID)
     }
 
     func stop(stepID: UUID) {
         guard timer(for: stepID) != nil else { return }
+        TimerCompletionNotifier.cancel(stepID: stepID)
         timers.removeAll { $0.stepID == stepID }
         persist()
         Task { await CookingTimerLiveActivityManager.end(stepID: stepID) }
     }
 
     func stop(timerID: UUID) {
-        guard timers.contains(where: { $0.id == timerID }) else { return }
+        guard let timer = timers.first(where: { $0.id == timerID }) else { return }
+        TimerCompletionNotifier.cancel(stepID: timer.stepID)
         timers.removeAll { $0.id == timerID }
         persist()
         Task { await CookingTimerLiveActivityManager.end(timerID: timerID) }
@@ -153,6 +164,9 @@ final class CookingTimerStore {
     func stopAll(for recipeID: UUID) {
         let active = timers.filter { $0.recipeID == recipeID }
         guard !active.isEmpty else { return }
+        for timer in active {
+            TimerCompletionNotifier.cancel(stepID: timer.stepID)
+        }
         timers.removeAll { $0.recipeID == recipeID }
         persist()
         for timer in active {
@@ -179,10 +193,14 @@ final class CookingTimerStore {
         let restored = timers
         Task {
             await CookingTimerLiveActivityManager.restore(timers: restored)
+            for timer in restored where timer.phase == .running {
+                scheduleCompletionNotification(stepID: timer.stepID)
+            }
         }
     }
 
     func clearAll() {
+        TimerCompletionNotifier.cancelAll()
         timers = []
         UserDefaults.standard.removeObject(forKey: persistenceKey)
         Task {
@@ -202,6 +220,23 @@ final class CookingTimerStore {
         guard let timer = timer(for: stepID) else { return }
         Task {
             await CookingTimerLiveActivityManager.sync(timer: timer, recipeTitle: timer.recipeTitle)
+        }
+    }
+
+    private func scheduleCompletionNotification(stepID: UUID) {
+        guard let timer = timer(for: stepID),
+              timer.phase == .running,
+              let endsAt = timer.endsAt else { return }
+
+        let sound = AppSettingsStore.shared.timerAlarmSound
+        Task {
+            await TimerCompletionNotifier.schedule(
+                stepID: stepID,
+                recipeTitle: timer.recipeTitle,
+                stepLabel: timer.label,
+                fireDate: endsAt,
+                sound: sound
+            )
         }
     }
 }

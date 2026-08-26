@@ -20,7 +20,7 @@ struct RecipeStepRowView: View {
                 Color.clear
                     .frame(height: 0)
                     .onAppear {
-                        cookingSession.timerStore.stop(stepID: step.id)
+                        cookingSession.timerStore.complete(stepID: step.id)
                     }
             }
 
