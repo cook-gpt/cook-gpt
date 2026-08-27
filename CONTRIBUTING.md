@@ -35,12 +35,13 @@ The iOS app lives under `Cook GPT/`. Each Swift source file starts with a short 
 - **Live Activity** — `CookingTimerAttributes.swift` is duplicated in the main app and widget extension targets; keep both files in sync.
 - **Website** — Marketing site is in `website/` (React + Vite); run `bun run build` from that folder to verify changes.
 
-Feature specs and architecture notes live in `specs/features/`. Prefer matching existing naming, file layout, and SwiftUI patterns when adding code.
+Feature specs and architecture notes live in `specs/features/`. See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Pull requests
 
 1. Branch from `main`.
-2. Open a PR using the repository template.
+2. Follow [.cursor/rules.md](.cursor/rules.md) and [docs/README.md](docs/README.md).
+3. Open a PR using the repository template.
 
 ## License
 

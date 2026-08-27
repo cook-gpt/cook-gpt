@@ -20,8 +20,8 @@ Use `feat:`, `fix:`, `docs:` prefixes. Group changes per release — see [Keep a
 
 ## Agent checklist
 
-1. Read **INSTRUCTIONS.md** (this file) and [index.md](index.md)
-2. Read [.agents/skills/index.md](.agents/skills/index.md) and [.agents/skills/README.md](.agents/skills/README.md)
+1. Read **INSTRUCTIONS.md** (this file), [docs/README.md](docs/README.md), and [.cursor/rules.md](.cursor/rules.md)
+2. Read [.agents/skills/README.md](.agents/skills/README.md) and [.agents/skills/xcode-tools/SKILL.md](.agents/skills/xcode-tools/SKILL.md)
 3. Add numbered concepts under `specs/features/` when adding user-visible behavior
 4. Use conventional commits for features/fixes destined for CHANGELOG
 
@@ -29,4 +29,4 @@ Use `feat:`, `fix:`, `docs:` prefixes. Group changes per release — see [Keep a
 
 ## Repository documents
 
-[README](README.md) | **INSTRUCTIONS** | [CHANGELOG](CHANGELOG.md) | [CONTRIBUTING](CONTRIBUTING.md) | [SECURITY](SECURITY.md) | [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md)
+[README](README.md) | [Docs](docs/README.md) | **INSTRUCTIONS** | [CHANGELOG](CHANGELOG.md) | [CONTRIBUTING](CONTRIBUTING.md) | [SECURITY](SECURITY.md) | [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md)

@@ -2,19 +2,27 @@
 okf_version: "0.1"
 ---
 
-# cook-gpt skills
+# CookGPT skills
 
-## Shared (synced)
+## Cursor rules
 
-Optional cross-template references: [auth/](shared/auth/), [supabase/](shared/supabase/)
+* [`.cursor/rules.md`](../../.cursor/rules.md)
+
+## Skill packs
+
+* [xcode-tools](xcode-tools/SKILL.md) — Xcode MCP build, test, docs
+* [spec-first](spec-first/SKILL.md) — spec-driven workflow
+* [swiftdata](swiftdata/SKILL.md) — SwiftData models and schema versioning
+* [live-activity](live-activity/SKILL.md) — timer Live Activity + widget
+* [marketing-website](marketing-website/SKILL.md) — `website/` landing site
 
 ## Local modules
 
-* [modules/](modules/) — add recreation guides as patterns emerge
+* [modules/](modules/) — optional deep-dive recreation guides
 
-## Agent skills
+## Catalog
 
-Cursor catalog: [README.md](README.md) — procedural guides (add `SKILL.md` packs when you adopt a stack).
+Full table: [README.md](README.md)
 
 ## Specs
 

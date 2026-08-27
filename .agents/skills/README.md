@@ -1,34 +1,33 @@
-# cook-gpt — Agent Skills Index
+# CookGPT — Agent Skills Index
 
-OKF module guides and Cursor skill packs for the cook-gpt iOS app.
+Cursor skill packs and module guides for **CookGPT**.
 
-## OKF layers
+## Skill packs
+
+| Skill | When to use |
+|-------|-------------|
+| [xcode-tools](xcode-tools/SKILL.md) | Build, test, diagnostics, Apple docs via Xcode MCP |
+| [spec-first](spec-first/SKILL.md) | Spec-driven feature workflow |
+| [swiftdata](swiftdata/SKILL.md) | `@Model` types and schema versioning |
+| [live-activity](live-activity/SKILL.md) | Cooking timer Live Activity + widget extension |
+| [marketing-website](marketing-website/SKILL.md) | React marketing site in `website/` |
+
+## Layers
 
 | Layer | Path |
 |-------|------|
 | Feature contracts | [`index.md`](../../index.md) (repo root) |
-| OKF skills index | [`index.md`](index.md) |
-| Shared concepts | [`shared/`](shared/) (synced from workspace `.agents/skills/`) |
-| Local modules | [`modules/`](modules/) |
+| Skills index | [`index.md`](index.md) |
+| Cursor rules | [`.cursor/rules.md`](../../.cursor/rules.md) |
+| Local modules | [`modules/`](modules/) — optional deep-dive guides |
 
-## Local modules (OKF)
+## Xcode MCP
 
-See [modules/](modules/) — add guides when you document reusable patterns.
-
-## Shared concepts (synced)
-
-Optional cross-template references — useful when this repo later gains backend services:
-
-* [auth/shared/](shared/auth/) — session, JWT, route guards
-* [supabase/shared/](shared/supabase/) — OAuth setup, worker clients
-
-## Cursor SKILL.md packs
-
-None shipped yet. Add `.agents/skills/<pack>/SKILL.md` when you adopt a stack, then list it here.
+Configured in Cursor as **xcode-tools** (`xcrun mcpbridge`). Requires Xcode running with `Cook GPT/Cook GPT.xcodeproj` open. Start with the [xcode-tools](xcode-tools/SKILL.md) skill.
 
 ## Extension order
 
-1. Read **`INSTRUCTIONS.md`** and **`index.md`**
-2. Add application code under `Cook GPT/`
-3. Document features in `specs/features/` and link from root `index.md`
-4. Add `.agents/skills/modules/` guides for non-obvious patterns
+1. Read **INSTRUCTIONS.md**, **docs/README.md**, and **`.cursor/rules.md`**
+2. Pick the relevant skill pack(s) from the table above
+3. Add application code under `Cook GPT/`
+4. Document features in `specs/features/` and link from root `index.md`

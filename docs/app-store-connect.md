@@ -71,3 +71,7 @@ Questions or feedback? We’d love to hear from you.
 - **App Store subtitle:** Gourmet Plan & Track
 - **Home screen name:** CookGPT (`CFBundleDisplayName`)
 - Use the full name **CookGPT — Gourmet Plan & Track** (or **CookGPT - Gourmet Plan & Track**) on first and last mention in the description; **CookGPT** alone is fine in the body and on the home screen.
+
+---
+
+[← Docs index](README.md)

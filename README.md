@@ -1,10 +1,27 @@
-# CookGPT
+<img src=".github/icon-cropped.png" width="200" alt="CookGPT app icon" align="left"/>
 
-<p align="center">
-  <img src=".github/icon-cropped.png" alt="CookGPT app icon" width="128">
-</p>
+<div>
+<h3>CookGPT</h3>
+<p><strong>CookGPT - Gourmet Plan & Track</strong> is a native <strong>SwiftUI</strong> iOS app for recipes, meal planning, and grocery lists — with step timers on the Lock Screen and Dynamic Island.</p>
+<a href="https://apps.apple.com/app/id6805535867"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83" width="175" alt="Download on the App Store"/></a>
+</div>
 
-**CookGPT - Gourmet Plan & Track** is a native **SwiftUI** iOS app for recipes, meal planning, and grocery lists — with step timers on the Lock Screen and Dynamic Island.
+<br/><br/>
+
+<div align="center">
+
+[![App Store](https://img.shields.io/badge/App%20Store-Download-0D96F6)](https://apps.apple.com/app/id6805535867)
+[![License](https://img.shields.io/badge/License-MIT-blue)](https://github.com/cook-gpt/cook-gpt/blob/main/LICENSE)
+[![iOS](https://img.shields.io/badge/iOS%20%26%20iPadOS-000000?logo=apple&logoColor=white)](https://github.com/cook-gpt/cook-gpt)
+
+<br/>
+<br/>
+
+<img src=".github/screenshot.png" width="824" alt="CookGPT app screenshot" style="border-radius: 5px;"/><br/>
+
+</div>
+
+<hr>
 
 Built by [xarlizard](https://github.com/xarlizard). Open source under [MIT](LICENSE).
 
@@ -49,6 +66,20 @@ Each Swift source file includes a header comment describing its role. Key types 
 
 All recipes, meals, and grocery data stay **on device** (SwiftData). No account or backend required.
 
+## Documentation
+
+| Doc | Description |
+|-----|-------------|
+| [docs/README.md](docs/README.md) | Documentation index |
+| [docs/development.md](docs/development.md) | Local setup and workflow |
+| [docs/architecture.md](docs/architecture.md) | App structure and data flow |
+| [docs/release-process.md](docs/release-process.md) | App Store versioning and release |
+| [docs/app-store-connect.md](docs/app-store-connect.md) | App Store listing copy |
+| [.cursor/rules.md](.cursor/rules.md) | Cursor AI editing rules |
+| [.agents/skills/README.md](.agents/skills/README.md) | Agent skills catalog |
+| [specs/features/](specs/features/) | Feature specifications |
+| [CHANGELOG.md](CHANGELOG.md) | Release history |
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
@@ -57,4 +88,4 @@ MIT — see [LICENSE](LICENSE).
 
 ## Repository documents
 
-**README** | [INSTRUCTIONS](INSTRUCTIONS.md) | [CHANGELOG](CHANGELOG.md) | [CONTRIBUTING](CONTRIBUTING.md) | [SECURITY](SECURITY.md) | [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md)
+**README** | [Docs](docs/README.md) | [INSTRUCTIONS](INSTRUCTIONS.md) | [CHANGELOG](CHANGELOG.md) | [CONTRIBUTING](CONTRIBUTING.md) | [SECURITY](SECURITY.md) | [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md)

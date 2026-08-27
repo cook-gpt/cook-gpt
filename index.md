@@ -24,8 +24,9 @@ OKF knowledge bundle for the cook-gpt iOS app — recipe guidance, health diets,
 
 ## Skills
 
-* [.agents/skills/index.md](.agents/skills/index.md) — OKF modules + shared concepts
-* [.agents/skills/README.md](.agents/skills/README.md) — Cursor `SKILL.md` catalog
+* [.cursor/rules.md](.cursor/rules.md) — Cursor editing rules
+* [.agents/skills/README.md](.agents/skills/README.md) — Skill packs (Xcode MCP, spec-first, domain guides)
+* [.agents/skills/xcode-tools/SKILL.md](.agents/skills/xcode-tools/SKILL.md) — Build, test, Apple docs via Xcode MCP
 
 ## History
 

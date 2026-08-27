@@ -1,5 +1,5 @@
 name: Bug Report
-description: Report a bug in Template
+description: Report a bug in CookGPT
 title: "[Bug]: "
 labels: ["bug", "triage"]
 body:
@@ -54,10 +54,9 @@ body:
       label: Environment
       description: Please provide your environment details
       placeholder: |
-        - OS: [e.g. Windows 11, macOS 12.3, Ubuntu 20.04]
-        - Node.js version: [e.g. 18.15.0]
-        - Bun version: [e.g. 1.2.15]
-        - App version/commit: [e.g. 0.1.0 or SHA]
+        - OS: [e.g. iOS 26.5, iPadOS 26.5]
+        - Xcode: [e.g. 26.0]
+        - CookGPT version: [e.g. 1.0.0 or commit SHA]
     validations:
       required: true
 
