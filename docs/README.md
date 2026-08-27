@@ -28,6 +28,12 @@ Structured forms under [`.github/ISSUE_TEMPLATE/`](../.github/ISSUE_TEMPLATE/). 
 |----------|-------------|---------|
 | [Pull request template](pull-request-template.md) | [`.github/pull_request_template.md`](../.github/pull_request_template.md) | Default PR body scaffold for contributors and maintainers |
 
+## App Store listing
+
+| Document | Summary |
+|----------|---------|
+| [App Store Connect copy](app-store-connect.md) | Promotional text and full app description for App Store Connect |
+
 ## Related automation (not documented here)
 
 These live outside `docs/` scope:
@@ -43,4 +49,4 @@ See the [repository README](../README.md) and [INSTRUCTIONS.md](../INSTRUCTIONS.
 
 ## Docs index
 
-**README** | [Dependabot commit signer](dependabot-signature-workflow.md) | [Bug report](bug-report-issue-template.md) | [Feature request](feature-request-issue-template.md) | [Documentation issue](documentation-issue-template.md) | [Pull request template](pull-request-template.md)
+**README** | [App Store Connect copy](app-store-connect.md) | [Dependabot commit signer](dependabot-signature-workflow.md) | [Bug report](bug-report-issue-template.md) | [Feature request](feature-request-issue-template.md) | [Documentation issue](documentation-issue-template.md) | [Pull request template](pull-request-template.md)

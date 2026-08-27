@@ -18,4 +18,8 @@ export const APP_NAME_SHORT = 'CookGPT';
 
 export const APP_STORE_URL = 'https://apps.apple.com/app/id6805535867';
 
+/** App Store promotional text (170 char max) */
+export const APP_STORE_PROMOTIONAL_TEXT =
+  'CookGPT — Gourmet Plan & Track. Start with built-in recipes, auto-schedule your week, and build a grocery list from whatever you planned to cook.';
+
 export const SITE_URL = 'https://cook-gpt.pages.dev';
