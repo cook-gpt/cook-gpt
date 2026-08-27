@@ -68,3 +68,45 @@ enum ShoppingListScope: String, CaseIterable, Identifiable {
         }
     }
 }
+
+enum WeekStartSetting: String, CaseIterable, Identifiable, Codable {
+    case monday
+    case tuesday
+    case wednesday
+    case thursday
+    case friday
+    case saturday
+    case sunday
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .monday: "Monday"
+        case .tuesday: "Tuesday"
+        case .wednesday: "Wednesday"
+        case .thursday: "Thursday"
+        case .friday: "Friday"
+        case .saturday: "Saturday"
+        case .sunday: "Sunday"
+        }
+    }
+
+    var firstWeekday: Int {
+        switch self {
+        case .sunday: 1
+        case .monday: 2
+        case .tuesday: 3
+        case .wednesday: 4
+        case .thursday: 5
+        case .friday: 6
+        case .saturday: 7
+        }
+    }
+
+    static func weekdayName(for firstWeekday: Int) -> String {
+        let symbols = Calendar.current.weekdaySymbols
+        guard firstWeekday >= 1, firstWeekday <= symbols.count else { return "—" }
+        return symbols[firstWeekday - 1]
+    }
+}

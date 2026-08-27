@@ -7,6 +7,7 @@ struct DietRootView: View {
 
     @Query(sort: \ScheduledMeal.day) private var scheduledMeals: [ScheduledMeal]
     @Environment(\.modelContext) private var modelContext
+    @Environment(AppSettingsStore.self) private var settings
 
     @State private var viewMode: ScheduleViewMode = .week
     @State private var selectedDate = Date()
@@ -23,6 +24,7 @@ struct DietRootView: View {
         case .day:
             return scheduledMeals.filter { MealScheduleCalendar.isSameDay($0.day, selectedDate) }
         case .week:
+            let _ = settings.weekStart
             let days = Set(MealScheduleCalendar.daysInWeek(containing: selectedDate).map(MealScheduleCalendar.startOfDay))
             return scheduledMeals.filter { days.contains(MealScheduleCalendar.startOfDay($0.day)) }
         case .month:
@@ -284,4 +286,5 @@ private struct ScheduledMealRow: View {
         DietRootView()
     }
     .modelContainer(try! CookGPTModelContainer.make())
+    .environment(AppSettingsStore.shared)
 }

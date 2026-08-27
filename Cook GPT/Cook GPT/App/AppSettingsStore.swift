@@ -40,6 +40,7 @@ final class AppSettingsStore {
         static let defaultPlannerServings = "appSettings.defaultPlannerServings"
         static let includeBreakfastInMealPrep = "appSettings.includeBreakfastInMealPrep"
         static let timerAlarmSound = "appSettings.timerAlarmSound"
+        static let weekStart = "appSettings.weekStart"
         static let customCategories = "appSettings.customCategories"
         static let customUnits = "appSettings.customUnits"
     }
@@ -61,6 +62,14 @@ final class AppSettingsStore {
             UserDefaults.standard.set(timerAlarmSound.rawValue, forKey: Keys.timerAlarmSound)
             TimerAlarmSoundInstaller.ensureInstalled(timerAlarmSound)
         }
+    }
+
+    var weekStart: WeekStartSetting = .monday {
+        didSet { UserDefaults.standard.set(weekStart.rawValue, forKey: Keys.weekStart) }
+    }
+
+    var resolvedFirstWeekday: Int {
+        weekStart.firstWeekday
     }
 
     private(set) var customCategories: [AppCategory] = [] {
@@ -99,6 +108,13 @@ final class AppSettingsStore {
         } else {
             timerAlarmSound = .defaultSound
         }
+        if let rawWeekStart = UserDefaults.standard.string(forKey: Keys.weekStart),
+           rawWeekStart != "system",
+           let storedWeekStart = WeekStartSetting(rawValue: rawWeekStart) {
+            weekStart = storedWeekStart
+        } else {
+            weekStart = .monday
+        }
         TimerAlarmSoundInstaller.ensureInstalled(timerAlarmSound)
         customCategories = Self.sanitizeCustomCategories(Self.loadCustomCategories())
         customUnits = Self.sanitizeCustomUnits(Self.loadCustomUnits())
@@ -109,6 +125,7 @@ final class AppSettingsStore {
         defaultPlannerServings = 1
         includeBreakfastInMealPrep = false
         timerAlarmSound = .defaultSound
+        weekStart = .monday
         customCategories = []
         customUnits = []
     }
@@ -209,6 +226,10 @@ final class AppSettingsStore {
 }
 
 enum AppMetadata {
+    static let advancedProFeaturesStatus = "Coming soon"
+    static let advancedSectionFooter =
+        "CookGPT Advanced unlocks pro features with a subscription or one-time purchase."
+
     static var version: String {
         let short = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "—"
         let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "—"

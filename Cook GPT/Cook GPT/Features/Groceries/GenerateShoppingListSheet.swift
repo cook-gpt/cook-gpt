@@ -1,6 +1,20 @@
 import SwiftUI
 import SwiftData
 
+enum GenerateShoppingListSource: Identifiable {
+    case schedule
+    case recipe
+
+    var id: Self { self }
+
+    var navigationTitle: String {
+        switch self {
+        case .schedule: "From schedule"
+        case .recipe: "From recipe"
+        }
+    }
+}
+
 struct GenerateShoppingListSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
@@ -9,13 +23,15 @@ struct GenerateShoppingListSheet: View {
     @Query(sort: \ScheduledMeal.day) private var scheduledMeals: [ScheduledMeal]
 
     let list: GroceryList
+    let source: GenerateShoppingListSource
     var onGenerated: () -> Void
 
+    @State private var deletePreviousList = false
     @State private var scope: ShoppingListScope = .week
     @State private var customStart = Date()
     @State private var customEnd = Date()
-    @State private var useScheduledMeals = true
-    @State private var selectedRecipeIDs: Set<UUID> = []
+    @State private var selectedRecipeID: UUID?
+    @State private var servings = 2
 
     private var range: (start: Date, end: Date) {
         MealScheduleCalendar.dateRange(
@@ -34,18 +50,22 @@ struct GenerateShoppingListSheet: View {
         }
     }
 
+    private var selectedRecipe: Recipe? {
+        guard let selectedRecipeID else { return nil }
+        return recipes.first { $0.id == selectedRecipeID }
+    }
+
     var body: some View {
         NavigationStack {
             Form {
-                Section("Source") {
-                    Picker("Generate from", selection: $useScheduledMeals) {
-                        Text("Scheduled meals").tag(true)
-                        Text("Selected recipes").tag(false)
-                    }
-                    .pickerStyle(.segmented)
+                Section {
+                    Toggle("Delete previous list", isOn: $deletePreviousList)
+                } footer: {
+                    Text("When off, imported ingredients are added to your existing list.")
                 }
 
-                if useScheduledMeals {
+                switch source {
+                case .schedule:
                     Section("Schedule range") {
                         Picker("Range", selection: $scope) {
                             ForEach(ShoppingListScope.allCases) { option in
@@ -62,87 +82,114 @@ struct GenerateShoppingListSheet: View {
                             .font(.caption)
                             .foregroundStyle(.secondary)
                     }
-                } else {
-                    Section("Recipes") {
+                case .recipe:
+                    Section {
                         if recipes.isEmpty {
                             Text("No recipes available.")
                                 .foregroundStyle(.secondary)
                         } else {
-                            ForEach(recipes) { recipe in
-                                Toggle(isOn: binding(for: recipe.id)) {
-                                    Text(recipe.title)
+                            Picker("Recipe", selection: $selectedRecipeID) {
+                                ForEach(recipes) { recipe in
+                                    Text(recipe.title).tag(Optional(recipe.id))
                                 }
                             }
+
+                            if selectedRecipe != nil {
+                                Stepper("Servings: \(servings)", value: $servings, in: 1...24)
+                            }
+                        }
+                    } footer: {
+                        if let selectedRecipe {
+                            Text("Recipe serves \(selectedRecipe.servings). Ingredient amounts scale to your selection.")
                         }
                     }
                 }
             }
-            .navigationTitle("Generate list")
+            .navigationTitle(source.navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button("Cancel") { dismiss() }
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Generate") { generate() }
-                        .disabled(!canGenerate)
+                    Button("Add") { addToList() }
+                        .disabled(!canAdd)
                 }
+            }
+            .onAppear {
+                guard source == .recipe else { return }
+                initializeRecipeSelection()
+            }
+            .onChange(of: selectedRecipeID) {
+                syncServingsToSelectedRecipe()
             }
         }
     }
 
-    private var canGenerate: Bool {
-        if useScheduledMeals {
+    private var canAdd: Bool {
+        switch source {
+        case .schedule:
             return !mealsInRange.isEmpty
+        case .recipe:
+            return selectedRecipe != nil
         }
-        return !selectedRecipeIDs.isEmpty
     }
 
-    private func binding(for recipeID: UUID) -> Binding<Bool> {
-        Binding(
-            get: { selectedRecipeIDs.contains(recipeID) },
-            set: { isOn in
-                if isOn {
-                    selectedRecipeIDs.insert(recipeID)
-                } else {
-                    selectedRecipeIDs.remove(recipeID)
-                }
-            }
-        )
+    private func initializeRecipeSelection() {
+        guard selectedRecipeID == nil, let firstRecipe = recipes.first else { return }
+        selectedRecipeID = firstRecipe.id
+        servings = firstRecipe.servings
     }
 
-    private func generate() {
+    private func syncServingsToSelectedRecipe() {
+        guard let selectedRecipe else { return }
+        servings = selectedRecipe.servings
+    }
+
+    private func addToList() {
         let recipeEntries: [(recipe: Recipe, servings: Int)]
         let sourceDescription: String
 
-        if useScheduledMeals {
+        switch source {
+        case .schedule:
             recipeEntries = ShoppingListGenerator.recipes(from: mealsInRange)
             let (start, end) = range
             sourceDescription = ShoppingListGenerator.sourceLabel(for: scope, start: start, end: end)
-        } else {
-            recipeEntries = recipes
-                .filter { selectedRecipeIDs.contains($0.id) }
-                .map { ($0, $0.servings) }
-            sourceDescription = ShoppingListGenerator.recipesLabel(count: recipeEntries.count)
+        case .recipe:
+            guard let selectedRecipe else { return }
+            recipeEntries = [(recipe: selectedRecipe, servings: servings)]
+            sourceDescription = ShoppingListGenerator.recipesLabel(count: 1)
         }
 
-        let aggregated = ShoppingListGenerator.aggregate(recipes: recipeEntries)
+        let imported = ShoppingListGenerator.aggregate(recipes: recipeEntries)
+        let finalItems: [AggregatedGroceryItem]
+
+        if deletePreviousList {
+            finalItems = imported
+        } else {
+            finalItems = ShoppingListGenerator.merge(aggregated: imported, with: list.items)
+        }
 
         list.items.forEach { modelContext.delete($0) }
         list.items = []
 
-        for item in aggregated {
+        for item in finalItems {
             let groceryItem = GroceryItem(
                 name: item.name,
                 quantity: item.quantity,
                 unit: item.unit,
+                isChecked: item.isChecked,
                 list: list
             )
             modelContext.insert(groceryItem)
             list.items.append(groceryItem)
         }
 
-        list.sourceDescription = sourceDescription
+        if deletePreviousList || list.sourceDescription.isEmpty {
+            list.sourceDescription = sourceDescription
+        } else {
+            list.sourceDescription = "\(list.sourceDescription) + \(sourceDescription)"
+        }
         list.generatedAt = .now
         try? modelContext.save()
         onGenerated()

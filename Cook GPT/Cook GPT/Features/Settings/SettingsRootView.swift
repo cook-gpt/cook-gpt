@@ -51,6 +51,15 @@ struct SettingsRootView: View {
                 Text("Used when planning meals and as the default for new scheduled meals.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+
+                Picker("Week starts on", selection: $settings.weekStart) {
+                    ForEach(WeekStartSetting.allCases) { option in
+                        Text(option.label).tag(option)
+                    }
+                }
+                Text("Used when navigating weeks on the Meals page.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
 
             Section {
@@ -125,6 +134,14 @@ struct SettingsRootView: View {
                 Text("Custom units")
             } footer: {
                 Text("Default units cannot be removed. These options are used when editing ingredients.")
+            }
+
+            Section {
+                LabeledContent("Pro features", value: AppMetadata.advancedProFeaturesStatus)
+            } header: {
+                Text("Advanced")
+            } footer: {
+                Text(AppMetadata.advancedSectionFooter)
             }
 
             Section("About") {

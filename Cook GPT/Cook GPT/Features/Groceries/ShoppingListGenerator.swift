@@ -5,6 +5,15 @@ struct AggregatedGroceryItem: Identifiable, Hashable {
     let name: String
     let unit: String
     let quantity: Double
+    let isChecked: Bool
+
+    init(id: String, name: String, unit: String, quantity: Double, isChecked: Bool = false) {
+        self.id = id
+        self.name = name
+        self.unit = unit
+        self.quantity = quantity
+        self.isChecked = isChecked
+    }
 
     var key: String {
         "\(name.lowercased())|\(unit.lowercased())"
@@ -12,8 +21,15 @@ struct AggregatedGroceryItem: Identifiable, Hashable {
 }
 
 enum ShoppingListGenerator {
+    private struct ItemTotal {
+        var name: String
+        var unit: String
+        var quantity: Double
+        var isChecked: Bool
+    }
+
     static func aggregate(recipes: [(recipe: Recipe, servings: Int)]) -> [AggregatedGroceryItem] {
-        var totals: [String: (name: String, unit: String, quantity: Double)] = [:]
+        var totals: [String: ItemTotal] = [:]
 
         for entry in recipes {
             guard entry.servings > 0, entry.recipe.servings > 0 else { continue }
@@ -28,13 +44,65 @@ enum ShoppingListGenerator {
                     existing.quantity += scaled
                     totals[key] = existing
                 } else {
-                    totals[key] = (name: name, unit: unit, quantity: scaled)
+                    totals[key] = ItemTotal(name: name, unit: unit, quantity: scaled, isChecked: false)
                 }
             }
         }
 
         return totals.values
-            .map { AggregatedGroceryItem(id: "\($0.name)|\($0.unit)", name: $0.name, unit: $0.unit, quantity: $0.quantity) }
+            .map {
+                AggregatedGroceryItem(
+                    id: "\($0.name)|\($0.unit)",
+                    name: $0.name,
+                    unit: $0.unit,
+                    quantity: $0.quantity,
+                    isChecked: $0.isChecked
+                )
+            }
+            .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+    }
+
+    static func merge(
+        aggregated newItems: [AggregatedGroceryItem],
+        with existingItems: [GroceryItem]
+    ) -> [AggregatedGroceryItem] {
+        var totals: [String: ItemTotal] = [:]
+
+        for item in existingItems {
+            let unit = item.unit.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "g" : item.unit
+            let key = "\(item.name.lowercased())|\(unit.lowercased())"
+            totals[key] = ItemTotal(
+                name: item.name,
+                unit: unit,
+                quantity: item.quantity,
+                isChecked: item.isChecked
+            )
+        }
+
+        for item in newItems {
+            if var existing = totals[item.key] {
+                existing.quantity += item.quantity
+                totals[item.key] = existing
+            } else {
+                totals[item.key] = ItemTotal(
+                    name: item.name,
+                    unit: item.unit,
+                    quantity: item.quantity,
+                    isChecked: false
+                )
+            }
+        }
+
+        return totals.values
+            .map {
+                AggregatedGroceryItem(
+                    id: "\($0.name)|\($0.unit)",
+                    name: $0.name,
+                    unit: $0.unit,
+                    quantity: $0.quantity,
+                    isChecked: $0.isChecked
+                )
+            }
             .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
     }
 

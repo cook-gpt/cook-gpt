@@ -5,7 +5,7 @@ struct GroceriesRootView: View {
     @Query(sort: \GroceryList.name) private var groceryLists: [GroceryList]
     @Environment(\.modelContext) private var modelContext
 
-    @State private var isGeneratingList = false
+    @State private var generateSource: GenerateShoppingListSource?
     @State private var isAddingItem = false
 
     private var primaryList: GroceryList? {
@@ -59,8 +59,15 @@ struct GroceriesRootView: View {
         .navigationTitle("Groceries")
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                Button("Generate") {
-                    isGeneratingList = true
+                Menu {
+                    Button("From schedule") {
+                        generateSource = .schedule
+                    }
+                    Button("From recipe") {
+                        generateSource = .recipe
+                    }
+                } label: {
+                    Image(systemName: "square.and.arrow.down")
                 }
                 .disabled(primaryList == nil)
             }
@@ -73,9 +80,9 @@ struct GroceriesRootView: View {
                 .disabled(primaryList == nil)
             }
         }
-        .sheet(isPresented: $isGeneratingList) {
+        .sheet(item: $generateSource) { source in
             if let list = primaryList {
-                GenerateShoppingListSheet(list: list) {}
+                GenerateShoppingListSheet(list: list, source: source) {}
             }
         }
         .sheet(isPresented: $isAddingItem) {

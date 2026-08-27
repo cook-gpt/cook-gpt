@@ -1,7 +1,11 @@
 import Foundation
 
 enum MealScheduleCalendar {
-    static let calendar = Calendar.current
+    static var calendar: Calendar {
+        var calendar = Calendar.current
+        calendar.firstWeekday = AppSettingsStore.shared.resolvedFirstWeekday
+        return calendar
+    }
 
     static func startOfDay(_ date: Date) -> Date {
         calendar.startOfDay(for: date)
