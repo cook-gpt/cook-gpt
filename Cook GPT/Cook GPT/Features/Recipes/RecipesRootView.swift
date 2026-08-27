@@ -25,6 +25,7 @@ struct RecipesRootView: View {
     @Query(sort: \Recipe.title) private var recipes: [Recipe]
     @Environment(\.modelContext) private var modelContext
     @Environment(CookingSessionManager.self) private var cookingSession
+    @Environment(AppSettingsStore.self) private var settings
 
     @State private var isAddingRecipe = false
     @State private var recipeToEdit: Recipe?
@@ -62,7 +63,10 @@ struct RecipesRootView: View {
 
     var body: some View {
         Group {
-            if recipes.isEmpty {
+            if settings.isResettingData {
+                ProgressView("Resetting app data…")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if recipes.isEmpty {
                 EmptyStateView(
                     systemImage: "book.closed",
                     title: "No recipes yet",

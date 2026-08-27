@@ -14,18 +14,27 @@ enum AppDataReset {
         settings: AppSettingsStore,
         cookingSession: CookingSessionManager
     ) async {
-        deleteAllData(context: context)
-        settings.resetToDefaults()
         cookingSession.reset()
         await CookingTimerLiveActivityManager.endAll()
+
+        settings.beginDataReset()
+        await Task.yield()
+
+        deleteAllData(context: context)
+        settings.resetToDefaults()
+        SampleDataSeeder.resetInstallFlags()
         SampleDataSeeder.seedFreshInstall(context: context)
         try? context.save()
+
+        settings.endDataReset()
     }
 
     private static func deleteAllData(context: ModelContext) {
         deleteAll(ScheduledMeal.self, context: context)
         deleteAll(GroceryItem.self, context: context)
         deleteAll(GroceryList.self, context: context)
+        deleteAll(RecipeStep.self, context: context)
+        deleteAll(RecipeIngredient.self, context: context)
         deleteAll(Recipe.self, context: context)
         deleteAll(Ingredient.self, context: context)
         deleteAll(DietProfile.self, context: context)

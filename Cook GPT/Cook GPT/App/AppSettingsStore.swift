@@ -87,6 +87,12 @@ final class AppSettingsStore {
         didSet { persistCustomUnits() }
     }
 
+    /// When true, data tabs avoid reading SwiftData models (used during factory reset).
+    private(set) var isResettingData = false
+
+    /// Bumped to remount root UI after a factory reset so `@Query` views drop stale models.
+    private(set) var contentResetID = UUID()
+
     var allCategories: [AppCategory] {
         Self.defaultCategories + customCategories
     }
@@ -136,6 +142,16 @@ final class AppSettingsStore {
         weekStart = .monday
         customCategories = []
         customUnits = []
+    }
+
+    func beginDataReset() {
+        isResettingData = true
+        contentResetID = UUID()
+    }
+
+    func endDataReset() {
+        isResettingData = false
+        contentResetID = UUID()
     }
 
     func label(forCategoryID id: String) -> String {

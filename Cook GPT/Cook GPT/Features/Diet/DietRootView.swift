@@ -46,7 +46,10 @@ struct DietRootView: View {
 
     var body: some View {
         Group {
-            if activeProfile == nil {
+            if settings.isResettingData {
+                ProgressView("Resetting app data…")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if activeProfile == nil {
                 EmptyStateView(
                     systemImage: "calendar",
                     title: "No diet profile",
@@ -103,6 +106,13 @@ struct DietRootView: View {
         .sheet(isPresented: $isPlanningMeals) {
             if let profile = activeProfile {
                 PlanMealsSheet(profile: profile)
+            }
+        }
+        .onChange(of: settings.isResettingData) { _, isResetting in
+            if isResetting {
+                isSchedulingMeal = false
+                isPlanningMeals = false
+                mealToEdit = nil
             }
         }
     }

@@ -37,6 +37,7 @@ struct ContentView: View {
             }
         }
         .preferredColorScheme(settings.appTheme.colorScheme)
+        .id(settings.contentResetID)
     }
 }
 

@@ -10,6 +10,7 @@ import SwiftData
 struct GroceriesRootView: View {
     @Query(sort: \GroceryList.name) private var groceryLists: [GroceryList]
     @Environment(\.modelContext) private var modelContext
+    @Environment(AppSettingsStore.self) private var settings
 
     @State private var generateSource: GenerateShoppingListSource?
     @State private var isAddingItem = false
@@ -20,7 +21,10 @@ struct GroceriesRootView: View {
 
     var body: some View {
         Group {
-            if let list = primaryList {
+            if settings.isResettingData {
+                ProgressView("Resetting app data…")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else if let list = primaryList {
                 let items = sortedItems(for: list)
                 let remaining = items.filter { !$0.isChecked }.count
                 let total = items.count

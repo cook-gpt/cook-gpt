@@ -25,6 +25,11 @@ enum SampleDataSeeder {
         upgradeRecipeStructureIfNeeded(context: context)
     }
 
+    static func resetInstallFlags() {
+        UserDefaults.standard.removeObject(forKey: seedFlagKey)
+        UserDefaults.standard.removeObject(forKey: recipeStructureVersionKey)
+    }
+
     static func seedFreshInstall(context: ModelContext) {
         var pool = IngredientPool(context: context)
 
