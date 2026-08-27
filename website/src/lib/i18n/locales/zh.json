@@ -14,10 +14,10 @@
     "hint": "iPhone 和 iPad 免费"
   },
   "home": {
-    "badge": "iOS 应用",
-    "title": "你最喜欢的餐食规划助手",
-    "subtitle": "CookGPT 集食谱、每周餐食规划和购物清单于一体 — 烹饪时锁屏显示步骤计时器。",
-    "heroAlt": "CookGPT 应用在 iPhone 上显示食谱界面",
+    "badge": "CookGPT",
+    "title": "美食计划与追踪",
+    "subtitle": "$t(app.name) 集食谱、每周餐食规划和购物清单于一体 — 烹饪时锁屏显示步骤计时器。",
+    "heroAlt": "$t(app.name) 应用在 iPhone 上显示食谱界面",
     "featuresTitle": "厨房所需一应俱全",
     "features": {
       "recipes": {
@@ -47,15 +47,15 @@
     },
     "featuresEyebrow": "为家庭烹饪而设计",
     "ctaTitle": "开始规划下一餐",
-    "ctaSubtitle": "在 App Store 免费下载 CookGPT，适用于 iPhone 和 iPad。"
+    "ctaSubtitle": "在 App Store 免费下载 $t(app.name)，适用于 iPhone 和 iPad。"
   },
   "docs": {
     "eyebrow": "指南",
     "title": "文档",
-    "subtitle": "在 iPhone 或 iPad 上开始使用 CookGPT。",
+    "subtitle": "在 iPhone 或 iPad 上开始使用 $t(app.name)。",
     "installTitle": "安装",
     "installSteps": [
-      "从 App Store 下载 CookGPT。",
+      "从 App Store 下载 $t(app.name)。",
       "打开应用 — 包含示例食谱和餐食日程。",
       "通过标签栏浏览食谱、餐食、购物和设置。"
     ],
@@ -74,7 +74,7 @@
       "settings": "设置 — 主题、分类、单位、早餐选项和数据重置"
     },
     "repoDocsTitle": "代码仓库",
-    "repoDocsDescription": "CookGPT 是开源项目，开发设置和贡献指南见 GitHub。",
+    "repoDocsDescription": "$t(app.name) 是开源项目，开发设置和贡献指南见 GitHub。",
     "links": {
       "readme": "README",
       "contributing": "贡献指南",
@@ -102,12 +102,12 @@
     "eyebrow": "法律",
     "title": "隐私政策",
     "updated": "最后更新：2026 年 8 月",
-    "intro": "CookGPT 将数据保存在您的设备上。我们不会通过服务器收集您的食谱、膳食计划或购物清单。",
+    "intro": "$t(app.name) 将数据保存在您的设备上。我们不会通过服务器收集您的食谱、膳食计划或购物清单。",
     "contact": "有问题？请在 GitHub 联系作者：",
     "sections": [
       {
         "title": "摘要",
-        "body": "无需账户。不出售数据。应用和网站均不使用分析、广告、崩溃报告 SDK 或第三方追踪。"
+        "body": "$t(app.name) 无需账户。我们不出售您的数据。应用和网站均不使用分析、广告网络、崩溃报告 SDK 或第三方追踪器。"
       },
       {
         "title": "设备上的数据",
@@ -123,12 +123,17 @@
       },
       {
         "title": "开源",
-        "body": "CookGPT 是开源项目。可在 GitHub 查看应用代码以了解数据处理方式。"
+        "body": "$t(app.name) 是开源项目。可在 GitHub 查看应用代码以了解数据处理方式。"
       },
       {
         "title": "变更",
         "body": "如本政策变更，将更新此页面。继续使用即表示接受更新后的政策。"
       }
     ]
+  },
+  "app": {
+    "name": "CookGPT - 美食计划与追踪",
+    "nameShort": "CookGPT",
+    "tagline": "美食计划与追踪"
   }
 }

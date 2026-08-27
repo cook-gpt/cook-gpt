@@ -1,7 +1,7 @@
 {
   "name": "cook-gpt-website",
   "version": "1.0.0",
-  "description": "Landing page for CookGPT — recipes, meal planning, and groceries for iOS.",
+  "description": "Landing page for CookGPT - Gourmet Plan & Track on iOS.",
   "type": "module",
   "scripts": {
     "dev": "vite",

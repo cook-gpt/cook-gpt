@@ -15,6 +15,7 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { cn } from '@/utils/cn';
+import { APP_NAME_SHORT } from '@/utils/releases';
 
 const LANGUAGES = [
   { value: 'en', label: 'EN' },
@@ -66,7 +67,7 @@ export function AppHeader({
           to="/"
           className="text-sm font-semibold tracking-tight text-foreground transition-opacity hover:opacity-70"
         >
-          CookGPT
+          {APP_NAME_SHORT}
         </Link>
 
         <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-6 md:flex">

@@ -10,7 +10,12 @@ export const REPO_URL = `https://github.com/${GITHUB_REPO}`;
 
 export const GITHUB_PROFILE_URL = `https://github.com/${GITHUB_OWNER}`;
 
-export const APP_STORE_URL =
-  'https://apps.apple.com/us/app/cookgpt-recipes-meals/id6805535867';
+/** App Store listing name */
+export const APP_NAME = 'CookGPT - Gourmet Plan & Track';
+
+/** Short brand name for compact UI */
+export const APP_NAME_SHORT = 'CookGPT';
+
+export const APP_STORE_URL = 'https://apps.apple.com/app/id6805535867';
 
 export const SITE_URL = 'https://cook-gpt.pages.dev';

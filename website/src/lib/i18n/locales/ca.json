@@ -14,10 +14,10 @@
     "hint": "Gratuït per a iPhone i iPad"
   },
   "home": {
-    "badge": "App per a iOS",
-    "title": "El teu planificador de menjars favorit",
-    "subtitle": "CookGPT reuneix receptes, planificació setmanal i llistes de la compra — amb temporitzadors a la pantalla de bloqueig mentre cuines.",
-    "heroAlt": "App CookGPT mostrant la pantalla de receptes a l'iPhone",
+    "badge": "CookGPT",
+    "title": "Pla gourmet i seguiment",
+    "subtitle": "$t(app.name) reuneix receptes, planificació setmanal i llistes de la compra — amb temporitzadors a la pantalla de bloqueig mentre cuines.",
+    "heroAlt": "App $t(app.name) mostrant la pantalla de receptes a l'iPhone",
     "featuresTitle": "Tot el que necessites a la cuina",
     "features": {
       "recipes": {
@@ -47,15 +47,15 @@
     },
     "featuresEyebrow": "Dissenyat per cuinar a casa",
     "ctaTitle": "Comença a planificar el proper àpat",
-    "ctaSubtitle": "Descarrega CookGPT gratis a l'App Store per a iPhone i iPad."
+    "ctaSubtitle": "Descarrega $t(app.name) gratis a l'App Store per a iPhone i iPad."
   },
   "docs": {
     "eyebrow": "Guia",
     "title": "Documentació",
-    "subtitle": "Comença amb CookGPT a iPhone o iPad.",
+    "subtitle": "Comença amb $t(app.name) a iPhone o iPad.",
     "installTitle": "Instal·lar",
     "installSteps": [
-      "Descarrega CookGPT des de l'App Store.",
+      "Descarrega $t(app.name) des de l'App Store.",
       "Obre l'app — inclou receptes d'exemple i un calendari de menjars.",
       "Explora Receptes, Menjars, Compra i Configuració des de la barra de pestanyes."
     ],
@@ -74,7 +74,7 @@
       "settings": "Configuració — tema, categories, unitats, esmorzar i restablir dades"
     },
     "repoDocsTitle": "Repositori",
-    "repoDocsDescription": "CookGPT és de codi obert. La configuració de desenvolupament i les guies de contribució són a GitHub.",
+    "repoDocsDescription": "$t(app.name) és de codi obert. La configuració de desenvolupament i les guies de contribució són a GitHub.",
     "links": {
       "readme": "README",
       "contributing": "Contribuir",
@@ -102,12 +102,12 @@
     "eyebrow": "Legal",
     "title": "Política de privacitat",
     "updated": "Darrera actualització: agost de 2026",
-    "intro": "CookGPT guarda les dades al dispositiu. No recollim receptes, plans ni llistes de la compra en servidors.",
+    "intro": "$t(app.name) guarda les dades al dispositiu. No recollim receptes, plans ni llistes de la compra en servidors.",
     "contact": "Preguntes? Contacta l'autor a GitHub:",
     "sections": [
       {
         "title": "Resum",
-        "body": "No cal compte. No venem dades. Sense analítiques, publicitat ni rastrejadors."
+        "body": "$t(app.name) no requereix compte. No venem les teves dades. Sense analítiques, publicitat, SDKs de fallades ni rastrejadors de tercers a l'app o en aquest lloc."
       },
       {
         "title": "Dades al dispositiu",
@@ -123,12 +123,17 @@
       },
       {
         "title": "Codi obert",
-        "body": "CookGPT és de codi obert. Revisa el codi a GitHub."
+        "body": "$t(app.name) és de codi obert. Revisa el codi a GitHub."
       },
       {
         "title": "Canvis",
         "body": "Si canvia la política, actualitzarem aquesta pàgina."
       }
     ]
+  },
+  "app": {
+    "name": "CookGPT - Pla gourmet i seguiment",
+    "nameShort": "CookGPT",
+    "tagline": "Pla gourmet i seguiment"
   }
 }

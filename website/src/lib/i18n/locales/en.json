@@ -13,11 +13,16 @@
     "label": "Download on the App Store",
     "hint": "Free for iPhone and iPad"
   },
+  "app": {
+    "name": "CookGPT - Gourmet Plan & Track",
+    "nameShort": "CookGPT",
+    "tagline": "Gourmet Plan & Track"
+  },
   "home": {
-    "badge": "iOS app",
-    "title": "Your favourite meals scheduler",
-    "subtitle": "CookGPT brings recipes, weekly meal planning, and smart grocery lists together — with step timers on your Lock Screen while you cook.",
-    "heroAlt": "CookGPT app showing the recipes screen on iPhone",
+    "badge": "CookGPT",
+    "title": "Gourmet Plan & Track",
+    "subtitle": "$t(app.name) brings recipes, weekly meal planning, and smart grocery lists together — with step timers on your Lock Screen while you cook.",
+    "heroAlt": "$t(app.name) app showing the recipes screen on iPhone",
     "featuresEyebrow": "Designed for home cooks",
     "featuresTitle": "Everything you need in the kitchen",
     "features": {
@@ -47,7 +52,7 @@
       }
     },
     "ctaTitle": "Start planning your next meal",
-    "ctaSubtitle": "Download CookGPT free on the App Store for iPhone and iPad."
+    "ctaSubtitle": "Download $t(app.name) free on the App Store for iPhone and iPad."
   },
   "footer": {
     "tagline": "Recipes, meal planning, and groceries — designed for iOS.",
@@ -68,12 +73,12 @@
     "eyebrow": "Legal",
     "title": "Privacy Policy",
     "updated": "Last updated: August 2026",
-    "intro": "CookGPT is built to keep your data on your device. We do not operate servers that collect your recipes, meal plans, or grocery lists.",
+    "intro": "$t(app.name) is built to keep your data on your device. We do not operate servers that collect your recipes, meal plans, or grocery lists.",
     "contact": "Questions? Reach the author on GitHub:",
     "sections": [
       {
         "title": "Summary",
-        "body": "CookGPT does not require an account. We do not sell your data. We do not use analytics, advertising networks, crash reporting SDKs, or third-party trackers in the app or on this website."
+        "body": "$t(app.name) does not require an account. We do not sell your data. We do not use analytics, advertising networks, crash reporting SDKs, or third-party trackers in the app or on this website."
       },
       {
         "title": "Data stored on your device",
@@ -89,7 +94,7 @@
       },
       {
         "title": "Open source",
-        "body": "CookGPT is open source. You can review the application code on GitHub to verify how data is handled."
+        "body": "$t(app.name) is open source. You can review the application code on GitHub to verify how data is handled."
       },
       {
         "title": "Changes",
@@ -100,10 +105,10 @@
   "docs": {
     "eyebrow": "Guide",
     "title": "Documentation",
-    "subtitle": "Get started with CookGPT on iPhone or iPad.",
+    "subtitle": "Get started with $t(app.name) on iPhone or iPad.",
     "installTitle": "Install",
     "installSteps": [
-      "Download CookGPT from the App Store.",
+      "Download $t(app.name) from the App Store.",
       "Open the app — sample recipes and a meal schedule are included.",
       "Explore Recipes, Meals, Groceries, and Settings from the tab bar."
     ],
@@ -122,7 +127,7 @@
       "settings": "Settings — theme, categories, units, breakfast planning, and data reset"
     },
     "repoDocsTitle": "Repository",
-    "repoDocsDescription": "CookGPT is open source. Development setup and contribution guides live on GitHub.",
+    "repoDocsDescription": "$t(app.name) is open source. Development setup and contribution guides live on GitHub.",
     "links": {
       "readme": "README",
       "contributing": "Contributing",

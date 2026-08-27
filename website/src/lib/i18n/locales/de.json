@@ -14,10 +14,10 @@
     "hint": "Kostenlos für iPhone und iPad"
   },
   "home": {
-    "badge": "iOS-App",
-    "title": "Dein Lieblings-Essensplaner",
-    "subtitle": "CookGPT vereint Rezepte, Wochenplanung und Einkaufslisten — mit Schritt-Timern auf dem Sperrbildschirm beim Kochen.",
-    "heroAlt": "CookGPT-App mit dem Rezepte-Bildschirm auf dem iPhone",
+    "badge": "CookGPT",
+    "title": "Gourmet-Plan & Tracking",
+    "subtitle": "$t(app.name) vereint Rezepte, Wochenplanung und Einkaufslisten — mit Schritt-Timern auf dem Sperrbildschirm beim Kochen.",
+    "heroAlt": "$t(app.name)-App mit dem Rezepte-Bildschirm auf dem iPhone",
     "featuresTitle": "Alles für die Küche",
     "features": {
       "recipes": {
@@ -47,15 +47,15 @@
     },
     "featuresEyebrow": "Für Hobbyköche gemacht",
     "ctaTitle": "Planen Sie Ihre nächste Mahlzeit",
-    "ctaSubtitle": "Laden Sie CookGPT kostenlos im App Store für iPhone und iPad herunter."
+    "ctaSubtitle": "Laden Sie $t(app.name) kostenlos im App Store für iPhone und iPad herunter."
   },
   "docs": {
     "eyebrow": "Leitfaden",
     "title": "Dokumentation",
-    "subtitle": "Starte mit CookGPT auf iPhone oder iPad.",
+    "subtitle": "Starte mit $t(app.name) auf iPhone oder iPad.",
     "installTitle": "Installation",
     "installSteps": [
-      "Lade CookGPT aus dem App Store herunter.",
+      "Lade $t(app.name) aus dem App Store herunter.",
       "Öffne die App — Beispielrezepte und ein Essensplan sind enthalten.",
       "Erkunde Rezepte, Mahlzeiten, Einkauf und Einstellungen in der Tab-Leiste."
     ],
@@ -74,7 +74,7 @@
       "settings": "Einstellungen — Design, Kategorien, Einheiten, Frühstück und Daten zurücksetzen"
     },
     "repoDocsTitle": "Repository",
-    "repoDocsDescription": "CookGPT ist Open Source. Entwicklungssetup und Beitragsrichtlinien findest du auf GitHub.",
+    "repoDocsDescription": "$t(app.name) ist Open Source. Entwicklungssetup und Beitragsrichtlinien findest du auf GitHub.",
     "links": {
       "readme": "README",
       "contributing": "Mitwirken",
@@ -102,12 +102,12 @@
     "eyebrow": "Rechtliches",
     "title": "Datenschutzerklärung",
     "updated": "Zuletzt aktualisiert: August 2026",
-    "intro": "CookGPT speichert Ihre Daten auf dem Gerät. Wir betreiben keine Server, die Rezepte, Essenspläne oder Einkaufslisten sammeln.",
+    "intro": "$t(app.name) speichert Ihre Daten auf dem Gerät. Wir betreiben keine Server, die Rezepte, Essenspläne oder Einkaufslisten sammeln.",
     "contact": "Fragen? Kontaktieren Sie den Autor auf GitHub:",
     "sections": [
       {
         "title": "Zusammenfassung",
-        "body": "CookGPT benötigt kein Konto. Wir verkaufen keine Daten. Keine Analytik, Werbung, Crash-SDKs oder Tracker in App oder Website."
+        "body": "$t(app.name) benötigt kein Konto. Wir verkaufen keine Daten. Keine Analytik, Werbung, Crash-SDKs oder Tracker in App oder Website."
       },
       {
         "title": "Daten auf Ihrem Gerät",
@@ -123,12 +123,17 @@
       },
       {
         "title": "Open Source",
-        "body": "CookGPT ist Open Source. Code auf GitHub einsehbar."
+        "body": "$t(app.name) ist Open Source. Code auf GitHub einsehbar."
       },
       {
         "title": "Änderungen",
         "body": "Bei Änderungen wird diese Seite aktualisiert. Weitere Nutzung gilt als Zustimmung."
       }
     ]
+  },
+  "app": {
+    "name": "CookGPT - Gourmet-Plan & Tracking",
+    "nameShort": "CookGPT",
+    "tagline": "Gourmet-Plan & Tracking"
   }
 }

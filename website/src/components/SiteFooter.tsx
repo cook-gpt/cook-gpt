@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import {
+  APP_NAME,
   APP_STORE_URL,
   GITHUB_ORG_URL,
   GITHUB_OWNER,
@@ -57,7 +58,7 @@ export function SiteFooter() {
       <div className="landing-container py-12 md:py-14">
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
           <div className="space-y-3 sm:col-span-2 lg:col-span-1">
-            <p className="text-sm font-semibold tracking-tight text-foreground">CookGPT</p>
+            <p className="text-sm font-semibold tracking-tight text-foreground">{APP_NAME}</p>
             <p className="max-w-xs text-[11px] leading-relaxed text-muted-foreground">
               {t('footer.tagline')}
             </p>

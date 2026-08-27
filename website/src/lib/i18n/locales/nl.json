@@ -14,10 +14,10 @@
     "hint": "Gratis voor iPhone en iPad"
   },
   "home": {
-    "badge": "iOS-app",
-    "title": "Je favoriete maaltijdplanner",
-    "subtitle": "CookGPT combineert recepten, weekplanning en boodschappenlijsten — met stap-timers op je vergrendelscherm tijdens het koken.",
-    "heroAlt": "CookGPT-app met het receptenscherm op iPhone",
+    "badge": "CookGPT",
+    "title": "Gourmetplan & bijhouden",
+    "subtitle": "$t(app.name) combineert recepten, weekplanning en boodschappenlijsten — met stap-timers op je vergrendelscherm tijdens het koken.",
+    "heroAlt": "$t(app.name)-app met het receptenscherm op iPhone",
     "featuresTitle": "Alles wat je nodig hebt in de keuken",
     "features": {
       "recipes": {
@@ -47,15 +47,15 @@
     },
     "featuresEyebrow": "Gemaakt voor thuiskoks",
     "ctaTitle": "Begin met het plannen van je volgende maaltijd",
-    "ctaSubtitle": "Download CookGPT gratis in de App Store voor iPhone en iPad."
+    "ctaSubtitle": "Download $t(app.name) gratis in de App Store voor iPhone en iPad."
   },
   "docs": {
     "eyebrow": "Gids",
     "title": "Documentatie",
-    "subtitle": "Aan de slag met CookGPT op iPhone of iPad.",
+    "subtitle": "Aan de slag met $t(app.name) op iPhone of iPad.",
     "installTitle": "Installeren",
     "installSteps": [
-      "Download CookGPT uit de App Store.",
+      "Download $t(app.name) uit de App Store.",
       "Open de app — voorbeeldrecepten en een maaltijdschema zijn inbegrepen.",
       "Verken Recepten, Maaltijden, Boodschappen en Instellingen via de tabbalk."
     ],
@@ -74,7 +74,7 @@
       "settings": "Instellingen — thema, categorieën, eenheden, ontbijt en data resetten"
     },
     "repoDocsTitle": "Repository",
-    "repoDocsDescription": "CookGPT is open source. Ontwikkelsetup en bijdragerichtlijnen staan op GitHub.",
+    "repoDocsDescription": "$t(app.name) is open source. Ontwikkelsetup en bijdragerichtlijnen staan op GitHub.",
     "links": {
       "readme": "README",
       "contributing": "Bijdragen",
@@ -102,12 +102,12 @@
     "eyebrow": "Juridisch",
     "title": "Privacybeleid",
     "updated": "Laatst bijgewerkt: augustus 2026",
-    "intro": "CookGPT bewaart je gegevens op je apparaat. We verzamelen geen recepten, maaltijdplannen of boodschappenlijsten op servers.",
+    "intro": "$t(app.name) bewaart je gegevens op je apparaat. We verzamelen geen recepten, maaltijdplannen of boodschappenlijsten op servers.",
     "contact": "Vragen? Neem contact op via GitHub:",
     "sections": [
       {
         "title": "Samenvatting",
-        "body": "Geen account nodig. We verkopen geen data. Geen analytics, advertenties, crash-SDK's of trackers."
+        "body": "$t(app.name) vereist geen account. We verkopen je gegevens niet. Geen analytics, advertenties, crash-SDK's of trackers van derden in de app of op deze site."
       },
       {
         "title": "Gegevens op je apparaat",
@@ -123,12 +123,17 @@
       },
       {
         "title": "Open source",
-        "body": "CookGPT is open source. Bekijk de code op GitHub."
+        "body": "$t(app.name) is open source. Bekijk de code op GitHub."
       },
       {
         "title": "Wijzigingen",
         "body": "Bij wijzigingen wordt deze pagina bijgewerkt."
       }
     ]
+  },
+  "app": {
+    "name": "CookGPT - Gourmetplan & bijhouden",
+    "nameShort": "CookGPT",
+    "tagline": "Gourmetplan & bijhouden"
   }
 }
