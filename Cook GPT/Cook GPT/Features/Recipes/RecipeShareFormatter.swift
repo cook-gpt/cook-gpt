@@ -1,3 +1,9 @@
+//  RecipeShareFormatter.swift
+//  Cook GPT
+//
+//  Plain-text export for sharing a recipe.
+//
+
 import Foundation
 
 enum RecipeShareFormatter {

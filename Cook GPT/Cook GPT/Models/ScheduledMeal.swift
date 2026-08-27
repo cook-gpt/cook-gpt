@@ -1,6 +1,13 @@
+//  ScheduledMeal.swift
+//  Cook GPT
+//
+//  A recipe scheduled on a day and meal slot with servings.
+//
+
 import Foundation
 import SwiftData
 
+/// Recipe scheduled on a calendar day and meal slot.
 @Model
 final class ScheduledMeal {
     var id: UUID

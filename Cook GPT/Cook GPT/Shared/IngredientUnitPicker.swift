@@ -1,3 +1,9 @@
+//  IngredientUnitPicker.swift
+//  Cook GPT
+//
+//  Picker bound to default and custom units from settings.
+//
+
 import SwiftUI
 
 struct IngredientUnitPicker: View {

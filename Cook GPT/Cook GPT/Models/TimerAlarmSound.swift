@@ -1,3 +1,9 @@
+//  TimerAlarmSound.swift
+//  Cook GPT
+//
+//  Clock-style alarm identifiers for timer completion audio.
+//
+
 import Foundation
 
 /// iPhone Clock alarm names. Audio is resolved on device through system ToneLibrary.

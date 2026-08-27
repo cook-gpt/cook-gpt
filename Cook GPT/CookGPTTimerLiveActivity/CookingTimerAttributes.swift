@@ -1,3 +1,11 @@
+//  CookingTimerAttributes.swift
+//  Cook GPT
+//
+//  ActivityAttributes payload for the timer Live Activity widget.
+//
+//  Keep in sync with Cook GPT/LiveActivity/CookingTimerAttributes.swift.
+//
+
 import ActivityKit
 import Foundation
 

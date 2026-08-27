@@ -1,3 +1,9 @@
+//  GenerateShoppingListSheet.swift
+//  Cook GPT
+//
+//  Import groceries from schedule or a single recipe.
+//
+
 import SwiftUI
 import SwiftData
 

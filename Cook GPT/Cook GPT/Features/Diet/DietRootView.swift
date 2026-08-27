@@ -1,3 +1,9 @@
+//  DietRootView.swift
+//  Cook GPT
+//
+//  Meals tab: day/week/month schedule browsing and meal management.
+//
+
 import SwiftUI
 import SwiftData
 
@@ -19,13 +25,18 @@ struct DietRootView: View {
         activeProfiles.first
     }
 
+    private var weekDays: [Date] {
+        // Observe week-start preference so the week grid refreshes when it changes in Settings.
+        let _ = settings.weekStart
+        return MealScheduleCalendar.daysInWeek(containing: selectedDate)
+    }
+
     private var visibleMeals: [ScheduledMeal] {
         switch viewMode {
         case .day:
             return scheduledMeals.filter { MealScheduleCalendar.isSameDay($0.day, selectedDate) }
         case .week:
-            let _ = settings.weekStart
-            let days = Set(MealScheduleCalendar.daysInWeek(containing: selectedDate).map(MealScheduleCalendar.startOfDay))
+            let days = Set(weekDays.map(MealScheduleCalendar.startOfDay))
             return scheduledMeals.filter { days.contains(MealScheduleCalendar.startOfDay($0.day)) }
         case .month:
             let days = Set(MealScheduleCalendar.daysInMonth(containing: selectedDate).map(MealScheduleCalendar.startOfDay))
@@ -169,7 +180,7 @@ struct DietRootView: View {
     @ViewBuilder
     private var weekScheduleView: some View {
         List {
-            ForEach(MealScheduleCalendar.daysInWeek(containing: selectedDate), id: \.self) { day in
+            ForEach(weekDays, id: \.self) { day in
                 Section(MealScheduleCalendar.dayTitle(day)) {
                     let dayMeals = scheduledMeals.filter { MealScheduleCalendar.isSameDay($0.day, day) }
                     if dayMeals.isEmpty {

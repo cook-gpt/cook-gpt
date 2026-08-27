@@ -1,3 +1,9 @@
+//  CookingTimerLiveActivityWidget.swift
+//  Cook GPT
+//
+//  Lock Screen and Dynamic Island UI for cooking timers.
+//
+
 import ActivityKit
 import SwiftUI
 import WidgetKit

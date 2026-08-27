@@ -1,3 +1,9 @@
+//  MealPlanningEnums.swift
+//  Cook GPT
+//
+//  Meal slots, diet types, schedule views, shopping scopes, and week-start options.
+//
+
 import Foundation
 
 enum MealSlot: String, Codable, CaseIterable {
@@ -102,11 +108,5 @@ enum WeekStartSetting: String, CaseIterable, Identifiable, Codable {
         case .friday: 6
         case .saturday: 7
         }
-    }
-
-    static func weekdayName(for firstWeekday: Int) -> String {
-        let symbols = Calendar.current.weekdaySymbols
-        guard firstWeekday >= 1, firstWeekday <= symbols.count else { return "—" }
-        return symbols[firstWeekday - 1]
     }
 }

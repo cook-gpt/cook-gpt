@@ -1,3 +1,9 @@
+//  DifficultyBadge.swift
+//  Cook GPT
+//
+//  Colored capsule for recipe difficulty.
+//
+
 import SwiftUI
 
 struct DifficultyBadge: View {

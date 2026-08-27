@@ -1,6 +1,13 @@
+//  DietProfile.swift
+//  Cook GPT
+//
+//  Active diet profile used by meal planning.
+//
+
 import Foundation
 import SwiftData
 
+/// User diet profile for meal planning filters.
 @Model
 final class DietProfile {
     var name: String

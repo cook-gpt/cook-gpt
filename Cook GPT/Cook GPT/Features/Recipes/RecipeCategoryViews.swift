@@ -1,3 +1,9 @@
+//  RecipeCategoryViews.swift
+//  Cook GPT
+//
+//  Category filter chips and tag toggle section.
+//
+
 import SwiftUI
 
 struct RecipeCategoryToggleSection: View {

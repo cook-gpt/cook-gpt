@@ -1,6 +1,13 @@
+//  GroceryList.swift
+//  Cook GPT
+//
+//  Shopping list container with generation metadata.
+//
+
 import Foundation
 import SwiftData
 
+/// Shopping list with optional generation metadata.
 @Model
 final class GroceryList {
     var name: String

@@ -1,6 +1,13 @@
+//  GroceryItem.swift
+//  Cook GPT
+//
+//  Line item on a grocery list (name, quantity, unit, checked state).
+//
+
 import Foundation
 import SwiftData
 
+/// One line on a grocery list.
 @Model
 final class GroceryItem {
     var name: String

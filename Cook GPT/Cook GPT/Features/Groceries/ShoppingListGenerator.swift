@@ -1,3 +1,9 @@
+//  ShoppingListGenerator.swift
+//  Cook GPT
+//
+//  Scales and aggregates recipe ingredients into grocery lines.
+//
+
 import Foundation
 
 struct AggregatedGroceryItem: Identifiable, Hashable {
@@ -20,6 +26,7 @@ struct AggregatedGroceryItem: Identifiable, Hashable {
     }
 }
 
+/// Scales recipe ingredients and merges grocery lines by name and unit.
 enum ShoppingListGenerator {
     private struct ItemTotal {
         var name: String

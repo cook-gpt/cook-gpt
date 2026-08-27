@@ -1,3 +1,9 @@
+//  AppTheme.swift
+//  Cook GPT
+//
+//  Appearance preference mapped to SwiftUI ColorScheme.
+//
+
 import Foundation
 import SwiftUI
 

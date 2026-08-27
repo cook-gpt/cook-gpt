@@ -1,3 +1,9 @@
+//  CookingSessionManager.swift
+//  Cook GPT
+//
+//  App-wide facade for active cooking timers.
+//
+
 import Foundation
 import SwiftUI
 

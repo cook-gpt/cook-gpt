@@ -1,3 +1,9 @@
+//  RecipeEditorSheet.swift
+//  Cook GPT
+//
+//  Create or edit recipes, ingredients, and timed steps.
+//
+
 import SwiftUI
 import SwiftData
 

@@ -1,6 +1,13 @@
+//  Recipe.swift
+//  Cook GPT
+//
+//  SwiftData recipe model with ingredients, steps, tags, and serving scaling.
+//
+
 import Foundation
 import SwiftData
 
+/// A recipe with metadata, ingredients, steps, and category tags.
 @Model
 final class Recipe {
     var id: UUID

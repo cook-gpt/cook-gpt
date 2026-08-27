@@ -1,3 +1,9 @@
+//  CookingTimerLiveActivityManager.swift
+//  Cook GPT
+//
+//  Starts and updates cooking timer Live Activities.
+//
+
 import ActivityKit
 import Foundation
 

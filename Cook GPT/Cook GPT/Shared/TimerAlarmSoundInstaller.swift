@@ -1,3 +1,9 @@
+//  TimerAlarmSoundInstaller.swift
+//  Cook GPT
+//
+//  Installs alarm audio into Library/Sounds for notifications.
+//
+
 import AVFoundation
 import Foundation
 

@@ -1,3 +1,9 @@
+//  TimerAlarmSoundPickerView.swift
+//  Cook GPT
+//
+//  Picker for Clock-style timer alarm sounds.
+//
+
 import SwiftUI
 
 struct TimerAlarmSoundPickerView: View {

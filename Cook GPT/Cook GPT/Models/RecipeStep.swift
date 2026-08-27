@@ -1,6 +1,13 @@
+//  RecipeStep.swift
+//  Cook GPT
+//
+//  Ordered cooking step with optional timer duration.
+//
+
 import Foundation
 import SwiftData
 
+/// One ordered step in a recipe, optionally with a timer.
 @Model
 final class RecipeStep {
     var id: UUID

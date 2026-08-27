@@ -1,3 +1,9 @@
+//  SettingsRootView.swift
+//  Cook GPT
+//
+//  Settings tab: appearance, planner, categories, units, about, reset.
+//
+
 import SwiftUI
 import SwiftData
 

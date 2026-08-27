@@ -1,3 +1,9 @@
+//  AppDataReset.swift
+//  Cook GPT
+//
+//  Factory reset: clears SwiftData, settings, timers, and re-seeds sample content.
+//
+
 import Foundation
 import SwiftData
 

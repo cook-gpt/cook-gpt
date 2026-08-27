@@ -1,3 +1,9 @@
+//  TimerAlarmAudioEnvironment.swift
+//  Cook GPT
+//
+//  Device vs Simulator capabilities for alarm previews.
+//
+
 import AudioToolbox
 import Foundation
 

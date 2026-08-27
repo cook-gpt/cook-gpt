@@ -1,3 +1,9 @@
+//  PlanMealsSheet.swift
+//  Cook GPT
+//
+//  Sheet to auto-fill meals across a date range.
+//
+
 import SwiftUI
 import SwiftData
 

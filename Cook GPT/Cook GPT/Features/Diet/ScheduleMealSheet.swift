@@ -1,3 +1,9 @@
+//  ScheduleMealSheet.swift
+//  Cook GPT
+//
+//  Sheet to add or edit one scheduled meal.
+//
+
 import SwiftUI
 import SwiftData
 

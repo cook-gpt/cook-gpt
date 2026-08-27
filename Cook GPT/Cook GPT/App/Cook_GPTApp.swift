@@ -1,6 +1,13 @@
+//  Cook_GPTApp.swift
+//  Cook GPT
+//
+//  Application entry point: SwiftData container, environment objects, and first-launch seeding.
+//
+
 import SwiftUI
 import SwiftData
 
+/// CookGPT application entry point.
 @main
 struct Cook_GPTApp: App {
     private let modelContainer: ModelContainer

@@ -1,3 +1,9 @@
+//  MealPlanner.swift
+//  Cook GPT
+//
+//  Selects diet-matching recipes and inserts scheduled meals.
+//
+
 import Foundation
 import SwiftData
 

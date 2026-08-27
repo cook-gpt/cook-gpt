@@ -1,6 +1,13 @@
+//  ModelContainer+CookGPT.swift
+//  Cook GPT
+//
+//  SwiftData schema, versioned store URL, legacy migration, and crash recovery.
+//
+
 import Foundation
 import SwiftData
 
+/// SwiftData persistence: schema definition, versioned store, and recovery.
 enum CookGPTModelContainer {
     /// Bump when SwiftData models change incompatibly.
     static let schemaVersion = 6

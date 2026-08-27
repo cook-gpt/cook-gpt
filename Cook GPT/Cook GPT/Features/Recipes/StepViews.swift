@@ -1,3 +1,9 @@
+//  StepViews.swift
+//  Cook GPT
+//
+//  Recipe step row with cooking timer controls.
+//
+
 import SwiftUI
 
 struct RecipeStepRowView: View {

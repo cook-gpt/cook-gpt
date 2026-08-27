@@ -1,48 +1,57 @@
-# cook-gpt
+# CookGPT
 
 <p align="center">
-  <img src=".github/icon-cropped.png" alt="Cook GPT app icon" width="128">
+  <img src=".github/icon-cropped.png" alt="CookGPT app icon" width="128">
 </p>
 
-An app that guides you through **cooking recipes**, **health diets**, and **groceries management**.
+**CookGPT - Gourmet Plan & Track** is a native **SwiftUI** iOS app for recipes, meal planning, and grocery lists — with step timers on the Lock Screen and Dynamic Island.
 
-Built as a native **SwiftUI** iOS app by [xarlizard](https://github.com/xarlizard).
+Built by [xarlizard](https://github.com/xarlizard). Open source under [MIT](LICENSE).
 
-## Features (planned)
+## Features
 
-- Step-by-step recipe guidance
-- Diet and nutrition tracking
-- Grocery lists and pantry management
+- **Recipes** — browse, favorite, filter, scale servings, share, and edit custom recipes
+- **Meals** — day / week / month schedule, manual scheduling, and auto meal planning
+- **Groceries** — import from schedule or recipes, merge with custom items, checklist UI
+- **Timers** — per-step cooking timers with Live Activities and Clock-style alarm sounds
+- **Settings** — theme, categories, units, week start day, and full data reset
+
+Landing site: [cook-gpt.pages.dev](https://cook-gpt.pages.dev)
 
 ## Quick start
 
-Requires **Xcode 26.6** and **iOS 26.5** simulator or device (iPhone and iPad).
+Requires **Xcode 26** and **iOS 26.5** (iPhone or iPad).
 
 ```bash
 git clone https://github.com/cook-gpt/cook-gpt.git
 cd cook-gpt
+open "Cook GPT/Cook GPT.xcodeproj"
 ```
 
-Open `Cook GPT/Cook GPT.xcodeproj` in Xcode, select a simulator or device, and press **Run** (⌘R).
+Select a simulator or device, then **Run** (⌘R).
 
 ## Repository layout
 
 | Path | Purpose |
 |------|---------|
-| `Cook GPT/Cook GPT/` | SwiftUI iOS app source |
-| `Cook GPT/Cook GPT/Features/` | Recipes, Diet, Groceries screens |
-| `Cook GPT/Cook GPT/Models/` | SwiftData domain models |
-| `specs/features/` | Numbered feature specs (OKF) |
-| `.agents/skills/` | Agent recreation guides |
-| `docs/` | GitHub workflow reference |
+| `Cook GPT/Cook GPT/App/` | Entry point, settings store, sample data, reset |
+| `Cook GPT/Cook GPT/Features/` | Recipes, Meals (Diet), Groceries, Settings screens |
+| `Cook GPT/Cook GPT/Models/` | SwiftData domain models and enums |
+| `Cook GPT/Cook GPT/Shared/` | Calendar, timers, formatting, reusable UI |
+| `Cook GPT/Cook GPT/LiveActivity/` | Timer Live Activity (main app side) |
+| `Cook GPT/CookGPTTimerLiveActivity/` | Widget extension for Lock Screen / Dynamic Island |
+| `website/` | Marketing site (React + Vite, Cloudflare Pages) |
+| `specs/features/` | Numbered feature specs |
 
-See [INSTRUCTIONS.md](INSTRUCTIONS.md) · [index.md](index.md) · [.agents/skills/](.agents/skills/)
+Each Swift source file includes a header comment describing its role. Key types use `///` documentation where helpful.
+
+## Data & privacy
+
+All recipes, meals, and grocery data stay **on device** (SwiftData). No account or backend required.
 
 ## License
 
 MIT — see [LICENSE](LICENSE).
-
-Maintained by [xarlizard](https://github.com/xarlizard).
 
 ---
 

@@ -1,3 +1,9 @@
+//  Enums.swift
+//  Cook GPT
+//
+//  Shared recipe and ingredient enums (difficulty, categories).
+//
+
 import Foundation
 
 enum IngredientCategory: String, Codable, CaseIterable {

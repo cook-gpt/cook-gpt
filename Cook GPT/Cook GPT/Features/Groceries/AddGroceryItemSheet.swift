@@ -1,3 +1,9 @@
+//  AddGroceryItemSheet.swift
+//  Cook GPT
+//
+//  Manually add one item to the shopping list.
+//
+
 import SwiftUI
 import SwiftData
 

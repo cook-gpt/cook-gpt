@@ -1,6 +1,13 @@
+//  RecipeIngredient.swift
+//  Cook GPT
+//
+//  Links a recipe to a catalog ingredient with quantity and unit.
+//
+
 import Foundation
 import SwiftData
 
+/// Quantity of an ingredient used by a recipe.
 @Model
 final class RecipeIngredient {
     var quantity: Double

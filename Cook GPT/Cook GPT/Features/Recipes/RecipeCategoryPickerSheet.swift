@@ -1,3 +1,9 @@
+//  RecipeCategoryPickerSheet.swift
+//  Cook GPT
+//
+//  Sheet to edit category tags on a recipe.
+//
+
 import SwiftUI
 import SwiftData
 

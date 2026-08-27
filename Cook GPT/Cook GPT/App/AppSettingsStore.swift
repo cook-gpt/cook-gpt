@@ -1,3 +1,9 @@
+//  AppSettingsStore.swift
+//  Cook GPT
+//
+//  UserDefaults-backed app preferences (theme, planner, timers, categories, units).
+//
+
 import Foundation
 
 struct AppCategory: Identifiable, Codable, Hashable {
@@ -12,6 +18,7 @@ struct AppCategory: Identifiable, Codable, Hashable {
     }
 }
 
+/// Central store for user preferences persisted in `UserDefaults`.
 @Observable
 @MainActor
 final class AppSettingsStore {
@@ -108,6 +115,7 @@ final class AppSettingsStore {
         } else {
             timerAlarmSound = .defaultSound
         }
+        // Migrate away from the removed "system" week-start option.
         if let rawWeekStart = UserDefaults.standard.string(forKey: Keys.weekStart),
            rawWeekStart != "system",
            let storedWeekStart = WeekStartSetting(rawValue: rawWeekStart) {

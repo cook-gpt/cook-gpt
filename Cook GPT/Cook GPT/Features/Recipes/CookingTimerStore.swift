@@ -1,6 +1,13 @@
+//  CookingTimerStore.swift
+//  Cook GPT
+//
+//  Timer state, persistence, notifications, and Live Activity sync.
+//
+
 import Foundation
 import SwiftUI
 
+/// Owns all active cooking timers: persistence, notifications, and Live Activities.
 @Observable
 @MainActor
 final class CookingTimerStore {
@@ -91,10 +98,6 @@ final class CookingTimerStore {
 
     func isLive(stepID: UUID) -> Bool {
         timer(for: stepID)?.isLive == true
-    }
-
-    func hasTimer(stepID: UUID) -> Bool {
-        timer(for: stepID) != nil
     }
 
     func start(stepID: UUID, recipeID: UUID, recipeTitle: String, label: String, duration: Int) {

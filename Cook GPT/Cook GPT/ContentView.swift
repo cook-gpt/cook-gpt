@@ -1,3 +1,9 @@
+//  ContentView.swift
+//  Cook GPT
+//
+//  Root tab bar: Recipes, Meals, Groceries, and Settings.
+//
+
 import SwiftUI
 import SwiftData
 

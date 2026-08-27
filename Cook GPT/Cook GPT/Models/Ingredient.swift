@@ -1,6 +1,13 @@
+//  Ingredient.swift
+//  Cook GPT
+//
+//  Reusable ingredient catalog entry.
+//
+
 import Foundation
 import SwiftData
 
+/// Named ingredient in the shared catalog.
 @Model
 final class Ingredient {
     var id: UUID

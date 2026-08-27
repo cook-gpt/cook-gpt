@@ -1,3 +1,9 @@
+//  GroceriesRootView.swift
+//  Cook GPT
+//
+//  Groceries tab: checklist UI and import/add actions.
+//
+
 import SwiftUI
 import SwiftData
 

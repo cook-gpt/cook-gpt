@@ -1,5 +1,13 @@
+//  MealScheduleCalendar.swift
+//  Cook GPT
+//
+//  Date helpers for meal views and grocery schedule ranges.
+//
+
 import Foundation
 
+/// Calendar helpers for meal schedule views and grocery date ranges.
+/// Respects the week-start day from `AppSettingsStore`.
 enum MealScheduleCalendar {
     static var calendar: Calendar {
         var calendar = Calendar.current

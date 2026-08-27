@@ -1,3 +1,9 @@
+//  RecipesRootView.swift
+//  Cook GPT
+//
+//  Recipes tab: browse, filter, favorite, and open recipes.
+//
+
 import SwiftUI
 import SwiftData
 

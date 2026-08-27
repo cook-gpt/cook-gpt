@@ -1,3 +1,9 @@
+//  EmptyStateView.swift
+//  Cook GPT
+//
+//  Reusable empty-state placeholder.
+//
+
 import SwiftUI
 
 struct EmptyStateView: View {

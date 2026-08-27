@@ -1,3 +1,9 @@
+//  SystemToneLibrary.swift
+//  Cook GPT
+//
+//  Resolves and plays built-in iPhone Clock alarm tones on device.
+//
+
 import AudioToolbox
 import AVFoundation
 import Foundation

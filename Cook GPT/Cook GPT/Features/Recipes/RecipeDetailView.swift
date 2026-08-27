@@ -1,3 +1,9 @@
+//  RecipeDetailView.swift
+//  Cook GPT
+//
+//  Recipe detail with scaled ingredients, steps, share, and timers.
+//
+
 import SwiftUI
 import SwiftData
 
@@ -93,13 +99,5 @@ struct RecipeDetailView: View {
         .sheet(isPresented: $isEditingRecipe) {
             RecipeEditorSheet(recipe: recipe)
         }
-    }
-}
-
-enum QuantityFormatter {
-    static func string(_ value: Double) -> String {
-        value.truncatingRemainder(dividingBy: 1) == 0
-            ? String(Int(value))
-            : String(format: "%.1f", value)
     }
 }

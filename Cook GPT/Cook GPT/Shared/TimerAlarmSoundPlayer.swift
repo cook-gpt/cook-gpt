@@ -1,3 +1,9 @@
+//  TimerAlarmSoundPlayer.swift
+//  Cook GPT
+//
+//  Plays alarm sounds for previews and completion.
+//
+
 import AVFoundation
 import Foundation
 

@@ -1,3 +1,9 @@
+//  SampleDataSeeder.swift
+//  Cook GPT
+//
+//  Installs default recipes, diet profile, groceries, and meals; migrates sample data by version.
+//
+
 import Foundation
 import SwiftData
 

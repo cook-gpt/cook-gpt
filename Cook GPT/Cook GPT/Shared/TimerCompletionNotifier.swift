@@ -1,3 +1,9 @@
+//  TimerCompletionNotifier.swift
+//  Cook GPT
+//
+//  Schedules local notifications when timers finish.
+//
+
 import Foundation
 import UserNotifications
 
