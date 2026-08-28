@@ -5,7 +5,7 @@ Guidance for AI assistants working in this repository.
 ## Architecture
 
 - Native **SwiftUI** iOS app; all user data stays on device via **SwiftData**
-- Feature code lives under `Cook GPT/Cook GPT/Features/` (Recipes, Diet/Meals, Groceries, Settings)
+- Feature code lives under `src/CookGPT/Features/` (Recipes, Diet/Meals, Groceries, Settings)
 - User preferences go through `AppSettingsStore` — not scattered `UserDefaults` keys
 - Bump `schemaVersion` in `ModelContainer+CookGPT.swift` when SwiftData models change incompatibly
 - `CookingTimerAttributes.swift` is duplicated in the main app and widget extension — keep both copies in sync

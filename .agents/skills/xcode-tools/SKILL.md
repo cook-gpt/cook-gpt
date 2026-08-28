@@ -15,8 +15,8 @@ Use the **xcode-tools** MCP server (`user-xcode-tools` in Cursor) instead of raw
 
 | Setting | Value |
 |---------|-------|
-| Project | `Cook GPT/Cook GPT.xcodeproj` |
-| Scheme | `Cook GPT` |
+| Project | `src/CookGPT.xcodeproj` |
+| Scheme | `CookGPT` |
 | Platform | iOS 26.5+ (iPhone / iPad simulator or device) |
 | Widget scheme | `CookGPTTimerLiveActivity` |
 
@@ -33,7 +33,7 @@ Use the **xcode-tools** MCP server (`user-xcode-tools` in Cursor) instead of raw
 
 ## Workflow
 
-1. Open `Cook GPT/Cook GPT.xcodeproj` in Xcode and select the **Cook GPT** scheme.
+1. Open `src/CookGPT.xcodeproj` in Xcode and select the **CookGPT** scheme.
 2. Call `BuildProject` after Swift changes.
 3. On failure, call `GetBuildLog` and `XcodeListNavigatorIssues` before editing files.
 4. Call `RunAllTests` (or `RunSomeTests`) before finishing a feature.

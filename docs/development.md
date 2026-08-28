@@ -4,7 +4,7 @@
 
 End users install **CookGPT - Gourmet Plan & Track** from the App Store. To run from source:
 
-1. Clone the repository and open `Cook GPT/Cook GPT.xcodeproj` in **Xcode 26**
+1. Clone the repository and open `src/CookGPT.xcodeproj` in **Xcode 26**
 2. Select an iOS simulator or device (deployment target **iOS 26.5**)
 3. Build and run (**⌘R**)
 
@@ -12,15 +12,15 @@ End users install **CookGPT - Gourmet Plan & Track** from the App Store. To run 
 
 | Directory | Responsibility |
 |-----------|----------------|
-| `Cook GPT/Cook GPT/App/` | App entry, settings store, sample data, factory reset |
-| `Cook GPT/Cook GPT/Features/Recipes/` | Recipe list, detail, editor, step timers, sharing |
-| `Cook GPT/Cook GPT/Features/Diet/` | Meals tab: schedule views, manual scheduling, auto planning |
-| `Cook GPT/Cook GPT/Features/Groceries/` | Shopping list UI, import from schedule/recipe, aggregation |
-| `Cook GPT/Cook GPT/Features/Settings/` | Theme, planner options, categories/units, about |
-| `Cook GPT/Cook GPT/Models/` | SwiftData `@Model` types and shared enums |
-| `Cook GPT/Cook GPT/Shared/` | Calendar helpers, timer audio, formatting, reusable UI |
-| `Cook GPT/Cook GPT/LiveActivity/` | Timer Live Activity manager (main app) |
-| `CookGPTTimerLiveActivity/` | Widget extension for Lock Screen / Dynamic Island |
+| `src/CookGPT/App/` | App entry, settings store, sample data, factory reset |
+| `src/CookGPT/Features/Recipes/` | Recipe list, detail, editor, step timers, sharing |
+| `src/CookGPT/Features/Diet/` | Meals tab: schedule views, manual scheduling, auto planning |
+| `src/CookGPT/Features/Groceries/` | Shopping list UI, import from schedule/recipe, aggregation |
+| `src/CookGPT/Features/Settings/` | Theme, planner options, categories/units, about |
+| `src/CookGPT/Models/` | SwiftData `@Model` types and shared enums |
+| `src/CookGPT/Shared/` | Calendar helpers, timer audio, formatting, reusable UI |
+| `src/CookGPT/LiveActivity/` | Timer Live Activity manager (main app) |
+| `src/CookGPTTimerLiveActivity/` | Widget extension for Lock Screen / Dynamic Island |
 | `website/` | Marketing site (React + Vite, Cloudflare Pages) |
 | `specs/features/` | Numbered feature specifications |
 

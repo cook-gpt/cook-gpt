@@ -13,7 +13,7 @@ timestamp: 2026-08-25T00:00:00Z
 | iOS | **26.5** | Primary client; iPhone and iPad (`TARGETED_DEVICE_FAMILY = 1,2`). Matches Xcode 26.6 SDK simulator runtime. |
 | macOS | **26.5** | Catalyst or native Mac target deferred; architecture must not block a future Mac app |
 
-Xcode project: `Cook GPT/Cook GPT.xcodeproj` (inner `Cook GPT/` source folder).
+Xcode project: `src/CookGPT.xcodeproj` (inner `CookGPT/` source folder).
 
 Toolchain: **Xcode 26.6** (Swift 5, `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`).
 
@@ -30,7 +30,7 @@ Toolchain: **Xcode 26.6** (Swift 5, `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`)
 ## Source layout
 
 ```
-Cook GPT/Cook GPT/
+src/CookGPT/
 ├── App/                 # @main, model container, seeding
 ├── Models/              # SwiftData @Model types
 ├── Features/

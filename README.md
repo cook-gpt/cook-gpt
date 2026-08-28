@@ -42,7 +42,7 @@ Requires **Xcode 26** and **iOS 26.5** (iPhone or iPad).
 ```bash
 git clone https://github.com/cook-gpt/cook-gpt.git
 cd cook-gpt
-open "Cook GPT/Cook GPT.xcodeproj"
+open "src/CookGPT.xcodeproj"
 ```
 
 Select a simulator or device, then **Run** (⌘R).
@@ -51,12 +51,12 @@ Select a simulator or device, then **Run** (⌘R).
 
 | Path | Purpose |
 |------|---------|
-| `Cook GPT/Cook GPT/App/` | Entry point, settings store, sample data, reset |
-| `Cook GPT/Cook GPT/Features/` | Recipes, Meals (Diet), Groceries, Settings screens |
-| `Cook GPT/Cook GPT/Models/` | SwiftData domain models and enums |
-| `Cook GPT/Cook GPT/Shared/` | Calendar, timers, formatting, reusable UI |
-| `Cook GPT/Cook GPT/LiveActivity/` | Timer Live Activity (main app side) |
-| `Cook GPT/CookGPTTimerLiveActivity/` | Widget extension for Lock Screen / Dynamic Island |
+| `src/CookGPT/App/` | Entry point, settings store, sample data, reset |
+| `src/CookGPT/Features/` | Recipes, Meals (Diet), Groceries, Settings screens |
+| `src/CookGPT/Models/` | SwiftData domain models and enums |
+| `src/CookGPT/Shared/` | Calendar, timers, formatting, reusable UI |
+| `src/CookGPT/LiveActivity/` | Timer Live Activity (main app side) |
+| `src/CookGPTTimerLiveActivity/` | Widget extension for Lock Screen / Dynamic Island |
 | `website/` | Marketing site (React + Vite, Cloudflare Pages) |
 | `specs/features/` | Numbered feature specs |
 

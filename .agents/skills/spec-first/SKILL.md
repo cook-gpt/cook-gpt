@@ -34,7 +34,7 @@ timestamp: 2026-08-25T00:00:00Z
 ## Implementation checklist
 
 - [ ] Spec updated or added
-- [ ] Code in the correct feature folder under `Cook GPT/Cook GPT/Features/`
+- [ ] Code in the correct feature folder under `src/CookGPT/Features/`
 - [ ] SwiftData changes include `schemaVersion` bump if needed
 - [ ] `docs/` updated when setup or architecture changes
 - [ ] [CHANGELOG.md](../../CHANGELOG.md) entry for user-facing changes

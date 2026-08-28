@@ -4,7 +4,7 @@ CookGPT is a native **SwiftUI** iOS app for recipes, meal planning, and grocery 
 
 ## Layers
 
-### Features (`Cook GPT/Cook GPT/Features/`)
+### Features (`src/CookGPT/Features/`)
 
 Tab-based UI organized by domain:
 
@@ -15,19 +15,19 @@ Tab-based UI organized by domain:
 | Groceries | `Features/Groceries/` | Shopping list, import from schedule or recipes, checklist |
 | Settings | `Features/Settings/` | Theme, categories, units, week start, data reset |
 
-### Models (`Cook GPT/Cook GPT/Models/`)
+### Models (`src/CookGPT/Models/`)
 
 SwiftData `@Model` types and shared enums. Schema versioning lives in `ModelContainer+CookGPT.swift` — bump `schemaVersion` when models change incompatibly.
 
-### Shared (`Cook GPT/Cook GPT/Shared/`)
+### Shared (`src/CookGPT/Shared/`)
 
 Cross-feature utilities: calendar/week boundaries (`MealScheduleCalendar`), timer audio, formatting, and reusable SwiftUI components.
 
-### App (`Cook GPT/Cook GPT/App/`)
+### App (`src/CookGPT/App/`)
 
 Entry point, `AppSettingsStore` (UserDefaults preferences), sample data seeding, and factory reset.
 
-### Live Activity (`Cook GPT/Cook GPT/LiveActivity/` + `CookGPTTimerLiveActivity/`)
+### Live Activity (`src/CookGPT/LiveActivity/` + `src/CookGPTTimerLiveActivity/`)
 
 Per-step cooking timers surface on the Lock Screen and Dynamic Island. `CookingTimerAttributes.swift` is duplicated in the main app and widget extension targets — keep both files in sync.
 

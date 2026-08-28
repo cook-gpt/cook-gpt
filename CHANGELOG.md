@@ -30,7 +30,7 @@ First App Store release of **CookGPT - Gourmet Plan & Track**.
 ### Added
 
 - Initial **cook-gpt** rebrand from [@open-templates](https://github.com/open-templates) repository template
-- SwiftUI iOS app scaffold (`Cook GPT/`)
+- SwiftUI iOS app scaffold (`src/`)
 - Repository docs, Dependabot, CODEOWNERS, and issue/PR templates
 
 ---

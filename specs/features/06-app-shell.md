@@ -8,7 +8,7 @@ timestamp: 2026-08-25T00:00:00Z
 
 ## Root structure
 
-`Cook_GPTApp` owns the SwiftData `ModelContainer` and presents `ContentView` as the root.
+`CookGPTApp` owns the SwiftData `ModelContainer` and presents `ContentView` as the root.
 
 `ContentView` hosts a **`TabView`** with three primary tabs:
 

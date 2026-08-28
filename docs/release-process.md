@@ -8,8 +8,8 @@ CookGPT uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH`.
 
 | Location | Field |
 |----------|-------|
-| `Cook GPT/Cook GPT.xcodeproj/project.pbxproj` | `MARKETING_VERSION` |
-| `Cook GPT/Cook GPT.xcodeproj/project.pbxproj` | `CURRENT_PROJECT_VERSION` (build number) |
+| `src/CookGPT.xcodeproj/project.pbxproj` | `MARKETING_VERSION` |
+| `src/CookGPT.xcodeproj/project.pbxproj` | `CURRENT_PROJECT_VERSION` (build number) |
 | `website/src/utils/releases.ts` | `APP_STORE_URL`, promotional text |
 
 ## Pre-release checklist

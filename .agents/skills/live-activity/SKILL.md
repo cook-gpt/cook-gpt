@@ -14,8 +14,8 @@ Cooking step timers use **ActivityKit** with a widget extension target.
 
 | Target | Path |
 |--------|------|
-| Main app manager | `Cook GPT/Cook GPT/LiveActivity/` |
-| Widget extension | `Cook GPT/CookGPTTimerLiveActivity/` |
+| Main app manager | `src/CookGPT/LiveActivity/` |
+| Widget extension | `src/CookGPTTimerLiveActivity/` |
 
 ## Critical rule
 
@@ -31,7 +31,7 @@ Cooking step timers use **ActivityKit** with a widget extension target.
 
 ## Audio
 
-Timer alarm sounds are handled in `Cook GPT/Cook GPT/Shared/` (see `TimerAlarmSoundInstaller`). Notification sounds require `.caf` in the Library Sounds directory.
+Timer alarm sounds are handled in `src/CookGPT/Shared/` (see `TimerAlarmSoundInstaller`). Notification sounds require `.caf` in the Library Sounds directory.
 
 ## See also
 

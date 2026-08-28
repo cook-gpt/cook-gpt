@@ -4,13 +4,13 @@ Guide for maintainers and coding agents working on **cook-gpt/cook-gpt**.
 
 ## Project
 
-**cook-gpt** is an app that guides you through cooking recipes, health diets, and groceries management. The iOS client lives under `Cook GPT/`.
+**cook-gpt** is an app that guides you through cooking recipes, health diets, and groceries management. The iOS client lives under `src/`.
 
 Maintained by [xarlizard](https://github.com/xarlizard).
 
 ## First steps
 
-1. Open `Cook GPT/Cook GPT.xcodeproj` in Xcode and run the app.
+1. Open `src/CookGPT.xcodeproj` in Xcode and run the app.
 2. Edit [`.github/dependabot.yml`](.github/dependabot.yml) when you add package ecosystems (e.g. Swift Package Manager).
 3. Never commit secrets; use `.env.example` only when backend services are added.
 

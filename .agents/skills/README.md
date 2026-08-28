@@ -23,11 +23,11 @@ Cursor skill packs and module guides for **CookGPT**.
 
 ## Xcode MCP
 
-Configured in Cursor as **xcode-tools** (`xcrun mcpbridge`). Requires Xcode running with `Cook GPT/Cook GPT.xcodeproj` open. Start with the [xcode-tools](xcode-tools/SKILL.md) skill.
+Configured in Cursor as **xcode-tools** (`xcrun mcpbridge`). Requires Xcode running with `src/CookGPT.xcodeproj` open. Start with the [xcode-tools](xcode-tools/SKILL.md) skill.
 
 ## Extension order
 
 1. Read **INSTRUCTIONS.md**, **docs/README.md**, and **`.cursor/rules.md`**
 2. Pick the relevant skill pack(s) from the table above
-3. Add application code under `Cook GPT/`
+3. Add application code under `src/`
 4. Document features in `specs/features/` and link from root `index.md`
