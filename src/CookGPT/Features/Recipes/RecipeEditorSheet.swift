@@ -10,6 +10,7 @@ import SwiftData
 struct RecipeEditorSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    @Environment(AppSettingsStore.self) private var settings
 
     var recipe: Recipe?
 
@@ -54,7 +55,7 @@ struct RecipeEditorSheet: View {
                     .onDelete(perform: deleteIngredients)
 
                     Button {
-                        ingredients.append(DraftIngredient())
+                        ingredients.append(DraftIngredient(unit: settings.defaultIngredientUnit))
                     } label: {
                         Label("Add ingredient", systemImage: "plus")
                     }
@@ -88,7 +89,12 @@ struct RecipeEditorSheet: View {
                         .disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                 }
             }
-            .onAppear(perform: initializeIfNeeded)
+            .onAppear {
+                if recipe == nil, ingredients.count == 1, ingredients[0].name.isEmpty {
+                    ingredients[0].unit = settings.defaultIngredientUnit
+                }
+                initializeIfNeeded()
+            }
         }
     }
 
@@ -106,7 +112,9 @@ struct RecipeEditorSheet: View {
         let loadedIngredients = recipe.ingredients.map {
             DraftIngredient(name: $0.displayName, quantity: $0.quantity, unit: $0.unit)
         }
-        ingredients = loadedIngredients.isEmpty ? [DraftIngredient()] : loadedIngredients
+        ingredients = loadedIngredients.isEmpty
+            ? [DraftIngredient(unit: settings.defaultIngredientUnit)]
+            : loadedIngredients
 
         let loadedSteps = recipe.sortedSteps.map {
             let totalSeconds = $0.timerSeconds ?? DraftStep.defaultTimerSeconds
@@ -123,7 +131,7 @@ struct RecipeEditorSheet: View {
     private func deleteIngredients(at offsets: IndexSet) {
         ingredients.remove(atOffsets: offsets)
         if ingredients.isEmpty {
-            ingredients.append(DraftIngredient())
+            ingredients.append(DraftIngredient(unit: settings.defaultIngredientUnit))
         }
     }
 
@@ -190,7 +198,9 @@ struct RecipeEditorSheet: View {
             let ingredient = findOrCreateIngredient(named: name)
             let recipeIngredient = RecipeIngredient(
                 quantity: draft.quantity,
-                unit: draft.unit.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "g" : draft.unit,
+                unit: draft.unit.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                    ? settings.defaultIngredientUnit
+                    : draft.unit,
                 ingredient: ingredient,
                 recipe: recipe
             )
@@ -320,7 +330,13 @@ private struct DraftIngredient: Identifiable {
     let id = UUID()
     var name = ""
     var quantity = 1.0
-    var unit = "g"
+    var unit: String
+
+    init(name: String = "", quantity: Double = 1.0, unit: String = "g") {
+        self.name = name
+        self.quantity = quantity
+        self.unit = unit
+    }
 }
 
 private struct DraftStep: Identifiable {

@@ -40,8 +40,6 @@ final class AppSettingsStore {
         AppCategory(id: "dessert", label: "Dessert", isDefault: true),
     ]
 
-    static let defaultUnits = ["g", "L", "tbsp", "pieces", "units", "cups"]
-
     private enum Keys {
         static let appTheme = "appSettings.appTheme"
         static let defaultPlannerServings = "appSettings.defaultPlannerServings"
@@ -49,7 +47,7 @@ final class AppSettingsStore {
         static let timerAlarmSound = "appSettings.timerAlarmSound"
         static let weekStart = "appSettings.weekStart"
         static let customCategories = "appSettings.customCategories"
-        static let customUnits = "appSettings.customUnits"
+        static let measurementSystem = "appSettings.measurementSystem"
     }
 
     var appTheme: AppTheme = .system {
@@ -75,6 +73,10 @@ final class AppSettingsStore {
         didSet { UserDefaults.standard.set(weekStart.rawValue, forKey: Keys.weekStart) }
     }
 
+    var measurementSystem: MeasurementSystem = .metric {
+        didSet { UserDefaults.standard.set(measurementSystem.rawValue, forKey: Keys.measurementSystem) }
+    }
+
     var resolvedFirstWeekday: Int {
         weekStart.firstWeekday
     }
@@ -83,8 +85,14 @@ final class AppSettingsStore {
         didSet { persistCustomCategories() }
     }
 
-    private(set) var customUnits: [String] = [] {
-        didSet { persistCustomUnits() }
+    /// Ingredient and grocery unit options for the selected measurement system.
+    var availableUnits: [String] {
+        measurementSystem.units
+    }
+
+    /// Default unit when adding new ingredients or grocery items.
+    var defaultIngredientUnit: String {
+        measurementSystem.defaultUnit
     }
 
     /// When true, data tabs avoid reading SwiftData models (used during factory reset).
@@ -95,13 +103,6 @@ final class AppSettingsStore {
 
     var allCategories: [AppCategory] {
         Self.defaultCategories + customCategories
-    }
-
-    var allUnits: [String] {
-        let extras = customUnits.filter { unit in
-            !Self.defaultUnits.contains { $0.caseInsensitiveCompare(unit) == .orderedSame }
-        }
-        return Self.defaultUnits + extras
     }
 
     private init() {
@@ -129,9 +130,14 @@ final class AppSettingsStore {
         } else {
             weekStart = .monday
         }
+        if let rawSystem = UserDefaults.standard.string(forKey: Keys.measurementSystem),
+           let storedSystem = MeasurementSystem(rawValue: rawSystem) {
+            measurementSystem = storedSystem
+        } else {
+            measurementSystem = MeasurementSystem.preferredForCurrentLocale
+        }
         TimerAlarmSoundInstaller.ensureInstalled(timerAlarmSound)
         customCategories = Self.sanitizeCustomCategories(Self.loadCustomCategories())
-        customUnits = Self.sanitizeCustomUnits(Self.loadCustomUnits())
     }
 
     func resetToDefaults() {
@@ -140,8 +146,8 @@ final class AppSettingsStore {
         includeBreakfastInMealPrep = false
         timerAlarmSound = .defaultSound
         weekStart = .monday
+        measurementSystem = MeasurementSystem.preferredForCurrentLocale
         customCategories = []
-        customUnits = []
     }
 
     func beginDataReset() {
@@ -167,10 +173,6 @@ final class AppSettingsStore {
         Self.defaultCategories.contains { $0.id == id }
     }
 
-    func isDefaultUnit(_ unit: String) -> Bool {
-        Self.defaultUnits.contains { $0.caseInsensitiveCompare(unit) == .orderedSame }
-    }
-
     @discardableResult
     func addCategory(label: String) -> Bool {
         let trimmed = label.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -187,22 +189,6 @@ final class AppSettingsStore {
     func removeCategory(id: String) {
         guard !isDefaultCategory(id: id) else { return }
         customCategories.removeAll { $0.id == id }
-    }
-
-    @discardableResult
-    func addUnit(_ unit: String) -> Bool {
-        let trimmed = unit.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return false }
-        guard !allUnits.contains(where: { $0.caseInsensitiveCompare(trimmed) == .orderedSame }) else { return false }
-
-        customUnits.append(trimmed)
-        customUnits.sort { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
-        return true
-    }
-
-    func removeUnit(_ unit: String) {
-        guard !isDefaultUnit(unit) else { return }
-        customUnits.removeAll { $0.caseInsensitiveCompare(unit) == .orderedSame }
     }
 
     private static func slugify(_ text: String) -> String {
@@ -228,24 +214,10 @@ final class AppSettingsStore {
         }
     }
 
-    private static func loadCustomUnits() -> [String] {
-        UserDefaults.standard.stringArray(forKey: Keys.customUnits) ?? []
-    }
-
-    private static func sanitizeCustomUnits(_ units: [String]) -> [String] {
-        units.filter { unit in
-            !defaultUnits.contains { $0.caseInsensitiveCompare(unit) == .orderedSame }
-        }
-    }
-
     private func persistCustomCategories() {
         if let data = try? JSONEncoder().encode(customCategories) {
             UserDefaults.standard.set(data, forKey: Keys.customCategories)
         }
-    }
-
-    private func persistCustomUnits() {
-        UserDefaults.standard.set(customUnits, forKey: Keys.customUnits)
     }
 }
 

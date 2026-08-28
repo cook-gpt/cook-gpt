@@ -35,7 +35,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		FA810681303E0DAB001C4C24 /* CookGPT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "CookGPT.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA810681303E0DAB001C4C24 /* CookGPT.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CookGPT.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA820681303E0DAB001C4C24 /* CookGPTTimerLiveActivity.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CookGPTTimerLiveActivity.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -52,7 +52,7 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		FA810683303E0DAB001C4C24 /* CookGPT */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "CookGPT";
+			path = CookGPT;
 			sourceTree = "<group>";
 		};
 		FA820683303E0DAB001C4C24 /* CookGPTTimerLiveActivity */ = {
@@ -121,10 +121,10 @@
 			fileSystemSynchronizedGroups = (
 				FA810683303E0DAB001C4C24 /* CookGPT */,
 			);
-			name = "CookGPT";
+			name = CookGPT;
 			packageProductDependencies = (
 			);
-			productName = "CookGPT";
+			productName = CookGPT;
 			productReference = FA810681303E0DAB001C4C24 /* CookGPT.app */;
 			productType = "com.apple.product-type.application";
 		};

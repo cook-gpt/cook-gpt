@@ -45,7 +45,7 @@ enum RecipeShareFormatter {
     private static func ingredientLine(quantity: Double, unit: String, name: String) -> String {
         let quantityText = QuantityFormatter.string(quantity)
         let unitText = unit.trimmingCharacters(in: .whitespacesAndNewlines)
-        let compactUnits: Set<String> = ["g", "kg", "ml", "l"]
+        let compactUnits: Set<String> = ["g", "mg", "ml", "l"]
 
         if compactUnits.contains(unitText.lowercased()) {
             return "- \(quantityText)\(unitText.lowercased()) of \(name)"

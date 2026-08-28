@@ -13,9 +13,7 @@ struct SettingsRootView: View {
     @Environment(CookingSessionManager.self) private var cookingSession
 
     @State private var isAddingCategory = false
-    @State private var isAddingUnit = false
     @State private var newCategoryLabel = ""
-    @State private var newUnit = ""
     @State private var showResetConfirmation = false
     @State private var isResetting = false
 
@@ -106,40 +104,20 @@ struct SettingsRootView: View {
             }
 
             Section {
-                ForEach(AppSettingsStore.defaultUnits, id: \.self) { unit in
-                    HStack {
-                        Text(unit)
-                        Spacer()
-                        Text("Default")
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                Picker("Measurement system", selection: $settings.measurementSystem) {
+                    ForEach(MeasurementSystem.allCases) { system in
+                        Text(system.label).tag(system)
                     }
                 }
-            } header: {
-                Text("Default units")
-            }
+                .pickerStyle(.segmented)
 
-            Section {
-                if settings.customUnits.isEmpty {
-                    Text("No custom units yet.")
-                        .foregroundStyle(.secondary)
-                } else {
-                    ForEach(settings.customUnits, id: \.self) { unit in
-                        Text(unit)
-                    }
-                    .onDelete(perform: deleteCustomUnits)
-                }
-
-                Button {
-                    newUnit = ""
-                    isAddingUnit = true
-                } label: {
-                    Label("Add unit", systemImage: "plus")
+                ForEach(settings.availableUnits, id: \.self) { unit in
+                    Text(unit)
                 }
             } header: {
-                Text("Custom units")
+                Text("Units")
             } footer: {
-                Text("Default units cannot be removed. These options are used when editing ingredients.")
+                Text("Choose metric or US customary units for ingredients and grocery items.")
             }
 
             Section {
@@ -187,13 +165,6 @@ struct SettingsRootView: View {
                 _ = settings.addCategory(label: newCategoryLabel)
             }
         }
-        .alert("Add unit", isPresented: $isAddingUnit) {
-            TextField("Unit", text: $newUnit)
-            Button("Cancel", role: .cancel) {}
-            Button("Add") {
-                _ = settings.addUnit(newUnit)
-            }
-        }
         .alert("Reset app data?", isPresented: $showResetConfirmation) {
             Button("Cancel", role: .cancel) {}
             Button("Reset", role: .destructive) {
@@ -219,14 +190,6 @@ struct SettingsRootView: View {
         for index in offsets {
             guard categories.indices.contains(index) else { continue }
             settings.removeCategory(id: categories[index].id)
-        }
-    }
-
-    private func deleteCustomUnits(at offsets: IndexSet) {
-        let units = settings.customUnits
-        for index in offsets {
-            guard units.indices.contains(index) else { continue }
-            settings.removeUnit(units[index])
         }
     }
 }

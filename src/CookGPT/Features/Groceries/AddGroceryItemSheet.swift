@@ -38,7 +38,7 @@ struct AddGroceryItemSheet: View {
                 }
             }
             .onAppear {
-                unit = settings.allUnits.first ?? "g"
+                unit = settings.defaultIngredientUnit
             }
         }
     }
