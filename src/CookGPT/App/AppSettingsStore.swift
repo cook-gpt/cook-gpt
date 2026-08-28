@@ -230,9 +230,7 @@ enum AppMetadata {
         "Additional pro features are planned for a future update. The current version is free and includes no in-app purchases or subscriptions."
 
     static var version: String {
-        let short = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "—"
-        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "—"
-        return "\(short) (\(build))"
+        Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "—"
     }
 
     static var languageName: String {

@@ -1,7 +1,7 @@
 //  MeasurementSystem.swift
 //  CookGPT
 //
-//  Metric vs US customary units for ingredients and groceries.
+//  Metric vs imperial units for ingredients and groceries.
 //
 
 import Foundation
@@ -15,7 +15,7 @@ enum MeasurementSystem: String, CaseIterable, Identifiable, Codable {
     var label: String {
         switch self {
         case .metric: "Metric"
-        case .imperial: "US Customary"
+        case .imperial: "Imperial"
         }
     }
 
