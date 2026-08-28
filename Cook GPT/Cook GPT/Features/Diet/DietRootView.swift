@@ -36,10 +36,14 @@ struct DietRootView: View {
         case .day:
             return scheduledMeals.filter { MealScheduleCalendar.isSameDay($0.day, selectedDate) }
         case .week:
-            let days = Set(weekDays.map(MealScheduleCalendar.startOfDay))
+            let days = Set(weekDays.map { MealScheduleCalendar.startOfDay($0) })
             return scheduledMeals.filter { days.contains(MealScheduleCalendar.startOfDay($0.day)) }
         case .month:
-            let days = Set(MealScheduleCalendar.daysInMonth(containing: selectedDate).map(MealScheduleCalendar.startOfDay))
+            let days = Set(
+                MealScheduleCalendar.daysInMonth(containing: selectedDate).map {
+                    MealScheduleCalendar.startOfDay($0)
+                }
+            )
             return scheduledMeals.filter { days.contains(MealScheduleCalendar.startOfDay($0.day)) }
         }
     }

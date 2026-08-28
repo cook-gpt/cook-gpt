@@ -22,7 +22,8 @@ struct AddGroceryItemSheet: View {
         NavigationStack {
             Form {
                 TextField("Name", text: $name)
-                Stepper("Quantity: \(QuantityFormatter.string(quantity))", value: $quantity, in: 0.1...100, step: 0.5)
+                TextField("Quantity", value: $quantity, format: .number)
+                    .keyboardType(.decimalPad)
                 IngredientUnitPicker(unit: $unit)
             }
             .navigationTitle("Add item")
@@ -33,7 +34,7 @@ struct AddGroceryItemSheet: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Add") { save() }
-                        .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty)
+                        .disabled(name.trimmingCharacters(in: .whitespaces).isEmpty || quantity <= 0)
                 }
             }
             .onAppear {
@@ -43,6 +44,8 @@ struct AddGroceryItemSheet: View {
     }
 
     private func save() {
+        guard quantity > 0 else { return }
+
         let item = GroceryItem(
             name: name.trimmingCharacters(in: .whitespaces),
             quantity: quantity,

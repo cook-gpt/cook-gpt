@@ -7,12 +7,23 @@
 import Foundation
 
 /// Calendar helpers for meal schedule views and grocery date ranges.
-/// Respects the week-start day from `AppSettingsStore`.
+/// Respects the week-start day from `AppSettingsStore` (via UserDefaults).
 enum MealScheduleCalendar {
+    /// Must match `AppSettingsStore` week-start key.
+    private static let weekStartDefaultsKey = "appSettings.weekStart"
+
     static var calendar: Calendar {
         var calendar = Calendar.current
-        calendar.firstWeekday = AppSettingsStore.shared.resolvedFirstWeekday
+        calendar.firstWeekday = resolvedFirstWeekday
         return calendar
+    }
+
+    private static var resolvedFirstWeekday: Int {
+        guard let raw = UserDefaults.standard.string(forKey: weekStartDefaultsKey),
+              let setting = WeekStartSetting(rawValue: raw) else {
+            return WeekStartSetting.monday.firstWeekday
+        }
+        return setting.firstWeekday
     }
 
     static func startOfDay(_ date: Date) -> Date {

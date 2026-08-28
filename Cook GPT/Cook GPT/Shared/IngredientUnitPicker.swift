@@ -8,13 +8,27 @@ import SwiftUI
 
 struct IngredientUnitPicker: View {
     @Binding var unit: String
+    var showsLabel: Bool = true
     @Environment(AppSettingsStore.self) private var settings
 
     var body: some View {
-        Picker("Unit", selection: $unit) {
-            ForEach(settings.allUnits, id: \.self) { option in
-                Text(option).tag(option)
+        if showsLabel {
+            Picker("Unit", selection: $unit) {
+                unitOptions
             }
+        } else {
+            Picker("", selection: $unit) {
+                unitOptions
+            }
+            .labelsHidden()
+            .pickerStyle(.menu)
+        }
+    }
+
+    @ViewBuilder
+    private var unitOptions: some View {
+        ForEach(settings.allUnits, id: \.self) { option in
+            Text(option).tag(option)
         }
     }
 }

@@ -49,19 +49,7 @@ struct RecipeEditorSheet: View {
 
                 Section {
                     ForEach($ingredients) { $ingredient in
-                        VStack(alignment: .leading, spacing: 8) {
-                            TextField("Ingredient name", text: $ingredient.name)
-                            HStack {
-                                Stepper(
-                                    QuantityFormatter.string(ingredient.quantity),
-                                    value: $ingredient.quantity,
-                                    in: 0.1...1000,
-                                    step: 0.5
-                                )
-                                IngredientUnitPicker(unit: $ingredient.unit)
-                            }
-                        }
-                        .padding(.vertical, 2)
+                        RecipeIngredientEditorRow(ingredient: $ingredient)
                     }
                     .onDelete(perform: deleteIngredients)
 
@@ -76,16 +64,7 @@ struct RecipeEditorSheet: View {
 
                 Section {
                     ForEach($steps) { $step in
-                        VStack(alignment: .leading, spacing: 8) {
-                            TextField("Instruction", text: $step.instruction, axis: .vertical)
-                                .lineLimit(2...5)
-
-                            Toggle("Timer", isOn: $step.hasTimer)
-                            if step.hasTimer {
-                                Stepper("Duration: \(step.timerMinutes) min", value: $step.timerMinutes, in: 1...180)
-                            }
-                        }
-                        .padding(.vertical, 2)
+                        RecipeStepEditorRow(step: $step)
                     }
                     .onDelete(perform: deleteSteps)
 
@@ -130,10 +109,12 @@ struct RecipeEditorSheet: View {
         ingredients = loadedIngredients.isEmpty ? [DraftIngredient()] : loadedIngredients
 
         let loadedSteps = recipe.sortedSteps.map {
-            DraftStep(
+            let totalSeconds = $0.timerSeconds ?? DraftStep.defaultTimerSeconds
+            return DraftStep(
                 instruction: $0.instruction,
                 hasTimer: $0.timerSeconds != nil,
-                timerMinutes: max(1, ($0.timerSeconds ?? 60) / 60)
+                timerHours: totalSeconds / 3600,
+                timerMinutes: (totalSeconds % 3600) / 60
             )
         }
         steps = loadedSteps.isEmpty ? [DraftStep()] : loadedSteps
@@ -204,7 +185,7 @@ struct RecipeEditorSheet: View {
     private func appendIngredients(to recipe: Recipe) {
         let savedIngredients = ingredients.compactMap { draft -> RecipeIngredient? in
             let name = draft.name.trimmingCharacters(in: .whitespacesAndNewlines)
-            guard !name.isEmpty else { return nil }
+            guard !name.isEmpty, draft.quantity > 0 else { return nil }
 
             let ingredient = findOrCreateIngredient(named: name)
             let recipeIngredient = RecipeIngredient(
@@ -228,7 +209,7 @@ struct RecipeEditorSheet: View {
             let step = RecipeStep(
                 order: stepOrder,
                 instruction: instruction,
-                timerSeconds: draft.hasTimer ? draft.timerMinutes * 60 : nil,
+                timerSeconds: draft.hasTimer ? draft.resolvedTimerSeconds : nil,
                 recipe: recipe
             )
             stepOrder += 1
@@ -251,6 +232,90 @@ struct RecipeEditorSheet: View {
     }
 }
 
+private struct RecipeIngredientEditorRow: View {
+    @Binding var ingredient: DraftIngredient
+
+    var body: some View {
+        HStack(spacing: 8) {
+            TextField("Ingredient", text: $ingredient.name)
+                .frame(maxWidth: .infinity)
+                .layoutPriority(7)
+
+            HStack(spacing: 6) {
+                TextField("1", value: $ingredient.quantity, format: .number)
+                    .keyboardType(.decimalPad)
+                    .multilineTextAlignment(.trailing)
+                    .frame(minWidth: 44)
+
+                IngredientUnitPicker(unit: $ingredient.unit, showsLabel: false)
+                    .fixedSize(horizontal: true, vertical: false)
+            }
+            .frame(maxWidth: .infinity)
+            .layoutPriority(3)
+        }
+    }
+}
+
+private struct RecipeStepEditorRow: View {
+    @Binding var step: DraftStep
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            TextField("Instruction", text: $step.instruction, axis: .vertical)
+                .lineLimit(2...5)
+
+            Toggle("Timer", isOn: $step.hasTimer)
+
+            if step.hasTimer {
+                CookingStepDurationPicker(
+                    hours: $step.timerHours,
+                    minutes: $step.timerMinutes
+                )
+            }
+        }
+        .padding(.vertical, 2)
+    }
+}
+
+private struct CookingStepDurationPicker: View {
+    @Binding var hours: Int
+    @Binding var minutes: Int
+
+    var body: some View {
+        HStack(spacing: 0) {
+            Picker("Hours", selection: $hours) {
+                ForEach(0..<24, id: \.self) { hour in
+                    Text("\(hour)").tag(hour)
+                }
+            }
+            .pickerStyle(.wheel)
+            .frame(maxWidth: .infinity)
+            .clipped()
+
+            Text("hr")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .frame(width: 28)
+
+            Picker("Minutes", selection: $minutes) {
+                ForEach(0..<60, id: \.self) { minute in
+                    Text(String(format: "%02d", minute)).tag(minute)
+                }
+            }
+            .pickerStyle(.wheel)
+            .frame(maxWidth: .infinity)
+            .clipped()
+
+            Text("min")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
+                .frame(width: 32)
+        }
+        .frame(height: 132)
+        .labelsHidden()
+    }
+}
+
 private struct DraftIngredient: Identifiable {
     let id = UUID()
     var name = ""
@@ -262,5 +327,13 @@ private struct DraftStep: Identifiable {
     let id = UUID()
     var instruction = ""
     var hasTimer = false
+    var timerHours = 0
     var timerMinutes = 5
+
+    static let defaultTimerSeconds = 5 * 60
+
+    var resolvedTimerSeconds: Int {
+        let total = timerHours * 3600 + timerMinutes * 60
+        return total > 0 ? total : Self.defaultTimerSeconds
+    }
 }
