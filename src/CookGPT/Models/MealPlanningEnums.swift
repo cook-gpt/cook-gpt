@@ -15,11 +15,8 @@ enum MealSlot: String, Codable, CaseIterable {
         rawValue.capitalized
     }
 
-    static func plannerSlots(includeBreakfast: Bool) -> [MealSlot] {
-        if includeBreakfast {
-            return allCases
-        }
-        return allCases.filter { $0 != .breakfast }
+    static func plannerSlots(included: Set<MealSlot>) -> [MealSlot] {
+        allCases.filter { included.contains($0) }
     }
 }
 

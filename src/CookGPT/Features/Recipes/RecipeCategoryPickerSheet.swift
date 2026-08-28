@@ -16,22 +16,20 @@ struct RecipeCategoryPickerSheet: View {
 
     var body: some View {
         NavigationStack {
-            Form {
-                RecipeCategoryToggleSection(selectedCategoryIDs: $selectedCategoryIDs)
-            }
-            .navigationTitle("Categories")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
+            RecipeCategoryPickerContent(selectedCategoryIDs: $selectedCategoryIDs)
+                .navigationTitle("Categories")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") { dismiss() }
+                    }
+                    ToolbarItem(placement: .confirmationAction) {
+                        Button("Save") { save() }
+                    }
                 }
-                ToolbarItem(placement: .confirmationAction) {
-                    Button("Save") { save() }
+                .onAppear {
+                    selectedCategoryIDs = Set(recipe.tags)
                 }
-            }
-            .onAppear {
-                selectedCategoryIDs = Set(recipe.tags)
-            }
         }
     }
 

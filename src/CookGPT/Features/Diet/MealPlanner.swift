@@ -39,13 +39,13 @@ enum MealPlanner {
         numberOfDays: Int,
         servings: Int,
         dietType: DietType,
-        includeBreakfast: Bool,
+        mealSlots: [MealSlot],
         recipes: [Recipe],
         existingMeals: [ScheduledMeal],
         context: ModelContext
     ) {
         let candidates = eligibleRecipes(dietType: dietType, from: recipes)
-        guard !candidates.isEmpty else { return }
+        guard !candidates.isEmpty, !mealSlots.isEmpty else { return }
 
         let rangeStart = MealScheduleCalendar.startOfDay(startDate)
         guard let rangeEnd = MealScheduleCalendar.calendar.date(byAdding: .day, value: numberOfDays - 1, to: rangeStart) else {
@@ -59,7 +59,7 @@ enum MealPlanner {
         var recipeIndex = 0
         let days = MealScheduleCalendar.dates(from: rangeStart, through: rangeEnd)
 
-        let slots = MealSlot.plannerSlots(includeBreakfast: includeBreakfast)
+        let slots = mealSlots
 
         for day in days {
             for slot in slots {

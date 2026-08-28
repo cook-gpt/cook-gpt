@@ -32,9 +32,7 @@ struct ScheduleMealSheet: View {
     }
 
     private var selectableMealSlots: [MealSlot] {
-        let includeBreakfast = settings.includeBreakfastInMealPrep
-            || existingMeal?.mealSlot == .breakfast
-        return MealSlot.plannerSlots(includeBreakfast: includeBreakfast)
+        MealSlot.allCases
     }
 
     var body: some View {
@@ -71,17 +69,13 @@ struct ScheduleMealSheet: View {
             .onAppear {
                 clampMealSlotIfNeeded()
             }
-            .onChange(of: settings.includeBreakfastInMealPrep) {
-                clampMealSlotIfNeeded()
-            }
         }
     }
 
     private func clampMealSlotIfNeeded() {
         guard existingMeal == nil else { return }
-        let slots = MealSlot.plannerSlots(includeBreakfast: settings.includeBreakfastInMealPrep)
-        if !slots.contains(mealSlot) {
-            mealSlot = slots.first ?? .lunch
+        if !selectableMealSlots.contains(mealSlot) {
+            mealSlot = selectableMealSlots.first ?? .lunch
         }
     }
 

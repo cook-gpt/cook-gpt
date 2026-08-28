@@ -22,7 +22,6 @@ struct SettingsRootView: View {
 
         List {
             SettingsSegmentedSection(settings: settings, unitsDetail: defaultUnitsDetail)
-            SettingsToggleSection(settings: settings)
             SettingsStepperSection(settings: settings)
             SettingsMenuPickerSection(settings: settings)
             SettingsNavigationSection(settings: settings)
@@ -133,20 +132,6 @@ private struct SettingsSegmentedSection: View {
             }
         } footer: {
             Text("Metric or imperial units for ingredients and grocery items.")
-        }
-    }
-}
-
-// MARK: - Toggle
-
-private struct SettingsToggleSection: View {
-    @Bindable var settings: AppSettingsStore
-
-    var body: some View {
-        Section {
-            Toggle("Include breakfast", isOn: $settings.includeBreakfastInMealPrep)
-        } footer: {
-            Text("When enabled, auto meal planning also schedules breakfast. Breakfast and dessert recipes are never used by the planner.")
         }
     }
 }

@@ -1,36 +1,98 @@
 //  RecipeCategoryViews.swift
 //  CookGPT
 //
-//  Category filter chips and tag toggle section.
+//  Category filter chips, compact selection, and searchable picker.
 //
 
 import SwiftUI
 
-struct RecipeCategoryToggleSection: View {
+struct RecipeCategorySelectionSection: View {
     @Binding var selectedCategoryIDs: Set<String>
     @Environment(AppSettingsStore.self) private var settings
 
+    private var selectedCategories: [AppCategory] {
+        settings.allCategories.filter { selectedCategoryIDs.contains($0.id) }
+    }
+
     var body: some View {
-        Section("Categories") {
-            ForEach(settings.allCategories) { category in
-                Toggle(isOn: binding(for: category.id)) {
-                    Text(category.label)
+        Section {
+            NavigationLink {
+                RecipeCategoryPickerContent(selectedCategoryIDs: $selectedCategoryIDs)
+                    .navigationTitle("Categories")
+                    .navigationBarTitleDisplayMode(.inline)
+            } label: {
+                categorySelectionLabel
+            }
+        } header: {
+            Text("Categories")
+        } footer: {
+            Text("Organize recipes for browsing and meal planning.")
+        }
+    }
+
+    @ViewBuilder
+    private var categorySelectionLabel: some View {
+        if selectedCategories.isEmpty {
+            Text("Add categories")
+                .foregroundStyle(.secondary)
+        } else {
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(selectedCategories) { category in
+                        CategoryChip(title: category.label, style: .selected)
+                    }
                 }
             }
         }
     }
+}
 
-    private func binding(for categoryID: String) -> Binding<Bool> {
-        Binding(
-            get: { selectedCategoryIDs.contains(categoryID) },
-            set: { isOn in
-                if isOn {
-                    selectedCategoryIDs.insert(categoryID)
-                } else {
-                    selectedCategoryIDs.remove(categoryID)
+struct RecipeCategoryPickerContent: View {
+    @Binding var selectedCategoryIDs: Set<String>
+    @Environment(AppSettingsStore.self) private var settings
+    @State private var searchText = ""
+
+    private var filteredCategories: [AppCategory] {
+        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !query.isEmpty else { return settings.allCategories }
+        return settings.allCategories.filter { category in
+            category.label.localizedCaseInsensitiveContains(query)
+                || category.id.localizedCaseInsensitiveContains(query)
+        }
+    }
+
+    var body: some View {
+        List {
+            if filteredCategories.isEmpty {
+                ContentUnavailableView.search(text: searchText)
+            } else {
+                ForEach(filteredCategories) { category in
+                    Button {
+                        toggle(category.id)
+                    } label: {
+                        HStack {
+                            Text(category.label)
+                            Spacer()
+                            if selectedCategoryIDs.contains(category.id) {
+                                Image(systemName: "checkmark")
+                                    .font(.body.weight(.semibold))
+                                    .foregroundStyle(Color.accentColor)
+                            }
+                        }
+                    }
+                    .foregroundStyle(.primary)
                 }
             }
-        )
+        }
+        .searchable(text: $searchText, prompt: "Search categories")
+    }
+
+    private func toggle(_ categoryID: String) {
+        if selectedCategoryIDs.contains(categoryID) {
+            selectedCategoryIDs.remove(categoryID)
+        } else {
+            selectedCategoryIDs.insert(categoryID)
+        }
     }
 }
 
@@ -69,14 +131,49 @@ private struct CategoryFilterChip: View {
 
     var body: some View {
         Button(action: action) {
-            Text(title)
-                .font(.subheadline.weight(.medium))
-                .padding(.horizontal, 12)
-                .padding(.vertical, 6)
-                .background(isSelected ? Color.accentColor : Color(.secondarySystemFill))
-                .foregroundStyle(isSelected ? Color.white : Color.primary)
-                .clipShape(Capsule())
+            CategoryChip(title: title, style: isSelected ? .filterSelected : .filter)
         }
         .buttonStyle(.plain)
+    }
+}
+
+private struct CategoryChip: View {
+    enum Style {
+        case selected
+        case filter
+        case filterSelected
+    }
+
+    let title: String
+    let style: Style
+
+    var body: some View {
+        Text(title)
+            .font(.subheadline.weight(.medium))
+            .padding(.horizontal, 12)
+            .padding(.vertical, 6)
+            .background(backgroundColor)
+            .foregroundStyle(foregroundColor)
+            .clipShape(Capsule())
+    }
+
+    private var backgroundColor: Color {
+        switch style {
+        case .selected:
+            Color(.secondarySystemFill)
+        case .filter:
+            Color(.secondarySystemFill)
+        case .filterSelected:
+            Color.accentColor
+        }
+    }
+
+    private var foregroundColor: Color {
+        switch style {
+        case .selected, .filter:
+            Color.primary
+        case .filterSelected:
+            Color.white
+        }
     }
 }

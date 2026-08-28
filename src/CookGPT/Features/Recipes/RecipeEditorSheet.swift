@@ -46,7 +46,7 @@ struct RecipeEditorSheet: View {
                     }
                 }
 
-                RecipeCategoryToggleSection(selectedCategoryIDs: $selectedCategoryIDs)
+                RecipeCategorySelectionSection(selectedCategoryIDs: $selectedCategoryIDs)
 
                 Section {
                     ForEach($ingredients) { $ingredient in

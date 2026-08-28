@@ -20,16 +20,32 @@ struct PlanMealsSheet: View {
     @State private var startDate = Date()
     @State private var numberOfDays = 7
     @State private var servings = 1
+    @State private var includeBreakfast = false
+    @State private var includeLunch = true
+    @State private var includeDinner = true
+
+    private var selectedMealSlots: [MealSlot] {
+        MealSlot.plannerSlots(included: selectedMealSlotSet)
+    }
+
+    private var selectedMealSlotSet: Set<MealSlot> {
+        var slots = Set<MealSlot>()
+        if includeBreakfast { slots.insert(.breakfast) }
+        if includeLunch { slots.insert(.lunch) }
+        if includeDinner { slots.insert(.dinner) }
+        return slots
+    }
 
     private var eligibleCount: Int {
         MealPlanner.eligibleRecipes(dietType: profile.dietType, from: recipes).count
     }
 
     private var plannedSlotsDescription: String {
-        if settings.includeBreakfastInMealPrep {
-            return "Breakfast, lunch, and dinner"
-        }
-        return "Lunch and dinner"
+        let labels = selectedMealSlots.map(\.label)
+        guard !labels.isEmpty else { return "No meals" }
+        if labels.count == 1 { return labels[0] }
+        if labels.count == 2 { return "\(labels[0]) and \(labels[1])" }
+        return "\(labels.dropLast().joined(separator: ", ")), and \(labels[labels.count - 1])"
     }
 
     var body: some View {
@@ -42,14 +58,12 @@ struct PlanMealsSheet: View {
                         .foregroundStyle(.secondary)
                 }
 
-                Section("Breakfast") {
-                    LabeledContent("Include in planner") {
-                        Text(settings.includeBreakfastInMealPrep ? "Enabled" : "Disabled")
-                            .foregroundStyle(settings.includeBreakfastInMealPrep ? .primary : .secondary)
-                    }
-                    Text("Change this in Settings → Meal planner.")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                Section {
+                    Toggle("Breakfast", isOn: $includeBreakfast)
+                    Toggle("Lunch", isOn: $includeLunch)
+                    Toggle("Dinner", isOn: $includeDinner)
+                } footer: {
+                    Text("Choose which meals to plan each day. Breakfast and dessert recipes are never used by the planner.")
                 }
 
                 Section("Schedule") {
@@ -74,7 +88,7 @@ struct PlanMealsSheet: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Plan") { plan() }
-                        .disabled(eligibleCount == 0)
+                        .disabled(eligibleCount == 0 || selectedMealSlots.isEmpty)
                 }
             }
             .onAppear {
@@ -89,7 +103,7 @@ struct PlanMealsSheet: View {
             numberOfDays: numberOfDays,
             servings: servings,
             dietType: profile.dietType,
-            includeBreakfast: settings.includeBreakfastInMealPrep,
+            mealSlots: selectedMealSlots,
             recipes: recipes,
             existingMeals: scheduledMeals,
             context: modelContext
