@@ -250,9 +250,12 @@ final class AppSettingsStore {
 }
 
 enum AppMetadata {
+    static let privacyPolicyURL = URL(string: "https://cook-gpt.pages.dev/privacy")!
+    static let sourceCodeURL = URL(string: "https://github.com/cook-gpt/cook-gpt")!
+
     static let advancedProFeaturesStatus = "Coming soon"
     static let advancedSectionFooter =
-        "CookGPT Advanced unlocks pro features with a subscription or one-time purchase."
+        "Additional pro features are planned for a future update. The current version is free and includes no in-app purchases or subscriptions."
 
     static var version: String {
         let short = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "—"

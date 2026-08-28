@@ -156,6 +156,8 @@ struct SettingsRootView: View {
                 Text("Language follows your device settings.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                Link("Privacy Policy", destination: AppMetadata.privacyPolicyURL)
+                Link("Source Code", destination: AppMetadata.sourceCodeURL)
             }
 
             Section {
