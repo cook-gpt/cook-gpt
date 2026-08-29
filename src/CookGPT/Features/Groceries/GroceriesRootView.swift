@@ -13,10 +13,19 @@ struct GroceriesRootView: View {
     @Environment(AppSettingsStore.self) private var settings
 
     @State private var isImportingIngredients = false
-    @State private var isAddingItem = false
 
     private var primaryList: GroceryList? {
         groceryLists.first
+    }
+
+    private var exportableItems: [GroceryItem] {
+        guard let list = primaryList else { return [] }
+        return sortedItems(for: list)
+    }
+
+    private var exportShareText: String {
+        guard let list = primaryList else { return "" }
+        return GroceryListShareFormatter.text(listName: list.name, items: exportableItems)
     }
 
     var body: some View {
@@ -47,7 +56,7 @@ struct GroceriesRootView: View {
                         ContentUnavailableView(
                             "No items yet",
                             systemImage: "cart",
-                            description: Text("Generate a list from scheduled meals or selected recipes.")
+                            description: Text("Tap + to import groceries from recipes, ingredients, or your meal schedule.")
                         )
                     } else {
                         ForEach(items, id: \.persistentModelID) { item in
@@ -69,16 +78,18 @@ struct GroceriesRootView: View {
         .navigationTitle("Groceries")
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                Button {
-                    isImportingIngredients = true
-                } label: {
-                    Image(systemName: "square.and.arrow.down")
+                ShareLink(
+                    item: exportShareText,
+                    subject: Text(primaryList?.name ?? "Grocery list")
+                ) {
+                    Image(systemName: "square.and.arrow.up")
                 }
-                .disabled(primaryList == nil)
+                .disabled(primaryList == nil || exportableItems.isEmpty)
+                .accessibilityLabel("Export grocery list")
             }
             ToolbarItem(placement: .primaryAction) {
                 Button {
-                    isAddingItem = true
+                    isImportingIngredients = true
                 } label: {
                     Image(systemName: "plus")
                 }
@@ -88,11 +99,6 @@ struct GroceriesRootView: View {
         .sheet(isPresented: $isImportingIngredients) {
             if let list = primaryList {
                 GenerateShoppingListSheet(list: list) {}
-            }
-        }
-        .sheet(isPresented: $isAddingItem) {
-            if let list = primaryList {
-                AddGroceryItemSheet(list: list)
             }
         }
     }

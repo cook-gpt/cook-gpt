@@ -1,39 +1,24 @@
-//  RecipeShareFormatter.swift
+//  GroceryListShareFormatter.swift
 //  CookGPT
 //
-//  Plain-text export for sharing a recipe.
+//  Plain-text export for sharing a grocery list.
 //
 
 import Foundation
 
-enum RecipeShareFormatter {
-    static func text(for recipe: Recipe, servings: Int) -> String {
+enum GroceryListShareFormatter {
+    static func text(listName: String, items: [GroceryItem]) -> String {
         var lines: [String] = [
-            recipe.title,
-            "- \(servings) servings",
-            "- \(recipe.prepMinutes) min prep time",
-            "- \(recipe.cookMinutes) min cooking time",
+            listName,
             "",
             "Ingredients:",
         ]
 
-        if recipe.ingredients.isEmpty {
+        if items.isEmpty {
             lines.append("- (none)")
         } else {
-            for item in recipe.ingredients {
-                let scaled = recipe.scaledQuantity(item.quantity, servings: servings)
-                lines.append(ingredientLine(quantity: scaled, unit: item.unit, name: item.displayName))
-            }
-        }
-
-        lines.append("")
-        lines.append("Steps:")
-
-        if recipe.sortedSteps.isEmpty {
-            lines.append("- (none)")
-        } else {
-            for (index, step) in recipe.sortedSteps.enumerated() {
-                lines.append("- \(index + 1). \(step.instruction)")
+            for item in items {
+                lines.append(ingredientLine(quantity: item.quantity, unit: item.unit, name: item.name))
             }
         }
 

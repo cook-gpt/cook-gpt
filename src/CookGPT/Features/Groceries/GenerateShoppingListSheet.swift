@@ -63,11 +63,11 @@ struct GenerateShoppingListSheet: View {
     var onGenerated: () -> Void
 
     @State private var deletePreviousList = false
-    @State private var importOrigin: GroceryImportOrigin = .schedule
+    @State private var importOrigin: GroceryImportOrigin = .manual
     @State private var scope: ShoppingListScope = .week
     @State private var customStart = Date()
     @State private var customEnd = Date()
-    @State private var importRows: [ImportRow] = [ImportRow.recipe()]
+    @State private var importRows: [ImportRow] = []
     @State private var recipePickerRowID: UUID?
 
     private var range: (start: Date, end: Date) {
@@ -189,7 +189,7 @@ struct GenerateShoppingListSheet: View {
 
             importAddActionsRow
         } header: {
-            Text("Recipes")
+            Text("Groceries")
         } footer: {
             Text("Add recipes with servings, or add individual ingredients with amounts. Recipe ingredient amounts scale from each recipe's base serving size.")
         }
@@ -252,9 +252,6 @@ struct GenerateShoppingListSheet: View {
 
     private func deleteImportRows(at offsets: IndexSet) {
         importRows.remove(atOffsets: offsets)
-        if importRows.isEmpty {
-            importRows.append(ImportRow.recipe())
-        }
     }
 
     private func addToList() {

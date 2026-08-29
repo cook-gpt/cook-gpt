@@ -7,6 +7,14 @@
 import Foundation
 import SwiftData
 
+struct MealPlanRequest {
+    let startDate: Date
+    let numberOfDays: Int
+    let servings: Int
+    let dietType: DietType
+    let mealSlots: [MealSlot]
+}
+
 enum MealPlanner {
     static func eligibleRecipes(dietType: DietType, from recipes: [Recipe]) -> [Recipe] {
         let excluded = AppSettingsStore.mealPlannerExcludedCategoryIDs
@@ -41,7 +49,6 @@ enum MealPlanner {
         dietType: DietType,
         mealSlots: [MealSlot],
         recipes: [Recipe],
-        existingMeals: [ScheduledMeal],
         context: ModelContext
     ) {
         let candidates = eligibleRecipes(dietType: dietType, from: recipes)
@@ -52,17 +59,14 @@ enum MealPlanner {
             return
         }
 
-        for meal in existingMeals where meal.day >= rangeStart && meal.day <= rangeEnd {
-            context.delete(meal)
-        }
+        deleteScheduledMeals(from: rangeStart, through: rangeEnd, context: context)
+        try? context.save()
 
         var recipeIndex = 0
         let days = MealScheduleCalendar.dates(from: rangeStart, through: rangeEnd)
 
-        let slots = mealSlots
-
         for day in days {
-            for slot in slots {
+            for slot in mealSlots {
                 let recipe = candidates[recipeIndex % candidates.count]
                 recipeIndex += 1
 
@@ -77,5 +81,23 @@ enum MealPlanner {
         }
 
         try? context.save()
+    }
+
+    @MainActor
+    private static func deleteScheduledMeals(
+        from rangeStart: Date,
+        through rangeEnd: Date,
+        context: ModelContext
+    ) {
+        let predicate = #Predicate<ScheduledMeal> { meal in
+            meal.day >= rangeStart && meal.day <= rangeEnd
+        }
+        let descriptor = FetchDescriptor<ScheduledMeal>(predicate: predicate)
+
+        guard let mealsToDelete = try? context.fetch(descriptor) else { return }
+
+        for meal in mealsToDelete {
+            context.delete(meal)
+        }
     }
 }

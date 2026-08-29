@@ -84,8 +84,7 @@ struct RecipeDetailView: View {
             ToolbarItemGroup(placement: .primaryAction) {
                 ShareLink(
                     item: shareText,
-                    subject: Text(recipe.title),
-                    message: Text(shareText)
+                    subject: Text(recipe.title)
                 ) {
                     Image(systemName: "square.and.arrow.up")
                 }

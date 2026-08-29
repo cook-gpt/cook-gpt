@@ -19,6 +19,7 @@ struct DietRootView: View {
     @State private var selectedDate = Date()
     @State private var isSchedulingMeal = false
     @State private var isPlanningMeals = false
+    @State private var isApplyingMealPlan = false
     @State private var mealToEdit: ScheduledMeal?
 
     private var activeProfile: DietProfile? {
@@ -59,6 +60,9 @@ struct DietRootView: View {
                     title: "No diet profile",
                     subtitle: "A diet profile is created on first launch."
                 )
+            } else if isApplyingMealPlan {
+                ProgressView("Planning meals…")
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else {
                 VStack(spacing: 0) {
                     Picker("View", selection: $viewMode) {
@@ -90,7 +94,7 @@ struct DietRootView: View {
                 Button("Plan meals") {
                     isPlanningMeals = true
                 }
-                .disabled(activeProfile == nil)
+                .disabled(activeProfile == nil || isApplyingMealPlan)
             }
             ToolbarItem(placement: .primaryAction) {
                 Button {
@@ -98,7 +102,7 @@ struct DietRootView: View {
                 } label: {
                     Image(systemName: "plus")
                 }
-                .disabled(activeProfile == nil)
+                .disabled(activeProfile == nil || isApplyingMealPlan)
             }
         }
         .sheet(isPresented: $isSchedulingMeal) {
@@ -109,15 +113,39 @@ struct DietRootView: View {
         }
         .sheet(isPresented: $isPlanningMeals) {
             if let profile = activeProfile {
-                PlanMealsSheet(profile: profile)
+                PlanMealsSheet(profile: profile, onPlan: applyMealPlan)
             }
         }
         .onChange(of: settings.isResettingData) { _, isResetting in
             if isResetting {
                 isSchedulingMeal = false
                 isPlanningMeals = false
+                isApplyingMealPlan = false
                 mealToEdit = nil
             }
+        }
+    }
+
+    private func applyMealPlan(_ request: MealPlanRequest) {
+        isApplyingMealPlan = true
+
+        Task { @MainActor in
+            defer { isApplyingMealPlan = false }
+
+            await Task.yield()
+
+            let recipeDescriptor = FetchDescriptor<Recipe>(sortBy: [SortDescriptor(\.title)])
+            let recipes = (try? modelContext.fetch(recipeDescriptor)) ?? []
+
+            MealPlanner.planMeals(
+                startingAt: request.startDate,
+                numberOfDays: request.numberOfDays,
+                servings: request.servings,
+                dietType: request.dietType,
+                mealSlots: request.mealSlots,
+                recipes: recipes,
+                context: modelContext
+            )
         }
     }
 
@@ -201,7 +229,7 @@ struct DietRootView: View {
                         Text("Nothing scheduled")
                             .foregroundStyle(.secondary)
                     } else {
-                        ForEach(dayMeals, id: \.id) { meal in
+                        ForEach(dayMeals, id: \.persistentModelID) { meal in
                             ScheduledMealRow(meal: meal)
                                 .contentShape(Rectangle())
                                 .onTapGesture {
@@ -230,7 +258,7 @@ struct DietRootView: View {
                         Text("Nothing scheduled")
                             .foregroundStyle(.secondary)
                     } else {
-                        ForEach(group.meals, id: \.id) { meal in
+                        ForEach(group.meals, id: \.persistentModelID) { meal in
                             ScheduledMealRow(meal: meal)
                                 .contentShape(Rectangle())
                                 .onTapGesture {

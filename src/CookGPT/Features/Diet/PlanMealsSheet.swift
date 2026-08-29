@@ -9,13 +9,12 @@ import SwiftData
 
 struct PlanMealsSheet: View {
     @Environment(\.dismiss) private var dismiss
-    @Environment(\.modelContext) private var modelContext
     @Environment(AppSettingsStore.self) private var settings
 
     let profile: DietProfile
+    let onPlan: (MealPlanRequest) -> Void
 
     @Query(sort: \Recipe.title) private var recipes: [Recipe]
-    @Query(sort: \ScheduledMeal.day) private var scheduledMeals: [ScheduledMeal]
 
     @State private var startDate = Date()
     @State private var numberOfDays = 7
@@ -98,15 +97,14 @@ struct PlanMealsSheet: View {
     }
 
     private func plan() {
-        MealPlanner.planMeals(
-            startingAt: startDate,
-            numberOfDays: numberOfDays,
-            servings: servings,
-            dietType: profile.dietType,
-            mealSlots: selectedMealSlots,
-            recipes: recipes,
-            existingMeals: scheduledMeals,
-            context: modelContext
+        onPlan(
+            MealPlanRequest(
+                startDate: startDate,
+                numberOfDays: numberOfDays,
+                servings: servings,
+                dietType: profile.dietType,
+                mealSlots: selectedMealSlots
+            )
         )
         dismiss()
     }

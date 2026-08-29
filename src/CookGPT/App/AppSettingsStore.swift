@@ -222,6 +222,8 @@ enum AppMetadata {
     static let advancedSectionFooter =
         "Additional pro features are planned for a future update. The current version is free and includes no in-app purchases or subscriptions."
 
+    static let shareAttribution = "Made with CookGPT: Gourmet Plan & Taste"
+
     static var version: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "—"
     }
