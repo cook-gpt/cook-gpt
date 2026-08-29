@@ -15,7 +15,7 @@
   },
   "home": {
     "badge": "CookGPT",
-    "title": "Gourmet-Plan & Tracking",
+    "title": "Gourmet-Plan & Taste",
     "subtitle": "$t(app.name) vereint Rezepte, Wochenplanung und Einkaufslisten — mit Schritt-Timern auf dem Sperrbildschirm beim Kochen.",
     "heroAlt": "$t(app.name)-App mit dem Rezepte-Bildschirm auf dem iPhone",
     "featuresTitle": "Alles für die Küche",
@@ -132,8 +132,8 @@
     ]
   },
   "app": {
-    "name": "CookGPT - Gourmet-Plan & Tracking",
+    "name": "CookGPT - Gourmet-Plan & Taste",
     "nameShort": "CookGPT",
-    "tagline": "Gourmet-Plan & Tracking"
+    "tagline": "Gourmet-Plan & Taste"
   }
 }

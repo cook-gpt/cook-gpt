@@ -15,7 +15,7 @@
   },
   "home": {
     "badge": "CookGPT",
-    "title": "Gourmetplan & bijhouden",
+    "title": "Gourmetplan & smaak",
     "subtitle": "$t(app.name) combineert recepten, weekplanning en boodschappenlijsten — met stap-timers op je vergrendelscherm tijdens het koken.",
     "heroAlt": "$t(app.name)-app met het receptenscherm op iPhone",
     "featuresTitle": "Alles wat je nodig hebt in de keuken",
@@ -132,8 +132,8 @@
     ]
   },
   "app": {
-    "name": "CookGPT - Gourmetplan & bijhouden",
+    "name": "CookGPT - Gourmetplan & smaak",
     "nameShort": "CookGPT",
-    "tagline": "Gourmetplan & bijhouden"
+    "tagline": "Gourmetplan & smaak"
   }
 }

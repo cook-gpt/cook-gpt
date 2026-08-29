@@ -15,7 +15,7 @@
   },
   "home": {
     "badge": "CookGPT",
-    "title": "Pla gourmet i seguiment",
+    "title": "Pla gourmet i gust",
     "subtitle": "$t(app.name) reuneix receptes, planificació setmanal i llistes de la compra — amb temporitzadors a la pantalla de bloqueig mentre cuines.",
     "heroAlt": "App $t(app.name) mostrant la pantalla de receptes a l'iPhone",
     "featuresTitle": "Tot el que necessites a la cuina",
@@ -132,8 +132,8 @@
     ]
   },
   "app": {
-    "name": "CookGPT - Pla gourmet i seguiment",
+    "name": "CookGPT - Pla gourmet i gust",
     "nameShort": "CookGPT",
-    "tagline": "Pla gourmet i seguiment"
+    "tagline": "Pla gourmet i gust"
   }
 }

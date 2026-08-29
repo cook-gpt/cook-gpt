@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2026-08-27
 
-First App Store release of **CookGPT - Gourmet Plan & Track**.
+First App Store release of **CookGPT - Gourmet Plan & Taste**.
 
 ### Added
 
@@ -22,7 +22,7 @@ First App Store release of **CookGPT - Gourmet Plan & Track**.
 
 ### Changed
 
-- App Store name: **CookGPT - Gourmet Plan & Track**
+- App Store name: **CookGPT - Gourmet Plan & Taste**
 - Open-source documentation: file headers and contributor code-structure guide
 
 ## [0.1.0] - 2026-08-25

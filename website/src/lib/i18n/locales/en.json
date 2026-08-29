@@ -14,13 +14,13 @@
     "hint": "Free for iPhone and iPad"
   },
   "app": {
-    "name": "CookGPT - Gourmet Plan & Track",
+    "name": "CookGPT - Gourmet Plan & Taste",
     "nameShort": "CookGPT",
-    "tagline": "Gourmet Plan & Track"
+    "tagline": "Gourmet Plan & Taste"
   },
   "home": {
     "badge": "CookGPT",
-    "title": "Gourmet Plan & Track",
+    "title": "Gourmet Plan & Taste",
     "subtitle": "$t(app.name) brings recipes, weekly meal planning, and smart grocery lists together — with step timers on your Lock Screen while you cook.",
     "heroAlt": "$t(app.name) app showing the recipes screen on iPhone",
     "featuresEyebrow": "Designed for home cooks",

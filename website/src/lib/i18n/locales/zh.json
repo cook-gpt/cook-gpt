@@ -15,7 +15,7 @@
   },
   "home": {
     "badge": "CookGPT",
-    "title": "美食计划与追踪",
+    "title": "美食计划与品味",
     "subtitle": "$t(app.name) 集食谱、每周餐食规划和购物清单于一体 — 烹饪时锁屏显示步骤计时器。",
     "heroAlt": "$t(app.name) 应用在 iPhone 上显示食谱界面",
     "featuresTitle": "厨房所需一应俱全",
@@ -132,8 +132,8 @@
     ]
   },
   "app": {
-    "name": "CookGPT - 美食计划与追踪",
+    "name": "CookGPT - 美食计划与品味",
     "nameShort": "CookGPT",
-    "tagline": "美食计划与追踪"
+    "tagline": "美食计划与品味"
   }
 }

@@ -2,7 +2,7 @@
 
 ## Getting started
 
-End users install **CookGPT - Gourmet Plan & Track** from the App Store. To run from source:
+End users install **CookGPT - Gourmet Plan & Taste** from the App Store. To run from source:
 
 1. Clone the repository and open `src/CookGPT.xcodeproj` in **Xcode 26**
 2. Select an iOS simulator or device (deployment target **iOS 26.5**)

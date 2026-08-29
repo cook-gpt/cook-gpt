@@ -15,7 +15,7 @@
   },
   "home": {
     "badge": "CookGPT",
-    "title": "Plan gourmet et suivi",
+    "title": "Plan gourmet et goût",
     "subtitle": "$t(app.name) réunit recettes, planification hebdomadaire et listes de courses — avec des minuteurs sur l'écran de verrouillage pendant que vous cuisinez.",
     "heroAlt": "App $t(app.name) affichant l'écran des recettes sur iPhone",
     "featuresTitle": "Tout ce qu'il faut en cuisine",
@@ -132,8 +132,8 @@
     ]
   },
   "app": {
-    "name": "CookGPT - Plan gourmet et suivi",
+    "name": "CookGPT - Plan gourmet et goût",
     "nameShort": "CookGPT",
-    "tagline": "Plan gourmet et suivi"
+    "tagline": "Plan gourmet et goût"
   }
 }

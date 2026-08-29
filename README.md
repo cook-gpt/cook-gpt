@@ -2,7 +2,7 @@
 
 <div>
 <h3>CookGPT</h3>
-<p><strong>CookGPT - Gourmet Plan & Track</strong> is a native <strong>SwiftUI</strong> iOS app for recipes, meal planning, and grocery lists — with step timers on the Lock Screen and Dynamic Island.</p>
+<p><strong>CookGPT - Gourmet Plan & Taste</strong> is a native <strong>SwiftUI</strong> iOS app for recipes, meal planning, and grocery lists — with step timers on the Lock Screen and Dynamic Island.</p>
 <a href="https://apps.apple.com/app/id6805535867"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83" width="175" alt="Download on the App Store"/></a>
 </div>
 

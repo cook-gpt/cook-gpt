@@ -1,6 +1,6 @@
 # App Store Connect — listing copy
 
-Source of truth for **CookGPT - Gourmet Plan & Track** ([App Store](https://apps.apple.com/app/id6805535867)).
+Source of truth for **CookGPT - Gourmet Plan & Taste** ([App Store](https://apps.apple.com/app/id6805535867)).
 
 Paste into **App Store Connect → Apps → CookGPT → App Information / Version Information** (English U.S.).
 
@@ -13,7 +13,7 @@ Paste into **App Store Connect → Apps → CookGPT → App Information / Versio
 ## Subtitle
 
 ```
-Gourmet Plan & Track
+Gourmet Plan & Taste
 ```
 
 (20 characters)
@@ -21,7 +21,7 @@ Gourmet Plan & Track
 ## Promotional Text
 
 ```
-CookGPT — Gourmet Plan & Track. Start with built-in recipes, auto-schedule your week, and build a grocery list from whatever you planned to cook.
+CookGPT — Gourmet Plan & Taste. Start with built-in recipes, auto-schedule your week, and build a grocery list from whatever you planned to cook.
 ```
 
 (145 characters)
@@ -29,7 +29,7 @@ CookGPT — Gourmet Plan & Track. Start with built-in recipes, auto-schedule you
 ## Description
 
 ```
-CookGPT — Gourmet Plan & Track helps you go from “what should we eat?” to a stocked kitchen and a clear cooking plan — all in one simple app.
+CookGPT — Gourmet Plan & Taste helps you go from “what should we eat?” to a stocked kitchen and a clear cooking plan — all in one simple app.
 
 Browse recipes, schedule your meals, and build a grocery list from what’s on your menu. Everything stays on your device. No account required.
 
@@ -60,17 +60,17 @@ SETTINGS
 • Customize categories and ingredient units
 • Reset to default data anytime
 
-CookGPT — Gourmet Plan & Track is built for home cooks who want less mental load: plan once, shop once, cook with confidence.
+CookGPT — Gourmet Plan & Taste is built for home cooks who want less mental load: plan once, shop once, cook with confidence.
 
 Questions or feedback? We’d love to hear from you.
 ```
 
 ## Branding notes
 
-- **App Store name:** CookGPT - Gourmet Plan & Track
-- **App Store subtitle:** Gourmet Plan & Track
+- **App Store name:** CookGPT - Gourmet Plan & Taste
+- **App Store subtitle:** Gourmet Plan & Taste
 - **Home screen name:** CookGPT (`CFBundleDisplayName`)
-- Use the full name **CookGPT — Gourmet Plan & Track** (or **CookGPT - Gourmet Plan & Track**) on first and last mention in the description; **CookGPT** alone is fine in the body and on the home screen.
+- Use the full name **CookGPT — Gourmet Plan & Taste** (or **CookGPT - Gourmet Plan & Taste**) on first and last mention in the description; **CookGPT** alone is fine in the body and on the home screen.
 
 ---
 

@@ -14,13 +14,13 @@
     "hint": "Gratis para iPhone y iPad"
   },
   "app": {
-    "name": "CookGPT - Plan gourmet y seguimiento",
+    "name": "CookGPT - Plan gourmet y sabor",
     "nameShort": "CookGPT",
-    "tagline": "Plan gourmet y seguimiento"
+    "tagline": "Plan gourmet y sabor"
   },
   "home": {
     "badge": "CookGPT",
-    "title": "Plan gourmet y seguimiento",
+    "title": "Plan gourmet y sabor",
     "subtitle": "$t(app.name) reúne recetas, planificación semanal de comidas y listas de la compra — con temporizadores en la pantalla de bloqueo mientras cocinas.",
     "heroAlt": "App $t(app.name) mostrando la pantalla de recetas en iPhone",
     "featuresEyebrow": "Diseñado para cocinar en casa",
