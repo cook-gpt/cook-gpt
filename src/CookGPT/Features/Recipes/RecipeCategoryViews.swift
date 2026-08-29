@@ -98,6 +98,7 @@ struct RecipeCategoryPickerContent: View {
 
 struct RecipeCategoryFilterBar: View {
     @Binding var selectedCategoryID: String?
+    var onEdit: () -> Void
     @Environment(AppSettingsStore.self) private var settings
 
     var body: some View {
@@ -110,7 +111,7 @@ struct RecipeCategoryFilterBar: View {
                     selectedCategoryID = nil
                 }
 
-                ForEach(settings.allCategories) { category in
+                ForEach(settings.visibleRecipeFilterCategories) { category in
                     CategoryFilterChip(
                         title: category.label,
                         isSelected: selectedCategoryID == category.id
@@ -118,6 +119,22 @@ struct RecipeCategoryFilterBar: View {
                         selectedCategoryID = category.id
                     }
                 }
+
+                Button(action: onEdit) {
+                    HStack(spacing: 4) {
+                        Image(systemName: "pencil")
+                        Text("Edit")
+                        Image(systemName: "tag")
+                    }
+                    .font(.subheadline.weight(.medium))
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 6)
+                    .background(Color(.secondarySystemFill))
+                    .foregroundStyle(.primary)
+                    .clipShape(Capsule())
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Edit categories")
             }
             .padding(.vertical, 4)
         }

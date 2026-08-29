@@ -11,12 +11,14 @@ private enum RecipeSortOption: String, CaseIterable {
     case alphabetical
     case difficulty
     case totalTime
+    case ingredients
 
     var label: String {
         switch self {
         case .alphabetical: "Alphabetical"
         case .difficulty: "Difficulty"
         case .totalTime: "Total time"
+        case .ingredients: "Ingredients"
         }
     }
 }
@@ -31,29 +33,45 @@ struct RecipesRootView: View {
     @State private var recipeToEdit: Recipe?
     @State private var recipeForCategories: Recipe?
     @State private var sortOption: RecipeSortOption = .alphabetical
+    @State private var sortAscending = true
     @State private var selectedCategoryFilter: String?
+    @State private var isEditingCategoryFilters = false
 
     private var sortedRecipes: [Recipe] {
         switch sortOption {
         case .alphabetical:
-            recipes.sorted {
-                $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending
-            }
+            recipes.sorted { compareTitles($0.title, $1.title) }
         case .difficulty:
             recipes.sorted {
                 if $0.difficulty.sortOrder != $1.difficulty.sortOrder {
-                    return $0.difficulty.sortOrder < $1.difficulty.sortOrder
+                    return compare($0.difficulty.sortOrder, $1.difficulty.sortOrder)
                 }
-                return $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending
+                return compareTitles($0.title, $1.title)
             }
         case .totalTime:
             recipes.sorted {
                 if $0.totalMinutes != $1.totalMinutes {
-                    return $0.totalMinutes < $1.totalMinutes
+                    return compare($0.totalMinutes, $1.totalMinutes)
                 }
-                return $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending
+                return compareTitles($0.title, $1.title)
+            }
+        case .ingredients:
+            recipes.sorted {
+                if $0.ingredients.count != $1.ingredients.count {
+                    return compare($0.ingredients.count, $1.ingredients.count)
+                }
+                return compareTitles($0.title, $1.title)
             }
         }
+    }
+
+    private func compare<T: Comparable>(_ lhs: T, _ rhs: T) -> Bool {
+        sortAscending ? lhs < rhs : lhs > rhs
+    }
+
+    private func compareTitles(_ lhs: String, _ rhs: String) -> Bool {
+        let result = lhs.localizedCaseInsensitiveCompare(rhs)
+        return sortAscending ? result == .orderedAscending : result == .orderedDescending
     }
 
     private var filteredRecipes: [Recipe] {
@@ -75,7 +93,10 @@ struct RecipesRootView: View {
             } else {
                 List {
                     Section {
-                        RecipeCategoryFilterBar(selectedCategoryID: $selectedCategoryFilter)
+                        RecipeCategoryFilterBar(
+                            selectedCategoryID: $selectedCategoryFilter,
+                            onEdit: { isEditingCategoryFilters = true }
+                        )
                             .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
                             .listRowBackground(Color.clear)
                     }
@@ -133,7 +154,7 @@ struct RecipesRootView: View {
         }
         .navigationTitle("Recipes")
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
+            ToolbarItemGroup(placement: .topBarLeading) {
                 Menu {
                     Picker("Sort by", selection: $sortOption) {
                         ForEach(RecipeSortOption.allCases, id: \.self) { option in
@@ -143,6 +164,14 @@ struct RecipesRootView: View {
                 } label: {
                     Image(systemName: "line.3.horizontal.decrease.circle")
                 }
+                .accessibilityLabel("Sort recipes")
+
+                Button {
+                    sortAscending.toggle()
+                } label: {
+                    Image(systemName: sortAscending ? "arrow.up" : "arrow.down")
+                }
+                .accessibilityLabel(sortAscending ? "Sort ascending" : "Sort descending")
             }
             ToolbarItem(placement: .primaryAction) {
                 Button {
@@ -161,6 +190,15 @@ struct RecipesRootView: View {
         .sheet(item: $recipeForCategories) { recipe in
             RecipeCategoryPickerSheet(recipe: recipe)
         }
+        .sheet(isPresented: $isEditingCategoryFilters) {
+            RecipeCategoryFilterEditorSheet()
+        }
+        .onChange(of: settings.visibleRecipeFilterCategories.map(\.id)) { _, visibleIDs in
+            if let selectedCategoryFilter,
+               !visibleIDs.contains(selectedCategoryFilter) {
+                self.selectedCategoryFilter = nil
+            }
+        }
         .navigationDestination(for: Recipe.self) { recipe in
             RecipeDetailView(recipe: recipe)
         }
@@ -175,6 +213,18 @@ struct RecipesRootView: View {
         cookingSession.timerStore.stopAll(for: recipe.id)
         modelContext.delete(recipe)
         try? modelContext.save()
+    }
+}
+
+private struct RecipeMetaItem: View {
+    let systemImage: String
+    let text: String
+
+    var body: some View {
+        HStack(spacing: 2) {
+            Image(systemName: systemImage)
+            Text(text)
+        }
     }
 }
 
@@ -207,8 +257,13 @@ private struct RecipeRowView: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
                 .lineLimit(2)
-            HStack {
-                Label("\(recipe.totalMinutes) min", systemImage: "clock")
+            HStack(spacing: 10) {
+                RecipeMetaItem(systemImage: "clock", text: "\(recipe.totalMinutes) min")
+                    .accessibilityLabel("\(recipe.totalMinutes) minutes")
+                RecipeMetaItem(systemImage: "fork.knife", text: "\(recipe.servings)")
+                    .accessibilityLabel("\(recipe.servings) servings")
+                RecipeMetaItem(systemImage: "list.bullet", text: "\(recipe.ingredients.count)")
+                    .accessibilityLabel("\(recipe.ingredients.count) ingredients")
                 DifficultyBadge(difficulty: recipe.difficulty)
             }
             .font(.caption)

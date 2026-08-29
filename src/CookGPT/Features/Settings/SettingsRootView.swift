@@ -1,7 +1,7 @@
 //  SettingsRootView.swift
 //  CookGPT
 //
-//  Settings tab: appearance, planner, categories, units, about, reset.
+//  Settings tab: appearance, planner, units, about, reset.
 //
 
 import SwiftUI
@@ -12,8 +12,6 @@ struct SettingsRootView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(CookingSessionManager.self) private var cookingSession
 
-    @State private var isAddingCategory = false
-    @State private var newCategoryLabel = ""
     @State private var showResetConfirmation = false
     @State private var isResetting = false
 
@@ -25,15 +23,6 @@ struct SettingsRootView: View {
             SettingsStepperSection(settings: settings)
             SettingsMenuPickerSection(settings: settings)
             SettingsNavigationSection(settings: settings)
-            SettingsCategoriesSection(
-                settings: settings,
-                categoriesDetail: defaultCategoriesDetail,
-                onAdd: {
-                    newCategoryLabel = ""
-                    isAddingCategory = true
-                },
-                onDelete: deleteCustomCategories
-            )
             SettingsInformationSection()
             SettingsResetSection(
                 isResetting: isResetting,
@@ -41,13 +30,6 @@ struct SettingsRootView: View {
             )
         }
         .navigationTitle("Settings")
-        .alert("Add category", isPresented: $isAddingCategory) {
-            TextField("Category name", text: $newCategoryLabel)
-            Button("Cancel", role: .cancel) {}
-            Button("Add") {
-                _ = settings.addCategory(label: newCategoryLabel)
-            }
-        }
         .alert("Reset app data?", isPresented: $showResetConfirmation) {
             Button("Cancel", role: .cancel) {}
             Button("Reset", role: .destructive) {
@@ -56,11 +38,6 @@ struct SettingsRootView: View {
         } message: {
             Text("This will permanently delete all recipes, scheduled meals, groceries, timers, and custom settings, then restore default data. This cannot be undone.")
         }
-    }
-
-    private var defaultCategoriesDetail: String {
-        let labels = AppSettingsStore.defaultCategories.map(\.label)
-        return "Built-in: " + labels.joined(separator: ", ")
     }
 
     private var defaultUnitsDetail: String {
@@ -77,14 +54,6 @@ struct SettingsRootView: View {
             cookingSession: cookingSession
         )
         isResetting = false
-    }
-
-    private func deleteCustomCategories(at offsets: IndexSet) {
-        let categories = settings.customCategories
-        for index in offsets {
-            guard categories.indices.contains(index) else { continue }
-            settings.removeCategory(id: categories[index].id)
-        }
     }
 }
 
@@ -186,40 +155,6 @@ private struct SettingsNavigationSection: View {
             }
         } footer: {
             Text("Uses the same alarm names as the iPhone Clock app. Previews and timer audio require a physical device.")
-        }
-    }
-}
-
-// MARK: - Editable list
-
-private struct SettingsCategoriesSection: View {
-    @Bindable var settings: AppSettingsStore
-    let categoriesDetail: String
-    let onAdd: () -> Void
-    let onDelete: (IndexSet) -> Void
-
-    var body: some View {
-        Section {
-            if settings.customCategories.isEmpty {
-                Text("No custom categories yet.")
-                    .foregroundStyle(.secondary)
-            } else {
-                ForEach(settings.customCategories) { category in
-                    Text(category.label)
-                }
-                .onDelete(perform: onDelete)
-            }
-
-            Button(action: onAdd) {
-                Label("Add category", systemImage: "plus")
-            }
-        } header: {
-            SettingsSectionInfoHeader(
-                title: "Categories",
-                detail: categoriesDetail
-            )
-        } footer: {
-            Text("Built-in categories cannot be removed. Tap or hover the info icon to see them.")
         }
     }
 }

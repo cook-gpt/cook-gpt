@@ -9,13 +9,6 @@ import Foundation
 struct AppCategory: Identifiable, Codable, Hashable {
     let id: String
     let label: String
-    let isDefault: Bool
-
-    init(id: String, label: String, isDefault: Bool = false) {
-        self.id = id
-        self.label = label
-        self.isDefault = isDefault
-    }
 }
 
 /// Central store for user preferences persisted in `UserDefaults`.
@@ -27,17 +20,17 @@ final class AppSettingsStore {
     static let mealPlannerExcludedCategoryIDs: Set<String> = ["breakfast", "dessert"]
 
     static let defaultCategories: [AppCategory] = [
-        AppCategory(id: "vegan", label: "Vegan", isDefault: true),
-        AppCategory(id: "vegetarian", label: "Vegetarian", isDefault: true),
-        AppCategory(id: "high-protein", label: "High protein", isDefault: true),
-        AppCategory(id: "low-carbs", label: "Low carbs", isDefault: true),
-        AppCategory(id: "no-carbs", label: "No carbs", isDefault: true),
-        AppCategory(id: "no-fats", label: "No fats", isDefault: true),
-        AppCategory(id: "quick", label: "Quick", isDefault: true),
-        AppCategory(id: "italian", label: "Italian", isDefault: true),
-        AppCategory(id: "meal-prep", label: "Meal prep", isDefault: true),
-        AppCategory(id: "breakfast", label: "Breakfast", isDefault: true),
-        AppCategory(id: "dessert", label: "Dessert", isDefault: true),
+        AppCategory(id: "vegan", label: "Vegan"),
+        AppCategory(id: "vegetarian", label: "Vegetarian"),
+        AppCategory(id: "high-protein", label: "High protein"),
+        AppCategory(id: "low-carbs", label: "Low carbs"),
+        AppCategory(id: "no-carbs", label: "No carbs"),
+        AppCategory(id: "no-fats", label: "No fats"),
+        AppCategory(id: "quick", label: "Quick"),
+        AppCategory(id: "italian", label: "Italian"),
+        AppCategory(id: "meal-prep", label: "Meal prep"),
+        AppCategory(id: "breakfast", label: "Breakfast"),
+        AppCategory(id: "dessert", label: "Dessert"),
     ]
 
     private enum Keys {
@@ -45,8 +38,10 @@ final class AppSettingsStore {
         static let defaultPlannerServings = "appSettings.defaultPlannerServings"
         static let timerAlarmSound = "appSettings.timerAlarmSound"
         static let weekStart = "appSettings.weekStart"
+        static let categories = "appSettings.categories"
         static let customCategories = "appSettings.customCategories"
         static let measurementSystem = "appSettings.measurementSystem"
+        static let recipeFilterActiveCategoryIDs = "appSettings.recipeFilterActiveCategoryIDs"
     }
 
     var appTheme: AppTheme = .system {
@@ -76,8 +71,13 @@ final class AppSettingsStore {
         weekStart.firstWeekday
     }
 
-    private(set) var customCategories: [AppCategory] = [] {
-        didSet { persistCustomCategories() }
+    private(set) var categories: [AppCategory] = [] {
+        didSet { persistCategories() }
+    }
+
+    /// Ordered active category IDs for the Recipes filter bar. Empty means all categories are active.
+    private(set) var recipeFilterActiveCategoryIDs: [String] = [] {
+        didSet { persistRecipeFilterActiveCategoryIDs() }
     }
 
     /// Ingredient and grocery unit options for the selected measurement system.
@@ -97,7 +97,12 @@ final class AppSettingsStore {
     private(set) var contentResetID = UUID()
 
     var allCategories: [AppCategory] {
-        Self.defaultCategories + customCategories
+        categories
+    }
+
+    /// Categories shown in the Recipes filter bar, in display order.
+    var visibleRecipeFilterCategories: [AppCategory] {
+        categories(for: effectiveRecipeFilterActiveCategoryIDs())
     }
 
     private init() {
@@ -131,7 +136,8 @@ final class AppSettingsStore {
             measurementSystem = MeasurementSystem.preferredForCurrentLocale
         }
         TimerAlarmSoundInstaller.ensureInstalled(timerAlarmSound)
-        customCategories = Self.sanitizeCustomCategories(Self.loadCustomCategories())
+        categories = Self.loadCategories()
+        recipeFilterActiveCategoryIDs = Self.loadRecipeFilterActiveCategoryIDs()
     }
 
     func resetToDefaults() {
@@ -140,7 +146,41 @@ final class AppSettingsStore {
         timerAlarmSound = .defaultSound
         weekStart = .monday
         measurementSystem = MeasurementSystem.preferredForCurrentLocale
-        customCategories = []
+        categories = Self.defaultCategories
+        recipeFilterActiveCategoryIDs = []
+    }
+
+    func effectiveRecipeFilterActiveCategoryIDs() -> [String] {
+        let allIDs = allCategories.map(\.id)
+        guard !allIDs.isEmpty else { return [] }
+
+        if recipeFilterActiveCategoryIDs.isEmpty {
+            return allIDs
+        }
+
+        var activeIDs = recipeFilterActiveCategoryIDs.filter { allIDs.contains($0) }
+        return activeIDs
+    }
+
+    func inactiveRecipeFilterCategoryIDs() -> [String] {
+        let active = Set(effectiveRecipeFilterActiveCategoryIDs())
+        return allCategories.map(\.id).filter { !active.contains($0) }
+    }
+
+    func setRecipeFilterActiveCategoryIDs(_ ids: [String]) {
+        let allIDs = Set(allCategories.map(\.id))
+        recipeFilterActiveCategoryIDs = ids.filter { allIDs.contains($0) }
+    }
+
+    func setRecipeFilterCategory(_ id: String, isActive: Bool) {
+        var ids = effectiveRecipeFilterActiveCategoryIDs()
+        if isActive {
+            guard !ids.contains(id) else { return }
+            ids.append(id)
+        } else {
+            ids.removeAll { $0 == id }
+        }
+        setRecipeFilterActiveCategoryIDs(ids)
     }
 
     func beginDataReset() {
@@ -162,26 +202,33 @@ final class AppSettingsStore {
         tags.map { label(forCategoryID: $0) }
     }
 
-    func isDefaultCategory(id: String) -> Bool {
-        Self.defaultCategories.contains { $0.id == id }
-    }
-
     @discardableResult
     func addCategory(label: String) -> Bool {
         let trimmed = label.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return false }
 
         let id = Self.slugify(trimmed)
-        guard !allCategories.contains(where: { $0.id == id }) else { return false }
+        guard !categories.contains(where: { $0.id == id }) else { return false }
 
-        customCategories.append(AppCategory(id: id, label: trimmed, isDefault: false))
-        customCategories.sort { $0.label.localizedCaseInsensitiveCompare($1.label) == .orderedAscending }
+        categories.append(AppCategory(id: id, label: trimmed))
+        if recipeFilterActiveCategoryIDs.isEmpty {
+            return true
+        }
+        var activeIDs = effectiveRecipeFilterActiveCategoryIDs()
+        if !activeIDs.contains(id) {
+            activeIDs.append(id)
+            setRecipeFilterActiveCategoryIDs(activeIDs)
+        }
         return true
     }
 
     func removeCategory(id: String) {
-        guard !isDefaultCategory(id: id) else { return }
-        customCategories.removeAll { $0.id == id }
+        categories.removeAll { $0.id == id }
+        if !recipeFilterActiveCategoryIDs.isEmpty {
+            setRecipeFilterActiveCategoryIDs(
+                recipeFilterActiveCategoryIDs.filter { $0 != id }
+            )
+        }
     }
 
     private static func slugify(_ text: String) -> String {
@@ -192,7 +239,27 @@ final class AppSettingsStore {
             .replacingOccurrences(of: " ", with: "-")
     }
 
-    private static func loadCustomCategories() -> [AppCategory] {
+    private static func loadCategories() -> [AppCategory] {
+        if let data = UserDefaults.standard.data(forKey: Keys.categories),
+           let decoded = try? JSONDecoder().decode([AppCategory].self, from: data),
+           !decoded.isEmpty {
+            return decoded
+        }
+
+        let legacyCustom = loadLegacyCustomCategories()
+        if legacyCustom.isEmpty, UserDefaults.standard.data(forKey: Keys.customCategories) == nil {
+            return defaultCategories
+        }
+
+        var merged = defaultCategories
+        let existingIDs = Set(merged.map(\.id))
+        for category in legacyCustom where !existingIDs.contains(category.id) {
+            merged.append(AppCategory(id: category.id, label: category.label))
+        }
+        return merged
+    }
+
+    private static func loadLegacyCustomCategories() -> [AppCategory] {
         guard let data = UserDefaults.standard.data(forKey: Keys.customCategories),
               let decoded = try? JSONDecoder().decode([AppCategory].self, from: data) else {
             return []
@@ -200,17 +267,23 @@ final class AppSettingsStore {
         return decoded
     }
 
-    private static func sanitizeCustomCategories(_ categories: [AppCategory]) -> [AppCategory] {
-        let defaultIDs = Set(defaultCategories.map(\.id))
-        return categories.filter { category in
-            !category.isDefault && !defaultIDs.contains(category.id)
+    private func persistCategories() {
+        if let data = try? JSONEncoder().encode(categories) {
+            UserDefaults.standard.set(data, forKey: Keys.categories)
         }
     }
 
-    private func persistCustomCategories() {
-        if let data = try? JSONEncoder().encode(customCategories) {
-            UserDefaults.standard.set(data, forKey: Keys.customCategories)
-        }
+    private func persistRecipeFilterActiveCategoryIDs() {
+        UserDefaults.standard.set(recipeFilterActiveCategoryIDs, forKey: Keys.recipeFilterActiveCategoryIDs)
+    }
+
+    private func categories(for ids: [String]) -> [AppCategory] {
+        let lookup = Dictionary(uniqueKeysWithValues: allCategories.map { ($0.id, $0) })
+        return ids.compactMap { lookup[$0] }
+    }
+
+    private static func loadRecipeFilterActiveCategoryIDs() -> [String] {
+        UserDefaults.standard.stringArray(forKey: Keys.recipeFilterActiveCategoryIDs) ?? []
     }
 }
 
