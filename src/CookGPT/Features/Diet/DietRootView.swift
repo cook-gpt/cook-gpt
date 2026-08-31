@@ -7,6 +7,11 @@
 import SwiftUI
 import SwiftData
 
+private struct MealRecipeDetailRoute: Hashable {
+    let recipeID: UUID
+    let servings: Int
+}
+
 struct DietRootView: View {
     @Query(filter: #Predicate<DietProfile> { $0.isActive == true })
     private var activeProfiles: [DietProfile]
@@ -120,6 +125,11 @@ struct DietRootView: View {
             }
         }
         .navigationTitle("Meals")
+        .navigationDestination(for: MealRecipeDetailRoute.self) { route in
+            if let recipe = recipes.first(where: { $0.id == route.recipeID }) {
+                RecipeDetailView(recipe: recipe, initialServings: route.servings)
+            }
+        }
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
                 if activeProfile != nil && !isApplyingMealPlan && !isEditingMeals {
@@ -439,11 +449,25 @@ struct DietRootView: View {
 
     @ViewBuilder
     private func scheduledMealListRow(_ meal: ScheduledMeal, showsMealSlotLabel: Bool = true) -> some View {
-        ScheduledMealRow(
-            meal: meal,
-            recipe: recipe(for: meal),
-            showsMealSlotLabel: showsMealSlotLabel
-        )
+        Group {
+            if let recipe = recipe(for: meal) {
+                NavigationLink(
+                    value: MealRecipeDetailRoute(recipeID: recipe.id, servings: meal.servings)
+                ) {
+                    ScheduledMealRow(
+                        meal: meal,
+                        recipe: recipe,
+                        showsMealSlotLabel: showsMealSlotLabel
+                    )
+                }
+            } else {
+                ScheduledMealRow(
+                    meal: meal,
+                    recipe: nil,
+                    showsMealSlotLabel: showsMealSlotLabel
+                )
+            }
+        }
         .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 12))
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
             Button(role: .destructive) {
