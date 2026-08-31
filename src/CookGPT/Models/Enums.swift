@@ -32,3 +32,36 @@ enum RecipeDifficulty: String, Codable, CaseIterable {
         }
     }
 }
+
+enum RecipeCookingTool: String, Codable, CaseIterable, Identifiable {
+    case oven
+    case pan
+    case fryer
+    case airFryer
+    case fridge
+    case freezer
+
+    var id: String { rawValue }
+
+    var label: String {
+        switch self {
+        case .oven: "Oven"
+        case .pan: "Pan"
+        case .fryer: "Fryer"
+        case .airFryer: "Air fryer"
+        case .fridge: "Fridge"
+        case .freezer: "Freezer"
+        }
+    }
+
+    var systemImage: String {
+        switch self {
+        case .oven: "oven.fill"
+        case .pan: "frying.pan.fill"
+        case .fryer: "flame.fill"
+        case .airFryer: "wind"
+        case .fridge: "refrigerator.fill"
+        case .freezer: "snowflake"
+        }
+    }
+}

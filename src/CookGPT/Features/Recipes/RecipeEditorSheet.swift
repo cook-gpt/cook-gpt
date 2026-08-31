@@ -21,6 +21,7 @@ struct RecipeEditorSheet: View {
     @State private var cookMinutes = 30
     @State private var difficulty: RecipeDifficulty = .medium
     @State private var selectedCategoryIDs: Set<String> = []
+    @State private var selectedCookingTools: Set<RecipeCookingTool> = []
     @State private var ingredients: [DraftIngredient] = [DraftIngredient()]
     @State private var steps: [DraftStep] = [DraftStep()]
     @State private var didInitialize = false
@@ -47,6 +48,8 @@ struct RecipeEditorSheet: View {
                 }
 
                 RecipeCategorySelectionSection(selectedCategoryIDs: $selectedCategoryIDs)
+
+                RecipeCookingToolsSection(selectedCookingTools: $selectedCookingTools)
 
                 Section {
                     ForEach($ingredients) { $ingredient in
@@ -108,6 +111,7 @@ struct RecipeEditorSheet: View {
         cookMinutes = recipe.cookMinutes
         difficulty = recipe.difficulty
         selectedCategoryIDs = Set(recipe.tags)
+        selectedCookingTools = Set(recipe.selectedCookingTools)
 
         let loadedIngredients = recipe.ingredients.map {
             DraftIngredient(name: $0.displayName, quantity: $0.quantity, unit: $0.unit)
@@ -146,6 +150,9 @@ struct RecipeEditorSheet: View {
         let trimmedTitle = title.trimmingCharacters(in: .whitespacesAndNewlines)
         let trimmedSummary = summary.trimmingCharacters(in: .whitespacesAndNewlines)
         let tags = selectedCategoryIDs.sorted()
+        let cookingTools = RecipeCookingTool.allCases
+            .filter { selectedCookingTools.contains($0) }
+            .map(\.rawValue)
 
         let targetRecipe: Recipe
         if let recipe {
@@ -157,6 +164,7 @@ struct RecipeEditorSheet: View {
             targetRecipe.cookMinutes = cookMinutes
             targetRecipe.difficulty = difficulty
             targetRecipe.tags = tags
+            targetRecipe.cookingTools = cookingTools
             replaceIngredients(for: targetRecipe)
             replaceSteps(for: targetRecipe)
         } else {
@@ -167,7 +175,8 @@ struct RecipeEditorSheet: View {
                 prepMinutes: prepMinutes,
                 cookMinutes: cookMinutes,
                 difficulty: difficulty,
-                tags: tags
+                tags: tags,
+                cookingTools: cookingTools
             )
             modelContext.insert(targetRecipe)
             appendIngredients(to: targetRecipe)

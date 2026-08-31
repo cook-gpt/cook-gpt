@@ -17,7 +17,8 @@ struct AppCategory: Identifiable, Codable, Hashable {
 final class AppSettingsStore {
     static let shared = AppSettingsStore()
 
-    static let mealPlannerExcludedCategoryIDs: Set<String> = ["breakfast", "dessert"]
+    static let mealPlannerExcludedCategoryIDs: Set<String> = ["dessert"]
+    static let breakfastCategoryID = "breakfast"
 
     static let defaultCategories: [AppCategory] = [
         AppCategory(id: "vegan", label: "Vegan"),

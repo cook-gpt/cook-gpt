@@ -36,6 +36,7 @@ struct RecipesRootView: View {
     @State private var sortAscending = true
     @State private var selectedCategoryFilter: String?
     @State private var isEditingCategoryFilters = false
+    @State private var searchText = ""
 
     private var sortedRecipes: [Recipe] {
         switch sortOption {
@@ -74,9 +75,29 @@ struct RecipesRootView: View {
         return sortAscending ? result == .orderedAscending : result == .orderedDescending
     }
 
-    private var filteredRecipes: [Recipe] {
+    private var categoryFilteredRecipes: [Recipe] {
         guard let selectedCategoryFilter else { return sortedRecipes }
         return sortedRecipes.filter { $0.hasCategory(selectedCategoryFilter) }
+    }
+
+    private var displayedRecipes: [Recipe] {
+        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !query.isEmpty else { return categoryFilteredRecipes }
+        return categoryFilteredRecipes.filter { recipe in
+            recipe.title.localizedCaseInsensitiveContains(query)
+                || recipe.summary.localizedCaseInsensitiveContains(query)
+                || settings.labels(forTagIDs: recipe.tags).contains {
+                    $0.localizedCaseInsensitiveContains(query)
+                }
+        }
+    }
+
+    private var activeDisplayedRecipes: [Recipe] {
+        displayedRecipes.filter { cookingSession.isInProgress(recipe: $0) }
+    }
+
+    private var inactiveDisplayedRecipes: [Recipe] {
+        displayedRecipes.filter { !cookingSession.isInProgress(recipe: $0) }
     }
 
     var body: some View {
@@ -97,59 +118,49 @@ struct RecipesRootView: View {
                             selectedCategoryID: $selectedCategoryFilter,
                             onEdit: { isEditingCategoryFilters = true }
                         )
-                            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
-                            .listRowBackground(Color.clear)
+                        .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 6, trailing: 16))
+                        .listRowBackground(Color.clear)
+                        .listRowSeparator(.hidden)
                     }
 
-                    if filteredRecipes.isEmpty {
-                        ContentUnavailableView(
-                            "No recipes in this category",
-                            systemImage: "tag.slash",
-                            description: Text("Try another category or add tags to your recipes.")
-                        )
-                    } else {
-                        ForEach(filteredRecipes) { recipe in
-                            NavigationLink(value: recipe) {
-                                RecipeRowView(
-                                    recipe: recipe,
-                                    isInProgress: cookingSession.isInProgress(recipe: recipe)
+                    Section {
+                        RecipeSearchBar(text: $searchText)
+                            .listRowInsets(EdgeInsets(top: 6, leading: 0, bottom: 8, trailing: 0))
+                            .listRowBackground(Color.clear)
+                            .listRowSeparator(.hidden)
+                    }
+
+                    if displayedRecipes.isEmpty {
+                        Section {
+                            ContentUnavailableView(
+                                searchText.isEmpty ? "No recipes in this category" : "No matching recipes",
+                                systemImage: searchText.isEmpty ? "tag.slash" : "magnifyingglass",
+                                description: Text(
+                                    searchText.isEmpty
+                                        ? "Try another category or add tags to your recipes."
+                                        : "Try a different search term."
                                 )
+                            )
+                        }
+                    } else {
+                        if !activeDisplayedRecipes.isEmpty {
+                            Section {
+                                ForEach(activeDisplayedRecipes) { recipe in
+                                    recipeListRow(recipe)
+                                }
                             }
-                            .swipeActions(edge: .leading, allowsFullSwipe: true) {
-                                Button {
-                                    toggleFavorite(recipe)
-                                } label: {
-                                    Label(
-                                        recipe.isFavorite ? "Unfavorite" : "Favorite",
-                                        systemImage: recipe.isFavorite ? "star.slash.fill" : "star.fill"
-                                    )
-                                }
-                                .tint(.yellow)
+                        }
 
-                                Button {
-                                    recipeForCategories = recipe
-                                } label: {
-                                    Label("Categories", systemImage: "tag")
+                        if !inactiveDisplayedRecipes.isEmpty {
+                            Section {
+                                ForEach(inactiveDisplayedRecipes) { recipe in
+                                    recipeListRow(recipe)
                                 }
-                                .tint(.blue)
-                            }
-                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                Button(role: .destructive) {
-                                    deleteRecipe(recipe)
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
-                                }
-
-                                Button {
-                                    recipeToEdit = recipe
-                                } label: {
-                                    Label("Edit", systemImage: "pencil")
-                                }
-                                .tint(.indigo)
                             }
                         }
                     }
                 }
+                .listSectionSpacing(8)
             }
         }
         .navigationTitle("Recipes")
@@ -199,8 +210,10 @@ struct RecipesRootView: View {
                 self.selectedCategoryFilter = nil
             }
         }
-        .navigationDestination(for: Recipe.self) { recipe in
-            RecipeDetailView(recipe: recipe)
+        .navigationDestination(for: UUID.self) { recipeID in
+            if let recipe = recipes.first(where: { $0.id == recipeID }) {
+                RecipeDetailView(recipe: recipe)
+            }
         }
     }
 
@@ -209,82 +222,95 @@ struct RecipesRootView: View {
         try? modelContext.save()
     }
 
-    private func deleteRecipe(_ recipe: Recipe) {
-        cookingSession.timerStore.stopAll(for: recipe.id)
-        modelContext.delete(recipe)
-        try? modelContext.save()
+    @ViewBuilder
+    private func recipeListRow(_ recipe: Recipe) -> some View {
+        NavigationLink(value: recipe.id) {
+            RecipeRowView(
+                recipe: recipe,
+                isInProgress: cookingSession.isInProgress(recipe: recipe)
+            )
+        }
+        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+            Button {
+                toggleFavorite(recipe)
+            } label: {
+                Label(
+                    recipe.isFavorite ? "Unfavorite" : "Favorite",
+                    systemImage: recipe.isFavorite ? "star.slash.fill" : "star.fill"
+                )
+            }
+            .tint(.yellow)
+
+            Button {
+                recipeForCategories = recipe
+            } label: {
+                Label("Categories", systemImage: "tag")
+            }
+            .tint(.blue)
+        }
+        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+            Button(role: .destructive) {
+                deleteRecipe(id: recipe.id)
+            } label: {
+                Label("Delete", systemImage: "trash")
+            }
+
+            Button {
+                recipeToEdit = recipe
+            } label: {
+                Label("Edit", systemImage: "pencil")
+            }
+            .tint(.indigo)
+        }
     }
-}
 
-private struct RecipeMetaItem: View {
-    let systemImage: String
-    let text: String
+    private func deleteRecipe(id recipeID: UUID) {
+        if recipeToEdit?.id == recipeID {
+            recipeToEdit = nil
+        }
+        if recipeForCategories?.id == recipeID {
+            recipeForCategories = nil
+        }
 
-    var body: some View {
-        HStack(spacing: 2) {
-            Image(systemName: systemImage)
-            Text(text)
+        cookingSession.timerStore.stopAll(for: recipeID)
+
+        Task { @MainActor in
+            guard let recipe = recipes.first(where: { $0.id == recipeID }) else { return }
+            ScheduledMeal.deleteMeals(referencing: recipeID, in: modelContext)
+            modelContext.delete(recipe)
+            try? modelContext.save()
         }
     }
 }
 
-private struct RecipeRowView: View {
-    let recipe: Recipe
-    var isInProgress: Bool = false
-    @Environment(AppSettingsStore.self) private var settings
+private struct RecipeSearchBar: View {
+    @Binding var text: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            HStack {
-                Text(recipe.title)
-                    .font(.headline)
-                if recipe.isFavorite {
-                    Image(systemName: "star.fill")
-                        .font(.caption)
-                        .foregroundStyle(.yellow)
-                }
-                if isInProgress {
-                    Text("Timer running")
-                        .font(.caption2.weight(.semibold))
-                        .padding(.horizontal, 6)
-                        .padding(.vertical, 2)
-                        .background(Color.blue.opacity(0.15))
-                        .foregroundStyle(.blue)
-                        .clipShape(Capsule())
-                }
-            }
-            Text(recipe.summary)
-                .font(.subheadline)
+        HStack(spacing: 8) {
+            Image(systemName: "magnifyingglass")
                 .foregroundStyle(.secondary)
-                .lineLimit(2)
-            HStack(spacing: 10) {
-                RecipeMetaItem(systemImage: "clock", text: "\(recipe.totalMinutes) min")
-                    .accessibilityLabel("\(recipe.totalMinutes) minutes")
-                RecipeMetaItem(systemImage: "fork.knife", text: "\(recipe.servings)")
-                    .accessibilityLabel("\(recipe.servings) servings")
-                RecipeMetaItem(systemImage: "list.bullet", text: "\(recipe.ingredients.count)")
-                    .accessibilityLabel("\(recipe.ingredients.count) ingredients")
-                DifficultyBadge(difficulty: recipe.difficulty)
-            }
-            .font(.caption)
-            .foregroundStyle(.secondary)
 
-            if !recipe.tags.isEmpty {
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 6) {
-                        ForEach(settings.labels(forTagIDs: recipe.tags), id: \.self) { label in
-                            Text(label)
-                                .font(.caption2)
-                                .padding(.horizontal, 8)
-                                .padding(.vertical, 3)
-                                .background(.quaternary)
-                                .clipShape(Capsule())
-                        }
-                    }
+            TextField("Search recipes", text: $text)
+                .textFieldStyle(.plain)
+                .autocorrectionDisabled()
+                .textInputAutocapitalization(.never)
+
+            if !text.isEmpty {
+                Button {
+                    text = ""
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundStyle(.secondary)
                 }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Clear search")
             }
         }
-        .padding(.vertical, 4)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(Color(.secondarySystemFill), in: Capsule())
     }
 }
 

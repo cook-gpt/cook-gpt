@@ -18,6 +18,7 @@ final class Recipe {
     var cookMinutes: Int
     var difficulty: RecipeDifficulty
     var tags: [String]
+    var cookingTools: [String]
     var isFavorite: Bool
 
     @Relationship(deleteRule: .cascade, inverse: \RecipeIngredient.recipe)
@@ -25,6 +26,9 @@ final class Recipe {
 
     @Relationship(deleteRule: .cascade, inverse: \RecipeStep.recipe)
     var steps: [RecipeStep]
+
+    @Relationship(deleteRule: .cascade, inverse: \ScheduledMeal.recipe)
+    var scheduledMeals: [ScheduledMeal]
 
     init(
         id: UUID = UUID(),
@@ -35,9 +39,11 @@ final class Recipe {
         cookMinutes: Int,
         difficulty: RecipeDifficulty,
         tags: [String] = [],
+        cookingTools: [String] = [],
         isFavorite: Bool = false,
         ingredients: [RecipeIngredient] = [],
-        steps: [RecipeStep] = []
+        steps: [RecipeStep] = [],
+        scheduledMeals: [ScheduledMeal] = []
     ) {
         self.id = id
         self.title = title
@@ -47,9 +53,11 @@ final class Recipe {
         self.cookMinutes = cookMinutes
         self.difficulty = difficulty
         self.tags = tags
+        self.cookingTools = cookingTools
         self.isFavorite = isFavorite
         self.ingredients = ingredients
         self.steps = steps
+        self.scheduledMeals = scheduledMeals
     }
 
     var totalMinutes: Int {
@@ -75,6 +83,24 @@ final class Recipe {
             tags.append(categoryID)
         } else {
             tags.removeAll { $0 == categoryID }
+        }
+    }
+
+    var selectedCookingTools: [RecipeCookingTool] {
+        let selected = Set(cookingTools)
+        return RecipeCookingTool.allCases.filter { selected.contains($0.rawValue) }
+    }
+
+    func hasCookingTool(_ tool: RecipeCookingTool) -> Bool {
+        cookingTools.contains(tool.rawValue)
+    }
+
+    func setCookingTool(_ tool: RecipeCookingTool, enabled: Bool) {
+        if enabled {
+            guard !hasCookingTool(tool) else { return }
+            cookingTools.append(tool.rawValue)
+        } else {
+            cookingTools.removeAll { $0 == tool.rawValue }
         }
     }
 }

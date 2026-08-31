@@ -29,10 +29,7 @@ enum MeasurementSystem: String, CaseIterable, Identifiable, Codable {
     }
 
     var defaultUnit: String {
-        switch self {
-        case .metric: "g"
-        case .imperial: "oz"
-        }
+        "units"
     }
 
     static var preferredForCurrentLocale: MeasurementSystem {

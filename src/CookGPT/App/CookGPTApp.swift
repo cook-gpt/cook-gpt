@@ -25,9 +25,17 @@ struct CookGPTApp: App {
             ContentView()
                 .environment(CookingSessionManager.shared)
                 .environment(AppSettingsStore.shared)
+                .environment(AppNavigationStore.shared)
                 .onAppear {
                     let context = modelContainer.mainContext
                     SampleDataSeeder.seedIfNeeded(context: context)
+
+                    let recipeDescriptor = FetchDescriptor<Recipe>()
+                    let recipes = (try? context.fetch(recipeDescriptor)) ?? []
+                    ScheduledMeal.removeOrphanedMeals(
+                        validRecipeIDs: Set(recipes.map(\.id)),
+                        in: context
+                    )
                 }
         }
         .modelContainer(modelContainer)

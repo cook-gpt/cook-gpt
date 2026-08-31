@@ -81,11 +81,18 @@ final class CookingTimerStore {
         }
     }
 
-    private(set) var timers: [RunningTimer] = []
+    private(set) var timers: [RunningTimer] = [] {
+        didSet { refreshRecipesTabBadge() }
+    }
+    private(set) var showsRecipesTabBadge = false
     private let persistenceKey = "activeCookingTimers"
 
     var activeTimers: [RunningTimer] {
         timers.filter { !$0.isFinished }
+    }
+
+    private func refreshRecipesTabBadge() {
+        showsRecipesTabBadge = timers.contains { !$0.isFinished }
     }
 
     func timers(for recipeID: UUID) -> [RunningTimer] {
@@ -127,6 +134,7 @@ final class CookingTimerStore {
         timer.phase = .paused
         timer.endsAt = nil
         timers[index] = timer
+        refreshRecipesTabBadge()
         TimerCompletionNotifier.cancel(stepID: stepID)
         persistAndSyncLiveActivity(stepID: stepID)
     }
@@ -138,6 +146,7 @@ final class CookingTimerStore {
         timer.phase = .running
         timer.endsAt = .now.addingTimeInterval(TimeInterval(timer.remainingSeconds))
         timers[index] = timer
+        refreshRecipesTabBadge()
         persistAndSyncLiveActivity(stepID: stepID)
         scheduleCompletionNotification(stepID: stepID)
     }
@@ -193,6 +202,7 @@ final class CookingTimerStore {
         guard let data = UserDefaults.standard.data(forKey: persistenceKey),
               let decoded = try? JSONDecoder().decode([RunningTimer].self, from: data) else { return }
         timers = decoded.filter { !$0.isFinished }
+        refreshRecipesTabBadge()
         let restored = timers
         Task {
             await CookingTimerLiveActivityManager.restore(timers: restored)

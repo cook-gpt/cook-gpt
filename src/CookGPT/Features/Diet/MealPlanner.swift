@@ -16,19 +16,33 @@ struct MealPlanRequest {
 }
 
 enum MealPlanner {
-    static func eligibleRecipes(dietType: DietType, from recipes: [Recipe]) -> [Recipe] {
+    static func eligibleRecipes(
+        dietType: DietType,
+        from recipes: [Recipe],
+        for mealSlot: MealSlot
+    ) -> [Recipe] {
         let excluded = AppSettingsStore.mealPlannerExcludedCategoryIDs
-        let plannerRecipes = recipes.filter { recipe in
-            Set(recipe.tags).isDisjoint(with: excluded)
+        let breakfastCategoryID = AppSettingsStore.breakfastCategoryID
+
+        let slotFiltered = recipes.filter { recipe in
+            let tags = Set(recipe.tags)
+            guard tags.isDisjoint(with: excluded) else { return false }
+
+            switch mealSlot {
+            case .breakfast:
+                return tags.contains(breakfastCategoryID)
+            case .lunch, .dinner:
+                return !tags.contains(breakfastCategoryID)
+            }
         }
 
         let categories = Set(dietType.preferredCategoryIDs)
 
         let filtered: [Recipe]
         if categories.isEmpty {
-            filtered = plannerRecipes
+            filtered = slotFiltered
         } else {
-            filtered = plannerRecipes.filter { recipe in
+            filtered = slotFiltered.filter { recipe in
                 !Set(recipe.tags).isDisjoint(with: categories)
             }
         }
@@ -51,24 +65,38 @@ enum MealPlanner {
         recipes: [Recipe],
         context: ModelContext
     ) {
-        let candidates = eligibleRecipes(dietType: dietType, from: recipes)
-        guard !candidates.isEmpty, !mealSlots.isEmpty else { return }
+        guard !mealSlots.isEmpty else { return }
+
+        let orderedMealSlots = mealSlots.sorted { $0.displayOrder < $1.displayOrder }
+        let candidatesBySlot = Dictionary(uniqueKeysWithValues: orderedMealSlots.map { slot in
+            (slot, eligibleRecipes(dietType: dietType, from: recipes, for: slot))
+        })
+
+        guard candidatesBySlot.values.contains(where: { !$0.isEmpty }) else { return }
 
         let rangeStart = MealScheduleCalendar.startOfDay(startDate)
         guard let rangeEnd = MealScheduleCalendar.calendar.date(byAdding: .day, value: numberOfDays - 1, to: rangeStart) else {
             return
         }
 
-        deleteScheduledMeals(from: rangeStart, through: rangeEnd, context: context)
+        deleteScheduledMeals(
+            from: rangeStart,
+            through: rangeEnd,
+            mealSlots: Set(orderedMealSlots),
+            context: context
+        )
         try? context.save()
 
-        var recipeIndex = 0
+        var recipeIndexBySlot: [MealSlot: Int] = [:]
         let days = MealScheduleCalendar.dates(from: rangeStart, through: rangeEnd)
 
         for day in days {
-            for slot in mealSlots {
-                let recipe = candidates[recipeIndex % candidates.count]
-                recipeIndex += 1
+            for slot in orderedMealSlots {
+                guard let candidates = candidatesBySlot[slot], !candidates.isEmpty else { continue }
+
+                let index = recipeIndexBySlot[slot, default: 0]
+                let recipe = candidates[index % candidates.count]
+                recipeIndexBySlot[slot] = index + 1
 
                 let scheduled = ScheduledMeal(
                     day: day,
@@ -87,6 +115,7 @@ enum MealPlanner {
     private static func deleteScheduledMeals(
         from rangeStart: Date,
         through rangeEnd: Date,
+        mealSlots: Set<MealSlot>,
         context: ModelContext
     ) {
         let predicate = #Predicate<ScheduledMeal> { meal in
@@ -94,9 +123,9 @@ enum MealPlanner {
         }
         let descriptor = FetchDescriptor<ScheduledMeal>(predicate: predicate)
 
-        guard let mealsToDelete = try? context.fetch(descriptor) else { return }
+        guard let mealsInRange = try? context.fetch(descriptor) else { return }
 
-        for meal in mealsToDelete {
+        for meal in mealsInRange where mealSlots.contains(meal.mealSlot) {
             context.delete(meal)
         }
     }

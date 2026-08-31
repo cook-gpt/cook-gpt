@@ -15,6 +15,14 @@ enum MealSlot: String, Codable, CaseIterable {
         rawValue.capitalized
     }
 
+    var displayOrder: Int {
+        switch self {
+        case .breakfast: 0
+        case .lunch: 1
+        case .dinner: 2
+        }
+    }
+
     static func plannerSlots(included: Set<MealSlot>) -> [MealSlot] {
         allCases.filter { included.contains($0) }
     }

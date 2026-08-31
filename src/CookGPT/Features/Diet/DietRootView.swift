@@ -11,16 +11,21 @@ struct DietRootView: View {
     @Query(filter: #Predicate<DietProfile> { $0.isActive == true })
     private var activeProfiles: [DietProfile]
 
+    @Query(sort: \Recipe.title) private var recipes: [Recipe]
     @Query(sort: \ScheduledMeal.day) private var scheduledMeals: [ScheduledMeal]
     @Environment(\.modelContext) private var modelContext
     @Environment(AppSettingsStore.self) private var settings
 
     @State private var viewMode: ScheduleViewMode = .week
     @State private var selectedDate = Date()
-    @State private var isSchedulingMeal = false
     @State private var isPlanningMeals = false
+    @State private var planMealsStartDate = Date()
+    @State private var planMealsNumberOfDays = 7
+    @State private var planMealsIncludedSlots: Set<MealSlot> = [.lunch, .dinner]
+    @State private var planMealsInitialServings: Int?
     @State private var isApplyingMealPlan = false
-    @State private var mealToEdit: ScheduledMeal?
+    @State private var isEditingMeals = false
+    @State private var mealRecipePickerContext: MealRecipePickerContext?
 
     private var activeProfile: DietProfile? {
         activeProfiles.first
@@ -46,6 +51,32 @@ struct DietRootView: View {
                 }
             )
             return scheduledMeals.filter { days.contains(MealScheduleCalendar.startOfDay($0.day)) }
+        }
+    }
+
+    private var exportDays: [Date] {
+        switch viewMode {
+        case .day:
+            return [MealScheduleCalendar.startOfDay(selectedDate)]
+        case .week:
+            return weekDays
+        case .month:
+            return MealScheduleCalendar.daysInMonth(containing: selectedDate)
+        }
+    }
+
+    private var exportShareText: String {
+        MealScheduleShareFormatter.text(
+            days: exportDays,
+            meals: visibleMeals,
+            recipes: recipes
+        )
+    }
+
+    private var hasExportableMeals: Bool {
+        visibleMeals.contains { meal in
+            guard let recipeID = meal.recipeID else { return false }
+            return recipes.contains { $0.id == recipeID }
         }
     }
 
@@ -91,39 +122,99 @@ struct DietRootView: View {
         .navigationTitle("Meals")
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                Button("Plan meals") {
-                    isPlanningMeals = true
+                if activeProfile != nil && !isApplyingMealPlan && !isEditingMeals {
+                    ShareLink(
+                        item: exportShareText,
+                        subject: Text("Scheduled meals")
+                    ) {
+                        Image(systemName: "square.and.arrow.up")
+                    }
+                    .disabled(!hasExportableMeals)
+                    .accessibilityLabel("Export scheduled meals")
                 }
-                .disabled(activeProfile == nil || isApplyingMealPlan)
             }
-            ToolbarItem(placement: .primaryAction) {
-                Button {
-                    isSchedulingMeal = true
-                } label: {
-                    Image(systemName: "plus")
+            ToolbarItemGroup(placement: .primaryAction) {
+                if activeProfile != nil && !isApplyingMealPlan {
+                    if !isEditingMeals {
+                        Button {
+                            openPlanMeals()
+                        } label: {
+                            Image(systemName: "plus")
+                        }
+                        .accessibilityLabel("Plan meals")
+                    }
+
+                    Button {
+                        if isEditingMeals {
+                            finishEditingMeals()
+                        } else {
+                            isEditingMeals = true
+                        }
+                    } label: {
+                        Image(systemName: isEditingMeals ? "checkmark" : "pencil")
+                    }
+                    .accessibilityLabel(isEditingMeals ? "Done editing" : "Edit meals")
                 }
-                .disabled(activeProfile == nil || isApplyingMealPlan)
             }
         }
-        .sheet(isPresented: $isSchedulingMeal) {
-            ScheduleMealSheet(defaultDate: selectedDate)
-        }
-        .sheet(item: $mealToEdit) { meal in
-            ScheduleMealSheet(existingMeal: meal)
+        .sheet(item: $mealRecipePickerContext) { context in
+            NavigationStack {
+                RecipeImportPickerContent(
+                    recipes: recipes,
+                    excludedRecipeIDs: [],
+                    onSelect: { selectedRecipe in
+                        if let meal = scheduledMeals.first(where: { $0.id == context.mealID }) {
+                            meal.recipeID = selectedRecipe.id
+                            meal.recipe = selectedRecipe
+                        }
+                        mealRecipePickerContext = nil
+                    }
+                )
+                .navigationTitle("Select recipe")
+                .navigationBarTitleDisplayMode(.inline)
+                .toolbar {
+                    ToolbarItem(placement: .cancellationAction) {
+                        Button("Cancel") {
+                            mealRecipePickerContext = nil
+                        }
+                    }
+                }
+            }
         }
         .sheet(isPresented: $isPlanningMeals) {
             if let profile = activeProfile {
-                PlanMealsSheet(profile: profile, onPlan: applyMealPlan)
+                PlanMealsSheet(
+                    profile: profile,
+                    startDate: planMealsStartDate,
+                    numberOfDays: planMealsNumberOfDays,
+                    includedMealSlots: planMealsIncludedSlots,
+                    initialServings: planMealsInitialServings,
+                    onPlan: applyMealPlan
+                )
+                .id(planMealsSheetID)
             }
         }
         .onChange(of: settings.isResettingData) { _, isResetting in
             if isResetting {
-                isSchedulingMeal = false
                 isPlanningMeals = false
                 isApplyingMealPlan = false
-                mealToEdit = nil
+                isEditingMeals = false
+                mealRecipePickerContext = nil
+                planMealsInitialServings = nil
             }
         }
+        .onAppear {
+            ScheduledMeal.removeOrphanedMeals(
+                validRecipeIDs: Set(recipes.map(\.id)),
+                in: modelContext
+            )
+        }
+    }
+
+    private var planMealsSheetID: String {
+        let slots = planMealsIncludedSlots.map(\.rawValue).sorted().joined(separator: "-")
+        let servings = planMealsInitialServings.map(String.init) ?? "default"
+        return "\(planMealsStartDate.timeIntervalSince1970)-\(planMealsNumberOfDays)-\(slots)-\(servings)"
     }
 
     private func applyMealPlan(_ request: MealPlanRequest) {
@@ -197,22 +288,16 @@ struct DietRootView: View {
 
             ForEach(MealSlot.allCases, id: \.self) { slot in
                 Section(slot.label) {
-                    if let meal = visibleMeals.first(where: { $0.mealSlot == slot }) {
-                        ScheduledMealRow(meal: meal)
-                            .contentShape(Rectangle())
-                            .onTapGesture {
-                                mealToEdit = meal
-                            }
-                            .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                Button(role: .destructive) {
-                                    deleteMeal(meal)
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
-                                }
-                            }
+                    if isEditingMeals {
+                        if let meal = meal(for: selectedDate, slot: slot) {
+                            scheduledMealEditRow(meal, showsMealSlotLabel: false)
+                        } else {
+                            addMealRecipeRow(for: selectedDate, slot: slot)
+                        }
+                    } else if let meal = meal(for: selectedDate, slot: slot) {
+                        scheduledMealListRow(meal, showsMealSlotLabel: false)
                     } else {
-                        Text("Nothing scheduled")
-                            .foregroundStyle(.secondary)
+                        planMealSlotButton(for: slot)
                     }
                 }
             }
@@ -224,24 +309,22 @@ struct DietRootView: View {
         List {
             ForEach(weekDays, id: \.self) { day in
                 Section(MealScheduleCalendar.dayTitle(day)) {
-                    let dayMeals = scheduledMeals.filter { MealScheduleCalendar.isSameDay($0.day, day) }
-                    if dayMeals.isEmpty {
-                        Text("Nothing scheduled")
-                            .foregroundStyle(.secondary)
+                    if isEditingMeals {
+                        ForEach(MealSlot.allCases, id: \.self) { slot in
+                            if let meal = meal(for: day, slot: slot) {
+                                scheduledMealEditRow(meal)
+                            } else {
+                                addMealRecipeRow(for: day, slot: slot, showsMealSlotLabel: true)
+                            }
+                        }
                     } else {
-                        ForEach(dayMeals, id: \.persistentModelID) { meal in
-                            ScheduledMealRow(meal: meal)
-                                .contentShape(Rectangle())
-                                .onTapGesture {
-                                    mealToEdit = meal
-                                }
-                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                    Button(role: .destructive) {
-                                        deleteMeal(meal)
-                                    } label: {
-                                        Label("Delete", systemImage: "trash")
-                                    }
-                                }
+                        let dayMeals = meals(for: day)
+                        if dayMeals.isEmpty {
+                            planMealsButton(for: day)
+                        } else {
+                            ForEach(dayMeals, id: \.persistentModelID) { meal in
+                                scheduledMealListRow(meal)
+                            }
                         }
                     }
                 }
@@ -254,23 +337,19 @@ struct DietRootView: View {
         List {
             ForEach(groupedMonthDays, id: \.day) { group in
                 Section(MealScheduleCalendar.dayTitle(group.day)) {
-                    if group.meals.isEmpty {
-                        Text("Nothing scheduled")
-                            .foregroundStyle(.secondary)
+                    if isEditingMeals {
+                        ForEach(MealSlot.allCases, id: \.self) { slot in
+                            if let meal = meal(for: group.day, slot: slot) {
+                                scheduledMealEditRow(meal)
+                            } else {
+                                addMealRecipeRow(for: group.day, slot: slot, showsMealSlotLabel: true)
+                            }
+                        }
+                    } else if group.meals.isEmpty {
+                        planMealsButton(for: group.day)
                     } else {
                         ForEach(group.meals, id: \.persistentModelID) { meal in
-                            ScheduledMealRow(meal: meal)
-                                .contentShape(Rectangle())
-                                .onTapGesture {
-                                    mealToEdit = meal
-                                }
-                                .swipeActions(edge: .trailing, allowsFullSwipe: true) {
-                                    Button(role: .destructive) {
-                                        deleteMeal(meal)
-                                    } label: {
-                                        Label("Delete", systemImage: "trash")
-                                    }
-                                }
+                            scheduledMealListRow(meal)
                         }
                     }
                 }
@@ -280,9 +359,57 @@ struct DietRootView: View {
 
     private var groupedMonthDays: [(day: Date, meals: [ScheduledMeal])] {
         MealScheduleCalendar.daysInMonth(containing: selectedDate).map { day in
-            let meals = scheduledMeals.filter { MealScheduleCalendar.isSameDay($0.day, day) }
-            return (day: day, meals: meals)
+            (day: day, meals: meals(for: day))
         }
+    }
+
+    private func meals(for day: Date) -> [ScheduledMeal] {
+        scheduledMeals
+            .filter { MealScheduleCalendar.isSameDay($0.day, day) }
+            .sortedByMealSlot()
+    }
+
+    private func meal(for day: Date, slot: MealSlot) -> ScheduledMeal? {
+        scheduledMeals.first {
+            MealScheduleCalendar.isSameDay($0.day, day) && $0.mealSlot == slot
+        }
+    }
+
+    private func addMeal(for day: Date, slot: MealSlot) {
+        let meal = ScheduledMeal(
+            day: day,
+            mealSlot: slot,
+            recipe: nil,
+            servings: settings.defaultPlannerServings
+        )
+        modelContext.insert(meal)
+        try? modelContext.save()
+        mealRecipePickerContext = MealRecipePickerContext(mealID: meal.id)
+    }
+
+    @ViewBuilder
+    private func addMealRecipeRow(
+        for day: Date,
+        slot: MealSlot,
+        showsMealSlotLabel: Bool = false
+    ) -> some View {
+        Button {
+            addMeal(for: day, slot: slot)
+        } label: {
+            VStack(alignment: .leading, spacing: 6) {
+                if showsMealSlotLabel {
+                    Text(slot.label)
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                }
+
+                Text("+ Add recipe")
+                    .foregroundStyle(.blue)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .buttonStyle(.plain)
+        .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 12))
     }
 
     private func shiftPeriod(by value: Int) {
@@ -298,39 +425,189 @@ struct DietRootView: View {
         }
     }
 
+    @ViewBuilder
+    private func scheduledMealEditRow(_ meal: ScheduledMeal, showsMealSlotLabel: Bool = true) -> some View {
+        ScheduledMealEditRow(
+            meal: meal,
+            recipes: recipes,
+            showsMealSlotLabel: showsMealSlotLabel,
+            onOpenPicker: { mealRecipePickerContext = MealRecipePickerContext(mealID: meal.id) },
+            onDelete: { deleteMeal(meal) }
+        )
+        .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 12))
+    }
+
+    @ViewBuilder
+    private func scheduledMealListRow(_ meal: ScheduledMeal, showsMealSlotLabel: Bool = true) -> some View {
+        ScheduledMealRow(
+            meal: meal,
+            recipe: recipe(for: meal),
+            showsMealSlotLabel: showsMealSlotLabel
+        )
+        .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 12))
+        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+            Button(role: .destructive) {
+                deleteMeal(meal)
+            } label: {
+                Label("Delete", systemImage: "trash")
+            }
+        }
+    }
+
+    private func recipe(for meal: ScheduledMeal) -> Recipe? {
+        guard let recipeID = meal.recipeID else { return nil }
+        return recipes.first { $0.id == recipeID }
+    }
+
     private func deleteMeal(_ meal: ScheduledMeal) {
         modelContext.delete(meal)
         try? modelContext.save()
+    }
+
+    private func finishEditingMeals() {
+        for meal in visibleMeals {
+            meal.servings = min(max(meal.servings, 1), 24)
+
+            if let recipeID = meal.recipeID,
+               let recipe = recipes.first(where: { $0.id == recipeID }) {
+                meal.recipe = recipe
+            } else {
+                modelContext.delete(meal)
+            }
+        }
+
+        try? modelContext.save()
+        isEditingMeals = false
+    }
+
+    private func openPlanMeals(
+        for day: Date? = nil,
+        mealSlots: Set<MealSlot>? = nil,
+        servings: Int? = nil
+    ) {
+        let defaults = planMealsDefaults(for: day)
+        planMealsStartDate = defaults.start
+        planMealsNumberOfDays = defaults.days
+        planMealsIncludedSlots = mealSlots ?? defaultPlanMealSlots
+        planMealsInitialServings = servings
+        isPlanningMeals = true
+    }
+
+    private var defaultPlanMealSlots: Set<MealSlot> {
+        [.lunch, .dinner]
+    }
+
+    private func planMealsDefaults(for day: Date? = nil) -> (start: Date, days: Int) {
+        if let day {
+            return (MealScheduleCalendar.startOfDay(day), 1)
+        }
+
+        switch viewMode {
+        case .day:
+            return (MealScheduleCalendar.startOfDay(selectedDate), 1)
+        case .week:
+            let start = weekDays.first ?? MealScheduleCalendar.startOfDay(selectedDate)
+            return (start, weekDays.count)
+        case .month:
+            let monthDays = MealScheduleCalendar.daysInMonth(containing: selectedDate)
+            let start = monthDays.first ?? MealScheduleCalendar.startOfDay(selectedDate)
+            return (start, monthDays.count)
+        }
+    }
+
+    @ViewBuilder
+    private func planMealSlotButton(for slot: MealSlot) -> some View {
+        Button {
+            openPlanMeals(for: selectedDate, mealSlots: [slot])
+        } label: {
+            Text("+ Plan \(slot.label)")
+                .foregroundStyle(.blue)
+        }
+        .buttonStyle(.plain)
+        .disabled(isApplyingMealPlan)
+    }
+
+    @ViewBuilder
+    private func planMealsButton(for day: Date) -> some View {
+        Button {
+            openPlanMeals(for: day)
+        } label: {
+            Text("+ Plan meals")
+                .foregroundStyle(.blue)
+        }
+        .buttonStyle(.plain)
+        .disabled(isApplyingMealPlan)
+    }
+}
+
+private struct MealRecipePickerContext: Identifiable {
+    let mealID: UUID
+
+    var id: UUID { mealID }
+}
+
+private struct ScheduledMealEditRow: View {
+    @Bindable var meal: ScheduledMeal
+    let recipes: [Recipe]
+    var showsMealSlotLabel: Bool = true
+    let onOpenPicker: () -> Void
+    let onDelete: () -> Void
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            if showsMealSlotLabel {
+                Text(meal.mealSlot.label)
+                    .font(.caption.weight(.semibold))
+                    .foregroundStyle(.secondary)
+            }
+
+            HStack(alignment: .center, spacing: 12) {
+                Button(role: .destructive, action: onDelete) {
+                    Image(systemName: "minus.circle.fill")
+                        .font(.title3)
+                        .foregroundStyle(.red)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Delete meal")
+
+                RecipeImportEntryRow(
+                    recipeID: $meal.recipeID,
+                    servings: $meal.servings,
+                    recipes: recipes,
+                    onOpenPicker: onOpenPicker
+                )
+            }
+        }
+        .padding(.vertical, 2)
     }
 }
 
 private struct ScheduledMealRow: View {
     let meal: ScheduledMeal
+    let recipe: Recipe?
+    var showsMealSlotLabel: Bool = true
+    @Environment(CookingSessionManager.self) private var cookingSession
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            HStack {
+        VStack(alignment: .leading, spacing: 6) {
+            if showsMealSlotLabel {
                 Text(meal.mealSlot.label)
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.secondary)
-                Spacer()
-                Text("\(meal.servings) servings")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
             }
 
-            if let recipe = meal.recipe {
-                Text(recipe.title)
-                    .font(.headline)
-                Text("\(recipe.totalMinutes) min · \(recipe.difficulty.label)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+            if let recipe {
+                RecipeRowView(
+                    recipe: recipe,
+                    isInProgress: cookingSession.isInProgress(recipe: recipe),
+                    showsSummary: false,
+                    servings: meal.servings
+                )
             } else {
-                Text("No recipe")
+                Text("Recipe unavailable")
                     .foregroundStyle(.secondary)
             }
         }
-        .padding(.vertical, 2)
     }
 }
 
@@ -339,5 +616,6 @@ private struct ScheduledMealRow: View {
         DietRootView()
     }
     .modelContainer(try! CookGPTModelContainer.make())
+    .environment(CookingSessionManager.shared)
     .environment(AppSettingsStore.shared)
 }

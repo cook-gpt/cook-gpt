@@ -14,6 +14,7 @@ final class GroceryItem {
     var quantity: Double
     var unit: String
     var isChecked: Bool
+    var sortOrder: Int
     var list: GroceryList?
 
     init(
@@ -21,12 +22,19 @@ final class GroceryItem {
         quantity: Double,
         unit: String,
         isChecked: Bool = false,
+        sortOrder: Int = 0,
         list: GroceryList? = nil
     ) {
         self.name = name
         self.quantity = quantity
         self.unit = unit
         self.isChecked = isChecked
+        self.sortOrder = sortOrder
         self.list = list
+    }
+
+    var mergeKey: String {
+        let normalizedUnit = unit.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "g" : unit
+        return "\(name.lowercased())|\(normalizedUnit.lowercased())"
     }
 }

@@ -28,4 +28,8 @@ final class GroceryList {
         self.generatedAt = generatedAt
         self.items = items
     }
+
+    var nextGrocerySortOrder: Int {
+        (items.map(\.sortOrder).max() ?? -1) + 1
+    }
 }

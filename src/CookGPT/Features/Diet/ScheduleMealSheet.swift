@@ -27,7 +27,7 @@ struct ScheduleMealSheet: View {
         self.defaultDate = defaultDate
         _day = State(initialValue: existingMeal?.day ?? MealScheduleCalendar.startOfDay(defaultDate))
         _mealSlot = State(initialValue: existingMeal?.mealSlot ?? .lunch)
-        _selectedRecipeID = State(initialValue: existingMeal?.recipe?.id)
+        _selectedRecipeID = State(initialValue: existingMeal?.recipeID)
         _servings = State(initialValue: existingMeal?.servings ?? AppSettingsStore.shared.defaultPlannerServings)
     }
 
@@ -86,6 +86,7 @@ struct ScheduleMealSheet: View {
             existingMeal.day = MealScheduleCalendar.startOfDay(day)
             existingMeal.mealSlot = mealSlot
             existingMeal.recipe = recipe
+            existingMeal.recipeID = recipe.id
             existingMeal.servings = servings
         } else {
             let meal = ScheduledMeal(

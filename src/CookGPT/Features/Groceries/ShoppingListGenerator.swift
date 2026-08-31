@@ -22,17 +22,33 @@ struct AggregatedGroceryItem: Identifiable, Hashable {
     }
 
     var key: String {
-        "\(name.lowercased())|\(unit.lowercased())"
+        ShoppingListGenerator.mergeKey(name: name, unit: unit, isChecked: isChecked)
+    }
+
+    /// Display/highlight identity (name + unit), independent of checked state.
+    var identityKey: String {
+        let normalizedUnit = unit.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "g" : unit
+        return "\(name.lowercased())|\(normalizedUnit.lowercased())"
     }
 }
 
-/// Scales recipe ingredients and merges grocery lines by name and unit.
+/// Scales recipe ingredients and merges grocery lines by name, unit, and checked state.
 enum ShoppingListGenerator {
     private struct ItemTotal {
         var name: String
         var unit: String
         var quantity: Double
         var isChecked: Bool
+    }
+
+    static func mergeKey(name: String, unit: String, isChecked: Bool) -> String {
+        let normalizedUnit = unit.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "g" : unit
+        return "\(name.lowercased())|\(normalizedUnit.lowercased())|\(isChecked)"
+    }
+
+    private static func mergeKey(name: String, unit: String) -> String {
+        let normalizedUnit = unit.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "g" : unit
+        return "\(name.lowercased())|\(normalizedUnit.lowercased())"
     }
 
     static func aggregate(recipes: [(recipe: Recipe, servings: Int)]) -> [AggregatedGroceryItem] {
@@ -45,7 +61,7 @@ enum ShoppingListGenerator {
                 let scaled = entry.recipe.scaledQuantity(item.quantity, servings: entry.servings)
                 let name = item.displayName
                 let unit = item.unit.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "g" : item.unit
-                let key = "\(name.lowercased())|\(unit.lowercased())"
+                let key = mergeKey(name: name, unit: unit)
 
                 if var existing = totals[key] {
                     existing.quantity += scaled
@@ -77,21 +93,27 @@ enum ShoppingListGenerator {
 
         for item in existingItems {
             let unit = item.unit.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "g" : item.unit
-            let key = "\(item.name.lowercased())|\(unit.lowercased())"
-            totals[key] = ItemTotal(
-                name: item.name,
-                unit: unit,
-                quantity: item.quantity,
-                isChecked: item.isChecked
-            )
+            let key = mergeKey(name: item.name, unit: unit, isChecked: item.isChecked)
+            if var existing = totals[key] {
+                existing.quantity += item.quantity
+                totals[key] = existing
+            } else {
+                totals[key] = ItemTotal(
+                    name: item.name,
+                    unit: unit,
+                    quantity: item.quantity,
+                    isChecked: item.isChecked
+                )
+            }
         }
 
         for item in newItems {
-            if var existing = totals[item.key] {
+            let key = mergeKey(name: item.name, unit: item.unit, isChecked: false)
+            if var existing = totals[key] {
                 existing.quantity += item.quantity
-                totals[item.key] = existing
+                totals[key] = existing
             } else {
-                totals[item.key] = ItemTotal(
+                totals[key] = ItemTotal(
                     name: item.name,
                     unit: item.unit,
                     quantity: item.quantity,
@@ -113,9 +135,15 @@ enum ShoppingListGenerator {
             .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
     }
 
-    static func recipes(from meals: [ScheduledMeal]) -> [(recipe: Recipe, servings: Int)] {
+    static func recipes(
+        from meals: [ScheduledMeal],
+        allRecipes: [Recipe]
+    ) -> [(recipe: Recipe, servings: Int)] {
         meals.compactMap { meal in
-            guard let recipe = meal.recipe else { return nil }
+            guard let recipeID = meal.recipeID,
+                  let recipe = allRecipes.first(where: { $0.id == recipeID }) else {
+                return nil
+            }
             return (recipe: recipe, servings: meal.servings)
         }
     }

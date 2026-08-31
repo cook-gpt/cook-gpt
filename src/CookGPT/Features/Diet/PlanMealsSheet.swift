@@ -12,16 +12,42 @@ struct PlanMealsSheet: View {
     @Environment(AppSettingsStore.self) private var settings
 
     let profile: DietProfile
+    let startDate: Date
+    let numberOfDays: Int
+    let includedMealSlots: Set<MealSlot>
+    let initialServings: Int?
     let onPlan: (MealPlanRequest) -> Void
 
     @Query(sort: \Recipe.title) private var recipes: [Recipe]
 
-    @State private var startDate = Date()
-    @State private var numberOfDays = 7
+    @State private var selectedStartDate: Date
+    @State private var selectedNumberOfDays: Int
     @State private var servings = 1
     @State private var includeBreakfast = false
     @State private var includeLunch = true
     @State private var includeDinner = true
+
+    init(
+        profile: DietProfile,
+        startDate: Date,
+        numberOfDays: Int,
+        includedMealSlots: Set<MealSlot> = [.lunch, .dinner],
+        initialServings: Int? = nil,
+        onPlan: @escaping (MealPlanRequest) -> Void
+    ) {
+        self.profile = profile
+        self.startDate = startDate
+        self.numberOfDays = numberOfDays
+        self.includedMealSlots = includedMealSlots
+        self.initialServings = initialServings
+        self.onPlan = onPlan
+        _selectedStartDate = State(initialValue: startDate)
+        _selectedNumberOfDays = State(initialValue: numberOfDays)
+        _servings = State(initialValue: initialServings ?? AppSettingsStore.shared.defaultPlannerServings)
+        _includeBreakfast = State(initialValue: includedMealSlots.contains(.breakfast))
+        _includeLunch = State(initialValue: includedMealSlots.contains(.lunch))
+        _includeDinner = State(initialValue: includedMealSlots.contains(.dinner))
+    }
 
     private var selectedMealSlots: [MealSlot] {
         MealSlot.plannerSlots(included: selectedMealSlotSet)
@@ -35,8 +61,26 @@ struct PlanMealsSheet: View {
         return slots
     }
 
-    private var eligibleCount: Int {
-        MealPlanner.eligibleRecipes(dietType: profile.dietType, from: recipes).count
+    private var eligibleRecipesDescription: String {
+        selectedMealSlots.map { slot in
+            let count = MealPlanner.eligibleRecipes(
+                dietType: profile.dietType,
+                from: recipes,
+                for: slot
+            ).count
+            return "\(slot.label): \(count)"
+        }
+        .joined(separator: " · ")
+    }
+
+    private var canPlan: Bool {
+        !selectedMealSlots.isEmpty && selectedMealSlots.allSatisfy { slot in
+            !MealPlanner.eligibleRecipes(
+                dietType: profile.dietType,
+                from: recipes,
+                for: slot
+            ).isEmpty
+        }
     }
 
     private var plannedSlotsDescription: String {
@@ -52,7 +96,7 @@ struct PlanMealsSheet: View {
             Form {
                 Section("Diet") {
                     LabeledContent("Type", value: profile.dietType.label)
-                    Text("Favorites are prioritized. Recipes are matched to your diet type. Breakfast and dessert recipes are excluded.")
+                    Text("Favorites are prioritized. Recipes are matched to your diet type. Breakfast recipes are used only for breakfast. Dessert recipes are excluded.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -62,19 +106,19 @@ struct PlanMealsSheet: View {
                     Toggle("Lunch", isOn: $includeLunch)
                     Toggle("Dinner", isOn: $includeDinner)
                 } footer: {
-                    Text("Choose which meals to plan each day. Breakfast and dessert recipes are never used by the planner.")
+                    Text("Choose which meals to plan each day. Breakfast uses only recipes tagged Breakfast. Lunch and dinner never use breakfast recipes.")
                 }
 
                 Section("Schedule") {
-                    DatePicker("Start", selection: $startDate, displayedComponents: .date)
-                    Stepper("Days: \(numberOfDays)", value: $numberOfDays, in: 1...31)
+                    DatePicker("Start", selection: $selectedStartDate, displayedComponents: .date)
+                    Stepper("Days: \(selectedNumberOfDays)", value: $selectedNumberOfDays, in: 1...31)
                     Stepper("Servings per meal: \(servings)", value: $servings, in: 1...12)
                 }
 
                 Section {
-                    Text("\(eligibleCount) recipes match this diet for meal planning.")
+                    Text(eligibleRecipesDescription)
                         .foregroundStyle(.secondary)
-                    Text("\(plannedSlotsDescription) will be planned for each day. Existing meals in this range will be replaced.")
+                    Text("\(plannedSlotsDescription) will be planned for each day. Existing meals for those slots in this range will be replaced.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -87,11 +131,15 @@ struct PlanMealsSheet: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button("Plan") { plan() }
-                        .disabled(eligibleCount == 0 || selectedMealSlots.isEmpty)
+                        .disabled(!canPlan)
                 }
             }
             .onAppear {
-                servings = settings.defaultPlannerServings
+                if let initialServings {
+                    servings = initialServings
+                } else {
+                    servings = settings.defaultPlannerServings
+                }
             }
         }
     }
@@ -99,8 +147,8 @@ struct PlanMealsSheet: View {
     private func plan() {
         onPlan(
             MealPlanRequest(
-                startDate: startDate,
-                numberOfDays: numberOfDays,
+                startDate: selectedStartDate,
+                numberOfDays: selectedNumberOfDays,
                 servings: servings,
                 dietType: profile.dietType,
                 mealSlots: selectedMealSlots

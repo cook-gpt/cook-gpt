@@ -124,7 +124,6 @@ struct RecipeCategoryFilterBar: View {
                     HStack(spacing: 4) {
                         Image(systemName: "pencil")
                         Text("Edit")
-                        Image(systemName: "tag")
                     }
                     .font(.subheadline.weight(.medium))
                     .padding(.horizontal, 12)
@@ -136,7 +135,6 @@ struct RecipeCategoryFilterBar: View {
                 .buttonStyle(.plain)
                 .accessibilityLabel("Edit categories")
             }
-            .padding(.vertical, 4)
         }
     }
 }

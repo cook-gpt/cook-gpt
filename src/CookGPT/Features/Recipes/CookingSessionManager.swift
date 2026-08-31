@@ -22,6 +22,10 @@ final class CookingSessionManager {
         !timerStore.timers(for: recipe.id).isEmpty
     }
 
+    var showsRecipesTabBadge: Bool {
+        timerStore.showsRecipesTabBadge
+    }
+
     func reset() {
         timerStore.clearAll()
     }

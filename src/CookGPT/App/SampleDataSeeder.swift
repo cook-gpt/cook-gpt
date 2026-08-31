@@ -10,7 +10,7 @@ import SwiftData
 enum SampleDataSeeder {
     private static let seedFlagKey = "didSeedSampleData"
     private static let recipeStructureVersionKey = "sampleRecipeStructureVersion"
-    private static let currentRecipeStructureVersion = 6
+    private static let currentRecipeStructureVersion = 8
 
     static func seedIfNeeded(context: ModelContext) {
         if !UserDefaults.standard.bool(forKey: seedFlagKey) {
@@ -78,6 +78,7 @@ enum SampleDataSeeder {
         for recipe in recipes {
             rebuildRecipeSteps(recipe: recipe, context: context)
             applyDefaultCategoryTags(recipe: recipe)
+            applyDefaultCookingTools(recipe: recipe)
         }
 
         addMissingDefaultRecipesIfNeeded(context: context)
@@ -134,6 +135,35 @@ enum SampleDataSeeder {
         return tags.filter { seen.insert($0).inserted }
     }
 
+    private static func cookingTools(_ tools: RecipeCookingTool...) -> [String] {
+        tools.map(\.rawValue)
+    }
+
+    private static func applyDefaultCookingTools(recipe: Recipe) {
+        switch recipe.title {
+        case "Spaghetti Aglio e Olio":
+            recipe.cookingTools = cookingTools(.pan)
+        case "Chicken & Broccoli Rice Bowl":
+            recipe.cookingTools = cookingTools(.pan)
+        case "Classic Scrambled Eggs":
+            recipe.cookingTools = cookingTools(.pan)
+        case "Greek Salad":
+            recipe.cookingTools = []
+        case "Hearty Lentil Soup":
+            recipe.cookingTools = cookingTools(.pan)
+        case "Pan-Seared Salmon":
+            recipe.cookingTools = cookingTools(.pan)
+        case "Overnight Oats":
+            recipe.cookingTools = cookingTools(.fridge)
+        case "Tomato Basil Soup":
+            recipe.cookingTools = cookingTools(.pan)
+        case "Banana Nice Cream":
+            recipe.cookingTools = cookingTools(.freezer)
+        default:
+            break
+        }
+    }
+
     private static func addMissingDefaultRecipesIfNeeded(context: ModelContext) {
         let descriptor = FetchDescriptor<Recipe>()
         let recipes = (try? context.fetch(descriptor)) ?? []
@@ -174,7 +204,8 @@ enum SampleDataSeeder {
             prepMinutes: 10,
             cookMinutes: 15,
             difficulty: .easy,
-            tags: ["vegetarian", "quick", "italian"]
+            tags: ["vegetarian", "quick", "italian"],
+            cookingTools: cookingTools(.pan)
         )
         attach(
             recipe: recipe,
@@ -197,7 +228,8 @@ enum SampleDataSeeder {
             prepMinutes: 15,
             cookMinutes: 25,
             difficulty: .medium,
-            tags: ["high-protein", "meal-prep"]
+            tags: ["high-protein", "meal-prep"],
+            cookingTools: cookingTools(.pan)
         )
         attach(
             recipe: recipe,
@@ -221,7 +253,8 @@ enum SampleDataSeeder {
             prepMinutes: 5,
             cookMinutes: 5,
             difficulty: .easy,
-            tags: ["vegetarian", "quick", "high-protein", "breakfast"]
+            tags: ["vegetarian", "quick", "high-protein", "breakfast"],
+            cookingTools: cookingTools(.pan)
         )
         attach(
             recipe: recipe,
@@ -268,7 +301,8 @@ enum SampleDataSeeder {
             prepMinutes: 15,
             cookMinutes: 35,
             difficulty: .easy,
-            tags: ["vegan", "meal-prep", "high-protein"]
+            tags: ["vegan", "meal-prep", "high-protein"],
+            cookingTools: cookingTools(.pan)
         )
         attach(
             recipe: recipe,
@@ -292,7 +326,8 @@ enum SampleDataSeeder {
             prepMinutes: 10,
             cookMinutes: 12,
             difficulty: .medium,
-            tags: ["high-protein", "low-carbs", "no-carbs"]
+            tags: ["high-protein", "low-carbs", "no-carbs"],
+            cookingTools: cookingTools(.pan)
         )
         attach(
             recipe: recipe,
@@ -315,7 +350,8 @@ enum SampleDataSeeder {
             prepMinutes: 10,
             cookMinutes: 0,
             difficulty: .easy,
-            tags: ["vegan", "quick", "meal-prep", "breakfast"]
+            tags: ["vegan", "quick", "meal-prep", "breakfast"],
+            cookingTools: cookingTools(.fridge)
         )
         attach(
             recipe: recipe,
@@ -339,7 +375,8 @@ enum SampleDataSeeder {
             prepMinutes: 10,
             cookMinutes: 25,
             difficulty: .easy,
-            tags: ["vegetarian", "italian", "quick"]
+            tags: ["vegetarian", "italian", "quick"],
+            cookingTools: cookingTools(.pan)
         )
         attach(
             recipe: recipe,
@@ -363,7 +400,8 @@ enum SampleDataSeeder {
             prepMinutes: 5,
             cookMinutes: 0,
             difficulty: .easy,
-            tags: ["dessert", "vegan", "quick"]
+            tags: ["dessert", "vegan", "quick"],
+            cookingTools: cookingTools(.freezer)
         )
         attach(
             recipe: recipe,

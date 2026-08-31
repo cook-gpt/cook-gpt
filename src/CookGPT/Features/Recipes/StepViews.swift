@@ -64,18 +64,23 @@ struct RecipeStepRowView: View {
                     duration: duration
                 )
             } label: {
-                Label("Start \(TimerFormatting.string(seconds: duration))", systemImage: "timer")
-                    .font(.subheadline)
+                HStack(spacing: 3) {
+                    Image(systemName: "timer")
+                        .foregroundStyle(.blue)
+                    Text("Start \(TimerFormatting.string(seconds: duration))")
+                }
+                .font(.subheadline)
             }
             .buttonStyle(.borderless)
+            .frame(maxWidth: .infinity, alignment: .center)
             .padding(.top, 4)
         }
     }
 
     @ViewBuilder
     private func timerControlBar(timer: CookingTimerStore.RunningTimer) -> some View {
-        HStack(spacing: 12) {
-            HStack(spacing: 6) {
+        ZStack {
+            HStack(spacing: 4) {
                 Image(systemName: timer.phase == .paused ? "pause.circle.fill" : "timer")
                     .foregroundStyle(.orange)
                 Text(TimerFormatting.string(seconds: timer.displayRemaining))
@@ -88,34 +93,37 @@ struct RecipeStepRowView: View {
                 }
             }
 
-            Spacer(minLength: 8)
+            HStack(spacing: 12) {
+                Spacer(minLength: 0)
 
-            if timer.phase == .running {
-                Button {
-                    cookingSession.timerStore.pause(stepID: step.id)
+                if timer.phase == .running {
+                    Button {
+                        cookingSession.timerStore.pause(stepID: step.id)
+                    } label: {
+                        Image(systemName: "pause.fill")
+                    }
+                    .buttonStyle(.borderless)
+                    .accessibilityLabel("Pause timer")
+                } else {
+                    Button {
+                        cookingSession.timerStore.resume(stepID: step.id)
+                    } label: {
+                        Image(systemName: "play.fill")
+                    }
+                    .buttonStyle(.borderless)
+                    .accessibilityLabel("Resume timer")
+                }
+
+                Button(role: .destructive) {
+                    cookingSession.timerStore.stop(stepID: step.id)
                 } label: {
-                    Image(systemName: "pause.fill")
+                    Image(systemName: "xmark.circle.fill")
                 }
                 .buttonStyle(.borderless)
-                .accessibilityLabel("Pause timer")
-            } else {
-                Button {
-                    cookingSession.timerStore.resume(stepID: step.id)
-                } label: {
-                    Image(systemName: "play.fill")
-                }
-                .buttonStyle(.borderless)
-                .accessibilityLabel("Resume timer")
+                .accessibilityLabel("Cancel timer")
             }
-
-            Button(role: .destructive) {
-                cookingSession.timerStore.stop(stepID: step.id)
-            } label: {
-                Image(systemName: "xmark.circle.fill")
-            }
-            .buttonStyle(.borderless)
-            .accessibilityLabel("Cancel timer")
         }
+        .frame(maxWidth: .infinity)
         .padding(.top, 6)
     }
 }

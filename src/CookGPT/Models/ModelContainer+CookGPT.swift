@@ -10,7 +10,7 @@ import SwiftData
 /// SwiftData persistence: schema definition, versioned store, and recovery.
 enum CookGPTModelContainer {
     /// Bump when SwiftData models change incompatibly.
-    static let schemaVersion = 6
+    static let schemaVersion = 9
 
     private static let seedFlagKey = "didSeedSampleData"
     private static let recipeStructureVersionKey = "sampleRecipeStructureVersion"
