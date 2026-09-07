@@ -70,6 +70,7 @@ Questions or feedback? We’d love to hear from you.
 - **App Store name:** CookGPT - Gourmet Plan & Taste
 - **App Store subtitle:** Gourmet Plan & Taste
 - **Home screen name:** CookGPT (`CFBundleDisplayName`)
+- **Support URL:** https://cook-gpt.pages.dev/contact
 - Use the full name **CookGPT — Gourmet Plan & Taste** (or **CookGPT - Gourmet Plan & Taste**) on first and last mention in the description; **CookGPT** alone is fine in the body and on the home screen.
 
 ---

@@ -57,6 +57,7 @@ export function AppHeader({
   const navRoutes = [
     { path: '/', label: t('nav.home') },
     { path: '/docs', label: t('nav.docs') },
+    { path: '/contact', label: t('nav.contact') },
     { path: '/privacy', label: t('nav.privacy') },
   ];
 

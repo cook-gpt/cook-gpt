@@ -2,6 +2,7 @@
   "nav": {
     "home": "Home",
     "docs": "Docs",
+    "contact": "Contact",
     "privacy": "Privacy"
   },
   "language": "Language",
@@ -66,7 +67,42 @@
     "links": {
       "org": "GitHub organization",
       "repo": "Repository",
-      "author": "@{{author}}"
+      "author": "@{{author}}",
+      "contact": "Contact support"
+    }
+  },
+  "contact": {
+    "eyebrow": "Support",
+    "title": "Contact us",
+    "intro": "Questions, feedback, or help with $t(app.name)? Use the form below and we will get back to you as soon as we can.",
+    "alternative": "You can also reach the developer on GitHub:",
+    "topics": {
+      "title": "We can help with",
+      "items": [
+        "Using recipes, meals, groceries, and cooking timers",
+        "Bug reports and feature suggestions",
+        "Privacy and on-device data questions",
+        "App Store download or device compatibility"
+      ]
+    },
+    "form": {
+      "heading": "Send a message",
+      "required": "All fields are required.",
+      "name": "Name",
+      "namePlaceholder": "Your name",
+      "email": "Email",
+      "emailPlaceholder": "you@example.com",
+      "subject": "Subject",
+      "subjectPlaceholder": "What is this about?",
+      "message": "Message",
+      "messagePlaceholder": "Describe your question or issue…",
+      "submit": "Send message",
+      "submitting": "Sending…"
+    },
+    "success": {
+      "title": "Message sent",
+      "body": "Thank you for reaching out. We have received your message and will respond as soon as possible.",
+      "sendAnother": "Send another message"
     }
   },
   "privacy": {

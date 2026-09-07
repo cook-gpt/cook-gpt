@@ -23,3 +23,5 @@ export const APP_STORE_PROMOTIONAL_TEXT =
   'CookGPT — Gourmet Plan & Taste. Start with built-in recipes, auto-schedule your week, and build a grocery list from whatever you planned to cook.';
 
 export const SITE_URL = 'https://cook-gpt.pages.dev';
+
+export const SUPPORT_URL = `${SITE_URL}/contact`;

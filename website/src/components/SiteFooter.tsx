@@ -76,6 +76,7 @@ export function SiteFooter() {
           <FooterColumn
             title={t('footer.columns.legal')}
             links={[
+              { type: 'internal', to: '/contact', label: t('footer.links.contact') },
               { type: 'internal', to: '/privacy', label: t('nav.privacy') },
             ]}
           />
