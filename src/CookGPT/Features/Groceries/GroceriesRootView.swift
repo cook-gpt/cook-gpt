@@ -25,7 +25,7 @@ struct GroceriesRootView: View {
 
     private var exportableItems: [GroceryItem] {
         guard let list = primaryList else { return [] }
-        return sortedItems(for: list)
+        return list.displayOrderedItems
     }
 
     private var exportShareText: String {
@@ -38,7 +38,7 @@ struct GroceriesRootView: View {
         if isEditingGroceries {
             return editModeItems(for: list)
         }
-        return sortedItems(for: list)
+        return list.displayOrderedItems
     }
 
     private var completedCount: Int {
@@ -60,38 +60,27 @@ struct GroceriesRootView: View {
                 ProgressView("Resetting app data…")
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             } else if primaryList != nil {
-                let items = listItems
+                let list = primaryList!
 
                 List {
-                    if items.isEmpty && !isEditingGroceries {
-                        ContentUnavailableView(
-                            "No items yet",
-                            systemImage: "cart",
-                            description: Text("Tap the edit button to add recipes and ingredients.")
-                        )
-                    } else {
-                        Section {
-                            ForEach(items, id: \.persistentModelID) { item in
-                                if isEditingGroceries {
+                    if isEditingGroceries {
+                        let items = editModeItems(for: list)
+
+                        if items.isEmpty && recipeImportDrafts.isEmpty {
+                            ContentUnavailableView(
+                                "No items yet",
+                                systemImage: "cart",
+                                description: Text("Tap the edit button to add recipes and ingredients.")
+                            )
+                        } else {
+                            Section {
+                                ForEach(items, id: \.persistentModelID) { item in
                                     GroceryItemEditRow(item: item) {
                                         deleteItem(item)
                                     }
-                                } else {
-                                    GroceryItemRow(
-                                        item: item,
-                                        animationOrder: highlightAnimationOrder(for: item, in: items),
-                                        onToggleCheck: { toggleItemCheck(item) },
-                                        onDelete: { deleteItem(item) }
-                                    )
                                 }
                             }
-                            .onMove { source, destination in
-                                moveItems(from: source, to: destination, in: items)
-                            }
-                            .moveDisabled(isEditingGroceries)
-                        }
 
-                        if isEditingGroceries {
                             Section {
                                 ForEach($recipeImportDrafts) { $draft in
                                     GroceryRecipeEditRow(
@@ -107,6 +96,55 @@ struct GroceriesRootView: View {
 
                             Section {
                                 editAddActionsRow
+                            }
+                        }
+                    } else {
+                        let checkedItems = checkedItems(for: list)
+                        let uncheckedItems = uncheckedItems(for: list)
+
+                        if checkedItems.isEmpty && uncheckedItems.isEmpty {
+                            ContentUnavailableView(
+                                "No items yet",
+                                systemImage: "cart",
+                                description: Text("Tap the edit button to add recipes and ingredients.")
+                            )
+                        } else {
+                            if !checkedItems.isEmpty {
+                                Section {
+                                    ForEach(checkedItems, id: \.persistentModelID) { item in
+                                        GroceryItemRow(
+                                            item: item,
+                                            animationOrder: highlightAnimationOrder(
+                                                for: item,
+                                                in: checkedItems + uncheckedItems
+                                            ),
+                                            onToggleCheck: { toggleItemCheck(item) },
+                                            onDelete: { deleteItem(item) }
+                                        )
+                                    }
+                                    .onMove { source, destination in
+                                        moveItems(from: source, to: destination, in: checkedItems)
+                                    }
+                                }
+                            }
+
+                            if !uncheckedItems.isEmpty {
+                                Section {
+                                    ForEach(uncheckedItems, id: \.persistentModelID) { item in
+                                        GroceryItemRow(
+                                            item: item,
+                                            animationOrder: highlightAnimationOrder(
+                                                for: item,
+                                                in: checkedItems + uncheckedItems
+                                            ),
+                                            onToggleCheck: { toggleItemCheck(item) },
+                                            onDelete: { deleteItem(item) }
+                                        )
+                                    }
+                                    .onMove { source, destination in
+                                        moveItems(from: source, to: destination, in: uncheckedItems)
+                                    }
+                                }
                             }
                         }
                     }
@@ -258,8 +296,12 @@ struct GroceriesRootView: View {
         }
     }
 
-    private func sortedItems(for list: GroceryList) -> [GroceryItem] {
-        list.items.sorted { $0.sortOrder < $1.sortOrder }
+    private func checkedItems(for list: GroceryList) -> [GroceryItem] {
+        list.items.filter(\.isChecked).sorted { $0.sortOrder < $1.sortOrder }
+    }
+
+    private func uncheckedItems(for list: GroceryList) -> [GroceryItem] {
+        list.items.filter { !$0.isChecked }.sorted { $0.sortOrder < $1.sortOrder }
     }
 
     private func editModeItems(for list: GroceryList) -> [GroceryItem] {
@@ -400,6 +442,8 @@ struct GroceriesRootView: View {
             modelContext.insert(groceryItem)
             list.items.append(groceryItem)
         }
+
+        list.normalizePartitionedSortOrders()
     }
 
     private func toggleItemCheck(_ item: GroceryItem) {
@@ -407,6 +451,7 @@ struct GroceriesRootView: View {
 
         if item.isChecked {
             item.isChecked = false
+            item.sortOrder = list.nextSortOrder(isChecked: false, excluding: item)
             try? modelContext.save()
             return
         }
@@ -420,6 +465,7 @@ struct GroceriesRootView: View {
             modelContext.delete(item)
         } else {
             item.isChecked = true
+            item.sortOrder = list.nextSortOrder(isChecked: true, excluding: item)
         }
 
         try? modelContext.save()

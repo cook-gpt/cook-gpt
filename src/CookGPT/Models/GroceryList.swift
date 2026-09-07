@@ -30,6 +30,31 @@ final class GroceryList {
     }
 
     var nextGrocerySortOrder: Int {
-        (items.map(\.sortOrder).max() ?? -1) + 1
+        nextSortOrder(isChecked: false)
+    }
+
+    func nextSortOrder(isChecked: Bool, excluding excludedItem: GroceryItem? = nil) -> Int {
+        let group = items.filter {
+            $0.isChecked == isChecked && $0.persistentModelID != excludedItem?.persistentModelID
+        }
+        return (group.map(\.sortOrder).max() ?? -1) + 1
+    }
+
+    func normalizePartitionedSortOrders() {
+        let checked = items.filter(\.isChecked).sorted { $0.sortOrder < $1.sortOrder }
+        let unchecked = items.filter { !$0.isChecked }.sorted { $0.sortOrder < $1.sortOrder }
+
+        for (index, item) in checked.enumerated() {
+            item.sortOrder = index
+        }
+        for (index, item) in unchecked.enumerated() {
+            item.sortOrder = index
+        }
+    }
+
+    var displayOrderedItems: [GroceryItem] {
+        let checked = items.filter(\.isChecked).sorted { $0.sortOrder < $1.sortOrder }
+        let unchecked = items.filter { !$0.isChecked }.sorted { $0.sortOrder < $1.sortOrder }
+        return checked + unchecked
     }
 }

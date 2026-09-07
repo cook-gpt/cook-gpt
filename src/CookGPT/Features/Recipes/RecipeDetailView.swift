@@ -139,18 +139,20 @@ struct RecipeDetailView: View {
         list.items.forEach { modelContext.delete($0) }
         list.items = []
 
-        for (index, item) in finalItems.enumerated() {
+        for item in finalItems {
             let groceryItem = GroceryItem(
                 name: item.name,
                 quantity: item.quantity,
                 unit: item.unit,
                 isChecked: item.isChecked,
-                sortOrder: index,
+                sortOrder: 0,
                 list: list
             )
             modelContext.insert(groceryItem)
             list.items.append(groceryItem)
         }
+
+        list.normalizePartitionedSortOrders()
 
         let sourceDescription = recipe.title
         if list.sourceDescription.isEmpty {
