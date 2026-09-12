@@ -53,8 +53,8 @@ final class GroceryList {
     }
 
     var displayOrderedItems: [GroceryItem] {
-        let checked = items.filter(\.isChecked).sorted { $0.sortOrder < $1.sortOrder }
-        let unchecked = items.filter { !$0.isChecked }.sorted { $0.sortOrder < $1.sortOrder }
+        let checked = items.filter { $0.isChecked && $0.hasContent }.sorted { $0.sortOrder < $1.sortOrder }
+        let unchecked = items.filter { !$0.isChecked && $0.hasContent }.sorted { $0.sortOrder < $1.sortOrder }
         return checked + unchecked
     }
 }

@@ -12,6 +12,7 @@ import Foundation
 struct CookingTimerAttributes: ActivityAttributes {
     struct ContentState: Codable, Hashable {
         var stepID: String
+        var recipeID: String
         var recipeTitle: String
         var stepLabel: String
         var phase: String
@@ -20,4 +21,5 @@ struct CookingTimerAttributes: ActivityAttributes {
     }
 
     var timerID: String
+    var recipeID: String
 }

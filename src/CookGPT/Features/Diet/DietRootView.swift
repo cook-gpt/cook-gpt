@@ -31,6 +31,7 @@ struct DietRootView: View {
     @State private var isApplyingMealPlan = false
     @State private var isEditingMeals = false
     @State private var mealRecipePickerContext: MealRecipePickerContext?
+    @State private var showDeleteRangeConfirmation = false
 
     private var activeProfile: DietProfile? {
         activeProfiles.first
@@ -85,6 +86,10 @@ struct DietRootView: View {
         }
     }
 
+    private var canDeleteVisibleMeals: Bool {
+        !visibleMeals.isEmpty
+    }
+
     var body: some View {
         Group {
             if settings.isResettingData {
@@ -132,15 +137,26 @@ struct DietRootView: View {
         }
         .toolbar {
             ToolbarItem(placement: .topBarLeading) {
-                if activeProfile != nil && !isApplyingMealPlan && !isEditingMeals {
-                    ShareLink(
-                        item: exportShareText,
-                        subject: Text("Scheduled meals")
-                    ) {
-                        Image(systemName: "square.and.arrow.up")
+                if activeProfile != nil && !isApplyingMealPlan {
+                    if isEditingMeals {
+                        Button {
+                            showDeleteRangeConfirmation = true
+                        } label: {
+                            Image(systemName: "trash")
+                                .foregroundStyle(canDeleteVisibleMeals ? .red : .secondary)
+                        }
+                        .disabled(!canDeleteVisibleMeals)
+                        .accessibilityLabel("Delete meals in current range")
+                    } else {
+                        ShareLink(
+                            item: exportShareText,
+                            subject: Text("Scheduled meals")
+                        ) {
+                            Image(systemName: "square.and.arrow.up")
+                        }
+                        .disabled(!hasExportableMeals)
+                        .accessibilityLabel("Export scheduled meals")
                     }
-                    .disabled(!hasExportableMeals)
-                    .accessibilityLabel("Export scheduled meals")
                 }
             }
             ToolbarItemGroup(placement: .primaryAction) {
@@ -204,6 +220,14 @@ struct DietRootView: View {
                 .id(planMealsSheetID)
             }
         }
+        .alert("Delete meals?", isPresented: $showDeleteRangeConfirmation) {
+            Button("Cancel", role: .cancel) {}
+            Button("Delete", role: .destructive) {
+                deleteVisibleMeals()
+            }
+        } message: {
+            Text("This will remove all scheduled meals for \(periodTitle).")
+        }
         .onChange(of: settings.isResettingData) { _, isResetting in
             if isResetting {
                 isPlanningMeals = false
@@ -211,6 +235,7 @@ struct DietRootView: View {
                 isEditingMeals = false
                 mealRecipePickerContext = nil
                 planMealsInitialServings = nil
+                showDeleteRangeConfirmation = false
             }
         }
         .onAppear {
@@ -485,6 +510,13 @@ struct DietRootView: View {
 
     private func deleteMeal(_ meal: ScheduledMeal) {
         modelContext.delete(meal)
+        try? modelContext.save()
+    }
+
+    private func deleteVisibleMeals() {
+        for meal in visibleMeals {
+            modelContext.delete(meal)
+        }
         try? modelContext.save()
     }
 

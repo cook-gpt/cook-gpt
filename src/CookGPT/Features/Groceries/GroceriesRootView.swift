@@ -15,6 +15,7 @@ struct GroceriesRootView: View {
     @Environment(AppNavigationStore.self) private var navigation
 
     @State private var isEditingGroceries = false
+    @State private var ingredientDrafts: [GroceryIngredientDraft] = []
     @State private var recipeImportDrafts: [GroceryEditRecipeDraft] = []
     @State private var recipePickerContext: RecipePickerContext?
     @State private var showDeleteAllConfirmation = false
@@ -54,6 +55,23 @@ struct GroceriesRootView: View {
         return Double(completedCount) / Double(totalCount)
     }
 
+    private var hasPersistedValidItems: Bool {
+        guard let list = primaryList else { return false }
+        return !editModeItems(for: list).isEmpty
+    }
+
+    private var hasRecipeImportDrafts: Bool {
+        !recipeImportDrafts.isEmpty
+    }
+
+    private var hasValidEditRows: Bool {
+        hasPersistedValidItems || hasFilledIngredientDrafts() || hasRecipeImportDrafts
+    }
+
+    private var canDeleteAllGroceries: Bool {
+        hasValidEditRows || ingredientDrafts.count > 1
+    }
+
     var body: some View {
         Group {
             if settings.isResettingData {
@@ -66,13 +84,7 @@ struct GroceriesRootView: View {
                     if isEditingGroceries {
                         let items = editModeItems(for: list)
 
-                        if items.isEmpty && recipeImportDrafts.isEmpty {
-                            ContentUnavailableView(
-                                "No items yet",
-                                systemImage: "cart",
-                                description: Text("Tap the edit button to add recipes and ingredients.")
-                            )
-                        } else {
+                        if !items.isEmpty {
                             Section {
                                 ForEach(items, id: \.persistentModelID) { item in
                                     GroceryItemEditRow(item: item) {
@@ -80,7 +92,23 @@ struct GroceriesRootView: View {
                                     }
                                 }
                             }
+                        }
 
+                        if !ingredientDrafts.isEmpty {
+                            Section {
+                                ForEach($ingredientDrafts) { $draft in
+                                    GroceryIngredientDraftEditRow(
+                                        draft: $draft,
+                                        canDelete: canDeleteIngredientDraft(draft.id)
+                                    ) {
+                                        deleteIngredientDraft(draft.id)
+                                    }
+                                    .id(draft.id)
+                                }
+                            }
+                        }
+
+                        if !recipeImportDrafts.isEmpty {
                             Section {
                                 ForEach($recipeImportDrafts) { $draft in
                                     GroceryRecipeEditRow(
@@ -93,10 +121,10 @@ struct GroceriesRootView: View {
                                     .id(draft.id)
                                 }
                             }
+                        }
 
-                            Section {
-                                editAddActionsRow
-                            }
+                        Section {
+                            editAddActionsRow
                         }
                     } else {
                         let checkedItems = checkedItems(for: list)
@@ -192,10 +220,13 @@ struct GroceriesRootView: View {
             }
             ToolbarItem(placement: .topBarLeading) {
                 if isEditingGroceries {
-                    Button("Delete all") {
+                    Button {
                         showDeleteAllConfirmation = true
+                    } label: {
+                        Image(systemName: "trash")
+                            .foregroundStyle(canDeleteAllGroceries ? .red : .secondary)
                     }
-                    .disabled(listItems.isEmpty && recipeImportDrafts.isEmpty)
+                    .disabled(!canDeleteAllGroceries)
                     .accessibilityLabel("Delete all groceries")
                 } else {
                     ShareLink(
@@ -214,8 +245,7 @@ struct GroceriesRootView: View {
                         if isEditingGroceries {
                             finishEditingGroceries()
                         } else {
-                            recipeImportDrafts = []
-                            isEditingGroceries = true
+                            beginEditingGroceries()
                         }
                     } label: {
                         if isEditingGroceries {
@@ -297,28 +327,17 @@ struct GroceriesRootView: View {
     }
 
     private func checkedItems(for list: GroceryList) -> [GroceryItem] {
-        list.items.filter(\.isChecked).sorted { $0.sortOrder < $1.sortOrder }
+        list.items.filter { $0.isChecked && $0.hasContent }.sorted { $0.sortOrder < $1.sortOrder }
     }
 
     private func uncheckedItems(for list: GroceryList) -> [GroceryItem] {
-        list.items.filter { !$0.isChecked }.sorted { $0.sortOrder < $1.sortOrder }
+        list.items.filter { !$0.isChecked && $0.hasContent }.sorted { $0.sortOrder < $1.sortOrder }
     }
 
     private func editModeItems(for list: GroceryList) -> [GroceryItem] {
-        var named: [GroceryItem] = []
-        var drafts: [GroceryItem] = []
-
-        for item in list.items {
-            if item.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-                drafts.append(item)
-            } else {
-                named.append(item)
-            }
-        }
-
-        named.sort { $0.sortOrder < $1.sortOrder }
-
-        return named + drafts
+        list.items
+            .filter(\.hasContent)
+            .sorted { $0.sortOrder < $1.sortOrder }
     }
 
     private var editAddActionsRow: some View {
@@ -349,6 +368,7 @@ struct GroceriesRootView: View {
 
     private func deleteRecipeDraft(_ id: UUID) {
         recipeImportDrafts.removeAll { $0.id == id }
+        ensureMinimumEditPlaceholderRow()
     }
 
     private func excludedRecipeIDs(except draftID: UUID) -> Set<UUID> {
@@ -359,24 +379,77 @@ struct GroceriesRootView: View {
         )
     }
 
-    private func addIngredient() {
-        guard let list = primaryList else { return }
+    private func beginEditingGroceries() {
+        recipeImportDrafts = []
+        ingredientDrafts = []
 
-        let item = GroceryItem(
-            name: "",
-            quantity: 1,
-            unit: settings.defaultIngredientUnit,
-            sortOrder: list.nextGrocerySortOrder,
-            list: list
-        )
-        modelContext.insert(item)
-        list.items.append(item)
+        if let list = primaryList {
+            purgeEmptyPersistedItems(from: list)
+            if editModeItems(for: list).isEmpty {
+                addIngredientDraft()
+            }
+        }
+
+        isEditingGroceries = true
+    }
+
+    private func purgeEmptyPersistedItems(from list: GroceryList) {
+        let emptyItems = list.items.filter { !$0.hasContent }
+        guard !emptyItems.isEmpty else { return }
+
+        for item in emptyItems {
+            modelContext.delete(item)
+        }
+        list.items.removeAll { item in
+            emptyItems.contains { $0.persistentModelID == item.persistentModelID }
+        }
         try? modelContext.save()
+    }
+
+    private func addIngredientDraft() {
+        ingredientDrafts.append(
+            GroceryIngredientDraft(unit: settings.defaultIngredientUnit)
+        )
+    }
+
+    private func deleteIngredientDraft(_ id: UUID) {
+        guard canDeleteIngredientDraft(id) else { return }
+        ingredientDrafts.removeAll { $0.id == id }
+        ensureMinimumEditPlaceholderRow()
+    }
+
+    private func canDeleteIngredientDraft(_ id: UUID) -> Bool {
+        guard let draft = ingredientDrafts.first(where: { $0.id == id }) else { return false }
+        guard draft.trimmedName.isEmpty else { return true }
+
+        if hasPersistedValidItems || hasRecipeImportDrafts || hasFilledIngredientDrafts(excluding: id) {
+            return true
+        }
+
+        return ingredientDrafts.count > 1
+    }
+
+    private func hasFilledIngredientDrafts(excluding excludedID: UUID? = nil) -> Bool {
+        ingredientDrafts.contains { draft in
+            draft.id != excludedID && !draft.trimmedName.isEmpty
+        }
+    }
+
+    private func ensureMinimumEditPlaceholderRow() {
+        guard isEditingGroceries else { return }
+        guard !hasPersistedValidItems, !hasRecipeImportDrafts, !hasFilledIngredientDrafts() else { return }
+        guard ingredientDrafts.isEmpty else { return }
+        addIngredientDraft()
+    }
+
+    private func addIngredient() {
+        addIngredientDraft()
     }
 
     private func deleteItem(_ item: GroceryItem) {
         modelContext.delete(item)
         try? modelContext.save()
+        ensureMinimumEditPlaceholderRow()
     }
 
     private func deleteAllGroceries() {
@@ -385,6 +458,9 @@ struct GroceriesRootView: View {
         list.items.forEach { modelContext.delete($0) }
         list.items = []
         recipeImportDrafts = []
+        ingredientDrafts = [
+            GroceryIngredientDraft(unit: settings.defaultIngredientUnit),
+        ]
         try? modelContext.save()
     }
 
@@ -395,7 +471,7 @@ struct GroceriesRootView: View {
         }
 
         for item in list.items {
-            item.name = item.name.trimmingCharacters(in: .whitespacesAndNewlines)
+            item.name = item.trimmedName
             if item.quantity <= 0 {
                 item.quantity = 1
             }
@@ -405,10 +481,9 @@ struct GroceriesRootView: View {
             }
         }
 
-        for item in list.items where item.name.isEmpty {
-            modelContext.delete(item)
-        }
+        purgeEmptyPersistedItems(from: list)
 
+        let draftItems = ingredientDrafts.compactMap(aggregatedIngredientDraft)
         let recipeEntries = recipeImportDrafts.compactMap { draft -> (recipe: Recipe, servings: Int)? in
             guard let recipeID = draft.recipeID,
                   let recipe = recipes.first(where: { $0.id == recipeID }) else {
@@ -417,13 +492,31 @@ struct GroceriesRootView: View {
             return (recipe: recipe, servings: draft.servings)
         }
 
-        let imported = ShoppingListGenerator.aggregate(recipes: recipeEntries)
+        let imported = ShoppingListGenerator.aggregate(recipes: recipeEntries) + draftItems
         let merged = ShoppingListGenerator.merge(aggregated: imported, with: list.items)
         applyMergedItems(merged, to: list)
 
+        ingredientDrafts = []
         recipeImportDrafts = []
         try? modelContext.save()
         isEditingGroceries = false
+    }
+
+    private func aggregatedIngredientDraft(_ draft: GroceryIngredientDraft) -> AggregatedGroceryItem? {
+        let name = draft.trimmedName
+        guard !name.isEmpty else { return nil }
+
+        let unit = draft.unit.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+            ? settings.defaultIngredientUnit
+            : draft.unit
+        let quantity = draft.quantity > 0 ? draft.quantity : 1
+
+        return AggregatedGroceryItem(
+            id: "\(name)|\(unit)",
+            name: name,
+            unit: unit,
+            quantity: quantity
+        )
     }
 
     private func applyMergedItems(_ merged: [AggregatedGroceryItem], to list: GroceryList) {
@@ -507,10 +600,51 @@ private struct RecipePickerContext: Identifiable {
     let id: UUID
 }
 
+private struct GroceryIngredientDraft: Identifiable {
+    let id = UUID()
+    var name = ""
+    var quantity = 1.0
+    var unit = ""
+
+    init(unit: String = "") {
+        self.unit = unit
+    }
+
+    var trimmedName: String {
+        name.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+}
+
 private struct GroceryEditRecipeDraft: Identifiable {
     let id = UUID()
     var recipeID: UUID?
     var servings = 1
+}
+
+private struct GroceryIngredientDraftEditRow: View {
+    @Binding var draft: GroceryIngredientDraft
+    let canDelete: Bool
+    let onDelete: () -> Void
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Button(role: .destructive, action: onDelete) {
+                Image(systemName: "minus.circle.fill")
+                    .font(.title3)
+                    .foregroundStyle(canDelete ? .red : .secondary)
+            }
+            .buttonStyle(.plain)
+            .disabled(!canDelete)
+            .accessibilityLabel("Remove ingredient")
+
+            EditableIngredientRow(
+                name: $draft.name,
+                quantity: $draft.quantity,
+                unit: $draft.unit
+            )
+        }
+        .padding(.vertical, 2)
+    }
 }
 
 private struct GroceryRecipeEditRow: View {

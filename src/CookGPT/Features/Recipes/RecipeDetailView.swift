@@ -7,6 +7,10 @@
 import SwiftUI
 import SwiftData
 
+private enum RecipeScrollAnchor {
+    static let stepsSection = "recipe-steps-section"
+}
+
 struct RecipeDetailView: View {
     let recipe: Recipe
 
@@ -37,6 +41,7 @@ struct RecipeDetailView: View {
     }
 
     var body: some View {
+        ScrollViewReader { scrollProxy in
         List {
             Section {
                 Text(recipe.summary)
@@ -101,8 +106,18 @@ struct RecipeDetailView: View {
                         recipe: recipe,
                         cookingSession: cookingSession
                     )
+                    .id(step.id)
                 }
             }
+            .id(RecipeScrollAnchor.stepsSection)
+        }
+        .onAppear {
+            scrollToPendingTarget(using: scrollProxy)
+        }
+        .onChange(of: navigation.pendingRecipeScrollRequest) { _, request in
+            guard request?.recipeID == recipe.id else { return }
+            scrollToPendingTarget(using: scrollProxy)
+        }
         }
         .navigationTitle(recipe.title)
         .toolbar {
@@ -125,6 +140,24 @@ struct RecipeDetailView: View {
         }
         .sheet(isPresented: $isEditingRecipe) {
             RecipeEditorSheet(recipe: recipe)
+        }
+    }
+
+    private func scrollToPendingTarget(using scrollProxy: ScrollViewProxy) {
+        guard let request = navigation.consumePendingRecipeScrollRequest(for: recipe.id) else { return }
+
+        let target: AnyHashable
+        if let stepID = request.stepID, recipe.sortedSteps.contains(where: { $0.id == stepID }) {
+            target = stepID
+        } else {
+            target = RecipeScrollAnchor.stepsSection
+        }
+
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(150))
+            withAnimation {
+                scrollProxy.scrollTo(target, anchor: .top)
+            }
         }
     }
 

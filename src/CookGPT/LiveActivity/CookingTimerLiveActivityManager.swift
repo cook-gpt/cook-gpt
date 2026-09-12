@@ -19,7 +19,10 @@ enum CookingTimerLiveActivityManager {
         guard areActivitiesEnabled else { return }
 
         let contentState = contentState(for: timer, recipeTitle: recipeTitle)
-        let attributes = CookingTimerAttributes(timerID: timer.id.uuidString)
+        let attributes = CookingTimerAttributes(
+            timerID: timer.id.uuidString,
+            recipeID: timer.recipeID.uuidString
+        )
 
         if let activity = activitiesByStepID[timer.stepID] {
             await activity.update(ActivityContent(state: contentState, staleDate: nil))
@@ -95,6 +98,7 @@ enum CookingTimerLiveActivityManager {
     ) -> CookingTimerAttributes.ContentState {
         CookingTimerAttributes.ContentState(
             stepID: timer.stepID.uuidString,
+            recipeID: timer.recipeID.uuidString,
             recipeTitle: recipeTitle,
             stepLabel: timer.label,
             phase: timer.phase.rawValue,

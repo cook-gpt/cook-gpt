@@ -28,7 +28,9 @@ struct RecipesRootView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(CookingSessionManager.self) private var cookingSession
     @Environment(AppSettingsStore.self) private var settings
+    @Environment(AppNavigationStore.self) private var navigation
 
+    @State private var navigationPath = NavigationPath()
     @State private var isAddingRecipe = false
     @State private var recipeToEdit: Recipe?
     @State private var recipeForCategories: Recipe?
@@ -101,6 +103,7 @@ struct RecipesRootView: View {
     }
 
     var body: some View {
+        NavigationStack(path: $navigationPath) {
         Group {
             if settings.isResettingData {
                 ProgressView("Resetting app data…")
@@ -215,6 +218,19 @@ struct RecipesRootView: View {
                 RecipeDetailView(recipe: recipe)
             }
         }
+        }
+        .onAppear {
+            navigateToPendingRecipeIfNeeded()
+        }
+        .onChange(of: navigation.pendingRecipeNavigationID) { _, _ in
+            navigateToPendingRecipeIfNeeded()
+        }
+    }
+
+    private func navigateToPendingRecipeIfNeeded() {
+        guard let recipeID = navigation.consumePendingRecipeNavigation() else { return }
+        navigationPath = NavigationPath()
+        navigationPath.append(recipeID)
     }
 
     private func toggleFavorite(_ recipe: Recipe) {

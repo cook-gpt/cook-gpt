@@ -24,9 +24,7 @@ struct ContentView: View {
 
         TabView(selection: $navigation.selectedTab) {
             Tab("Recipes", systemImage: "book.closed", value: AppNavigationStore.Tab.recipes) {
-                NavigationStack {
-                    RecipesRootView()
-                }
+                RecipesRootView()
             }
             .badge(cookingSession.showsRecipesTabBadge ? Text(verbatim: "") : nil)
 
@@ -51,6 +49,11 @@ struct ContentView: View {
         }
         .preferredColorScheme(settings.appTheme.colorScheme)
         .id(settings.contentResetID)
+        .onOpenURL { url in
+            if let destination = AppDeepLink.recipeDestination(from: url) {
+                navigation.openRecipe(id: destination.recipeID, stepID: destination.stepID)
+            }
+        }
     }
 }
 

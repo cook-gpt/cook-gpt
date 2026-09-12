@@ -18,14 +18,41 @@ final class AppNavigationStore {
         case settings
     }
 
+    struct RecipeScrollRequest: Equatable {
+        let recipeID: UUID
+        let stepID: UUID?
+    }
+
     var selectedTab: Tab = .recipes
     private(set) var highlightedGroceryItemKeys: Set<String> = []
+    private(set) var pendingRecipeNavigationID: UUID?
+    private(set) var pendingRecipeScrollRequest: RecipeScrollRequest?
 
     private init() {}
 
     func openGroceries(highlightingItemKeys keys: Set<String>) {
         highlightedGroceryItemKeys = keys
         selectedTab = .groceries
+    }
+
+    func openRecipe(id: UUID, stepID: UUID? = nil) {
+        selectedTab = .recipes
+        pendingRecipeNavigationID = id
+        pendingRecipeScrollRequest = RecipeScrollRequest(recipeID: id, stepID: stepID)
+    }
+
+    func consumePendingRecipeNavigation() -> UUID? {
+        let recipeID = pendingRecipeNavigationID
+        pendingRecipeNavigationID = nil
+        return recipeID
+    }
+
+    func consumePendingRecipeScrollRequest(for recipeID: UUID) -> RecipeScrollRequest? {
+        guard let request = pendingRecipeScrollRequest, request.recipeID == recipeID else {
+            return nil
+        }
+        pendingRecipeScrollRequest = nil
+        return request
     }
 
     func clearGroceryHighlights() {
@@ -35,5 +62,7 @@ final class AppNavigationStore {
     func reset() {
         selectedTab = .recipes
         highlightedGroceryItemKeys = []
+        pendingRecipeNavigationID = nil
+        pendingRecipeScrollRequest = nil
     }
 }

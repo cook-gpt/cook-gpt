@@ -92,14 +92,15 @@ enum ShoppingListGenerator {
         var totals: [String: ItemTotal] = [:]
 
         for item in existingItems {
+            guard item.hasContent else { continue }
             let unit = item.unit.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "g" : item.unit
-            let key = mergeKey(name: item.name, unit: unit, isChecked: item.isChecked)
+            let key = mergeKey(name: item.trimmedName, unit: unit, isChecked: item.isChecked)
             if var existing = totals[key] {
                 existing.quantity += item.quantity
                 totals[key] = existing
             } else {
                 totals[key] = ItemTotal(
-                    name: item.name,
+                    name: item.trimmedName,
                     unit: unit,
                     quantity: item.quantity,
                     isChecked: item.isChecked

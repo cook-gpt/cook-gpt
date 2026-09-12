@@ -13,6 +13,7 @@ struct CookingTimerLiveActivityWidget: Widget {
         ActivityConfiguration(for: CookingTimerAttributes.self) { context in
             CookingTimerLiveActivityView(context: context)
                 .activityBackgroundTint(Color.orange.opacity(0.15))
+                .widgetURL(recipeDeepLinkURL(for: context))
         } dynamicIsland: { context in
             DynamicIsland {
                 DynamicIslandExpandedRegion(.leading) {
@@ -45,7 +46,19 @@ struct CookingTimerLiveActivityWidget: Widget {
                 Image(systemName: "timer")
                     .foregroundStyle(.orange)
             }
+            .widgetURL(recipeDeepLinkURL(for: context))
         }
+    }
+
+    private func recipeDeepLinkURL(for context: ActivityViewContext<CookingTimerAttributes>) -> URL? {
+        guard let recipeID = UUID(uuidString: context.attributes.recipeID),
+              let stepID = UUID(uuidString: context.state.stepID) else { return nil }
+        var components = URLComponents()
+        components.scheme = "cookgpt"
+        components.host = "recipe"
+        components.path = "/\(recipeID.uuidString)"
+        components.queryItems = [URLQueryItem(name: "step", value: stepID.uuidString)]
+        return components.url
     }
 
     @ViewBuilder

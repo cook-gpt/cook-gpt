@@ -33,8 +33,16 @@ final class GroceryItem {
         self.list = list
     }
 
+    var trimmedName: String {
+        name.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    var hasContent: Bool {
+        !trimmedName.isEmpty
+    }
+
     var mergeKey: String {
         let normalizedUnit = unit.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? "g" : unit
-        return "\(name.lowercased())|\(normalizedUnit.lowercased())"
+        return "\(trimmedName.lowercased())|\(normalizedUnit.lowercased())"
     }
 }

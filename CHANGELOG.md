@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-09-12
+
+### Added
+
+- **Timer Live Activities** — tapping the Lock Screen or Dynamic Island timer opens the recipe and scrolls to the active step
+- **Groceries edit mode** — empty lists show a starter ingredient row; delete-all trash icon
+- **Meals edit mode** — trash icon to clear all scheduled meals in the current day, week, or month range
+
+### Changed
+
+- **Groceries** — new ingredient rows stay as drafts until named; blank lines are never saved to the list
+- **Settings** — Privacy Policy and Source Code moved to their own section
+
 ## [1.0.0] - 2026-08-27
 
 First App Store release of **CookGPT - Gourmet Plan & Taste**.
@@ -36,5 +49,7 @@ First App Store release of **CookGPT - Gourmet Plan & Taste**.
 ---
 
 ## Repository documents
+
+[1.0.1]: https://github.com/cook-gpt/cook-gpt/compare/v1.0.0...v1.0.1
 
 [README](README.md) | [INSTRUCTIONS](INSTRUCTIONS.md) | **CHANGELOG** | [CONTRIBUTING](CONTRIBUTING.md) | [SECURITY](SECURITY.md) | [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md)

@@ -24,6 +24,7 @@ struct SettingsRootView: View {
             SettingsMenuPickerSection(settings: settings)
             SettingsNavigationSection(settings: settings)
             SettingsInformationSection()
+            SettingsLinksSection()
             SettingsResetSection(
                 isResetting: isResetting,
                 showResetConfirmation: $showResetConfirmation
@@ -167,13 +168,20 @@ private struct SettingsInformationSection: View {
             LabeledContent("Pro features", value: AppMetadata.advancedProFeaturesStatus)
             LabeledContent("Version", value: AppMetadata.version)
             LabeledContent("Language", value: AppMetadata.languageName)
-            Link("Privacy Policy", destination: AppMetadata.privacyPolicyURL)
-            Link("Source Code", destination: AppMetadata.sourceCodeURL)
         } footer: {
             VStack(alignment: .leading, spacing: 8) {
                 Text(AppMetadata.advancedSectionFooter)
                 Text("Language follows your device settings.")
             }
+        }
+    }
+}
+
+private struct SettingsLinksSection: View {
+    var body: some View {
+        Section {
+            Link("Privacy Policy", destination: AppMetadata.privacyPolicyURL)
+            Link("Source Code", destination: AppMetadata.sourceCodeURL)
         }
     }
 }
