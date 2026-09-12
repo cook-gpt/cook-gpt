@@ -9,15 +9,16 @@ import SwiftData
 
 enum SampleDataSeeder {
     private static let seedFlagKey = "didSeedSampleData"
+    private static let minimalShellFlagKey = "didSeedMinimalShell"
     private static let recipeStructureVersionKey = "sampleRecipeStructureVersion"
-    private static let currentRecipeStructureVersion = 8
+    private static let currentRecipeStructureVersion = 9
 
     static func seedIfNeeded(context: ModelContext) {
         if !UserDefaults.standard.bool(forKey: seedFlagKey) {
             let recipeDescriptor = FetchDescriptor<Recipe>()
             let existingRecipes = (try? context.fetch(recipeDescriptor)) ?? []
             if existingRecipes.isEmpty {
-                seedFreshInstall(context: context)
+                seedLegacyFreshInstall(context: context)
             }
             UserDefaults.standard.set(true, forKey: seedFlagKey)
         }
@@ -27,24 +28,19 @@ enum SampleDataSeeder {
 
     static func resetInstallFlags() {
         UserDefaults.standard.removeObject(forKey: seedFlagKey)
+        UserDefaults.standard.removeObject(forKey: minimalShellFlagKey)
         UserDefaults.standard.removeObject(forKey: recipeStructureVersionKey)
     }
 
-    static func seedFreshInstall(context: ModelContext) {
-        var pool = IngredientPool(context: context)
+    static func seedMinimalInstallIfNeeded(context: ModelContext) {
+        guard !UserDefaults.standard.bool(forKey: minimalShellFlagKey) else { return }
 
-        let recipes = [
-            makeAglioOlioRecipe(pool: &pool, context: context),
-            makeChickenBowlRecipe(pool: &pool, context: context),
-            makeScrambledEggsRecipe(pool: &pool, context: context),
-            makeGreekSaladRecipe(pool: &pool, context: context),
-            makeLentilSoupRecipe(pool: &pool, context: context),
-            makeSalmonRecipe(pool: &pool, context: context),
-            makeOvernightOatsRecipe(pool: &pool, context: context),
-            makeTomatoSoupRecipe(pool: &pool, context: context),
-            makeBananaNiceCreamRecipe(pool: &pool, context: context),
-        ]
-        recipes.forEach { context.insert($0) }
+        let profileDescriptor = FetchDescriptor<DietProfile>()
+        let existingProfiles = (try? context.fetch(profileDescriptor)) ?? []
+        if !existingProfiles.isEmpty {
+            UserDefaults.standard.set(true, forKey: minimalShellFlagKey)
+            return
+        }
 
         let profile = DietProfile(name: "Balanced", dietType: .balanced, isActive: true)
         context.insert(profile)
@@ -52,20 +48,92 @@ enum SampleDataSeeder {
         let groceryList = GroceryList(name: "Shopping list")
         context.insert(groceryList)
 
+        try? context.save()
+        UserDefaults.standard.set(true, forKey: minimalShellFlagKey)
+    }
+
+    static func seedSelectedPacks(
+        categoryIDs: [String],
+        context: ModelContext,
+        settings: AppSettingsStore
+    ) {
+        settings.applyStarterCategories(categoryIDs)
+
+        let recipeIDs = RecipePackCatalog.recipeIDs(for: categoryIDs)
+        guard !recipeIDs.isEmpty else {
+            markRecipeDataSeeded()
+            return
+        }
+
+        var pool = IngredientPool(context: context)
+        let recipes = recipeIDs.map { makeRecipe(id: $0, pool: &pool, context: context) }
+        recipes.forEach { context.insert($0) }
+
+        seedSampleMealsIfPossible(recipes: recipes, context: context)
+
+        try? context.save()
+        markRecipeDataSeeded()
+    }
+
+    /// Legacy full install used for existing users upgrading before onboarding existed.
+    private static func seedLegacyFreshInstall(context: ModelContext) {
+        let allCategoryIDs = RecipePackCatalog.packs.map(\.categoryID)
+        seedSelectedPacks(categoryIDs: allCategoryIDs, context: context, settings: AppSettingsStore.shared)
+    }
+
+    private static func markRecipeDataSeeded() {
+        UserDefaults.standard.set(true, forKey: seedFlagKey)
+        UserDefaults.standard.set(currentRecipeStructureVersion, forKey: recipeStructureVersionKey)
+    }
+
+    private static func seedSampleMealsIfPossible(recipes: [Recipe], context: ModelContext) {
+        guard recipes.count >= 2 else { return }
+
         let today = MealScheduleCalendar.startOfDay(.now)
         let tomorrow = MealScheduleCalendar.calendar.date(byAdding: .day, value: 1, to: today) ?? today
 
         let sampleMeals = [
             ScheduledMeal(day: today, mealSlot: .lunch, recipe: recipes[0], servings: 1),
-            ScheduledMeal(day: today, mealSlot: .dinner, recipe: recipes[1], servings: 1),
-            ScheduledMeal(day: tomorrow, mealSlot: .lunch, recipe: recipes[2], servings: 1),
-            ScheduledMeal(day: tomorrow, mealSlot: .dinner, recipe: recipes[5], servings: 1),
+            ScheduledMeal(day: today, mealSlot: .dinner, recipe: recipes[min(1, recipes.count - 1)], servings: 1),
+            ScheduledMeal(day: tomorrow, mealSlot: .lunch, recipe: recipes[min(2, recipes.count - 1)], servings: 1),
+            ScheduledMeal(day: tomorrow, mealSlot: .dinner, recipe: recipes[min(3, recipes.count - 1)], servings: 1),
         ]
-        sampleMeals.forEach { context.insert($0) }
 
-        try? context.save()
-        UserDefaults.standard.set(true, forKey: seedFlagKey)
-        UserDefaults.standard.set(currentRecipeStructureVersion, forKey: recipeStructureVersionKey)
+        sampleMeals.forEach { context.insert($0) }
+    }
+
+    private static func makeRecipe(
+        id: SampleRecipeID,
+        pool: inout IngredientPool,
+        context: ModelContext
+    ) -> Recipe {
+        switch id {
+        case .aglioOlio:
+            makeAglioOlioRecipe(pool: &pool, context: context)
+        case .chickenBowl:
+            makeChickenBowlRecipe(pool: &pool, context: context)
+        case .scrambledEggs:
+            makeScrambledEggsRecipe(pool: &pool, context: context)
+        case .greekSalad:
+            makeGreekSaladRecipe(pool: &pool, context: context)
+        case .lentilSoup:
+            makeLentilSoupRecipe(pool: &pool, context: context)
+        case .salmon:
+            makeSalmonRecipe(pool: &pool, context: context)
+        case .overnightOats:
+            makeOvernightOatsRecipe(pool: &pool, context: context)
+        case .tomatoSoup:
+            makeTomatoSoupRecipe(pool: &pool, context: context)
+        case .bananaNiceCream:
+            makeBananaNiceCreamRecipe(pool: &pool, context: context)
+        case .chickpeaCurry, .veggieStirFry, .avocadoToast, .capreseSalad, .mushroomRisotto,
+             .turkeyMeatballs, .eggWhiteOmelette, .cobbSalad, .zucchiniNoodles, .grilledChicken,
+             .steakBites, .shrimpScampi, .eggMuffins, .tunaSalad, .steamedVeggies, .berrySmoothieBowl,
+             .bakedCod, .riceAndBeans, .cucumberSalad, .margheritaFlatbread, .pestoPasta, .burritoBowl,
+             .quinoaSalad, .yogurtParfait, .chocolateMousse, .appleCrumble, .chiaPudding, .bakedPeaches,
+             .coconutCookies:
+            makeExtendedRecipe(id: id, pool: &pool, context: context)!
+        }
     }
 
     private static func upgradeRecipeStructureIfNeeded(context: ModelContext) {
@@ -90,6 +158,10 @@ enum SampleDataSeeder {
     private static func rebuildRecipeSteps(recipe: Recipe, context: ModelContext) {
         recipe.steps.forEach { context.delete($0) }
         recipe.steps = []
+
+        if rebuildExtendedRecipeSteps(recipe: recipe, context: context) {
+            return
+        }
 
         switch recipe.title {
         case "Spaghetti Aglio e Olio":
@@ -135,11 +207,15 @@ enum SampleDataSeeder {
         return tags.filter { seen.insert($0).inserted }
     }
 
-    private static func cookingTools(_ tools: RecipeCookingTool...) -> [String] {
+    static func cookingTools(_ tools: RecipeCookingTool...) -> [String] {
         tools.map(\.rawValue)
     }
 
     private static func applyDefaultCookingTools(recipe: Recipe) {
+        if applyExtendedCookingTools(recipe: recipe) {
+            return
+        }
+
         switch recipe.title {
         case "Spaghetti Aglio e Olio":
             recipe.cookingTools = cookingTools(.pan)
@@ -177,7 +253,7 @@ enum SampleDataSeeder {
     }
 
 
-    private struct IngredientPool {
+    struct IngredientPool {
         let context: ModelContext
         private var cache: [String: Ingredient] = [:]
 
@@ -415,7 +491,7 @@ enum SampleDataSeeder {
         return recipe
     }
 
-    private static func attach(
+    static func attach(
         recipe: Recipe,
         ingredients: [(Double, String, Ingredient)],
         steps: [RecipeStep],
@@ -505,7 +581,7 @@ enum SampleDataSeeder {
         ])
     }
 
-    private static func makeSteps(
+    static func makeSteps(
         recipe: Recipe,
         context: ModelContext,
         steps: [(String, Int?)]

@@ -25,7 +25,7 @@ enum AppDataReset {
         deleteAllData(context: context)
         settings.resetToDefaults()
         SampleDataSeeder.resetInstallFlags()
-        SampleDataSeeder.seedFreshInstall(context: context)
+        SampleDataSeeder.seedMinimalInstallIfNeeded(context: context)
         try? context.save()
 
         settings.endDataReset()

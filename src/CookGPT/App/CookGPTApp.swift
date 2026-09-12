@@ -28,7 +28,11 @@ struct CookGPTApp: App {
                 .environment(AppNavigationStore.shared)
                 .onAppear {
                     let context = modelContainer.mainContext
-                    SampleDataSeeder.seedIfNeeded(context: context)
+                    if AppSettingsStore.shared.hasCompletedOnboarding {
+                        SampleDataSeeder.seedIfNeeded(context: context)
+                    } else {
+                        SampleDataSeeder.seedMinimalInstallIfNeeded(context: context)
+                    }
 
                     let recipeDescriptor = FetchDescriptor<Recipe>()
                     let recipes = (try? context.fetch(recipeDescriptor)) ?? []

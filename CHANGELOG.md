@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **First-launch onboarding** — three-step tutorial for app overview, starter recipe pack selection, and timer notifications
+- **Starter recipe packs** — eleven collections with six recipes each; only selected packs are installed on first launch
+- **Reset tutorial** — Settings option to replay onboarding without resetting recipe data
+
+### Changed
+
+- **Onboarding recipe packs** — grid of icon tiles with tap-to-select instead of list rows with descriptions
+- **Edit categories** — unified checklist-style list with recipe counts (`Recipes: N`), back and pencil toolbar icons, and delete/reorder in edit mode
+
 ## [1.0.1] - 2026-09-12
 
 ### Added

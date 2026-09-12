@@ -43,6 +43,7 @@ final class AppSettingsStore {
         static let customCategories = "appSettings.customCategories"
         static let measurementSystem = "appSettings.measurementSystem"
         static let recipeFilterActiveCategoryIDs = "appSettings.recipeFilterActiveCategoryIDs"
+        static let hasCompletedOnboarding = "appSettings.hasCompletedOnboarding"
     }
 
     var appTheme: AppTheme = .system {
@@ -97,6 +98,13 @@ final class AppSettingsStore {
     /// Bumped to remount root UI after a factory reset so `@Query` views drop stale models.
     private(set) var contentResetID = UUID()
 
+    var hasCompletedOnboarding: Bool = false {
+        didSet { UserDefaults.standard.set(hasCompletedOnboarding, forKey: Keys.hasCompletedOnboarding) }
+    }
+
+    /// Shows the onboarding overlay again without changing starter data.
+    private(set) var shouldPresentOnboarding = false
+
     var allCategories: [AppCategory] {
         categories
     }
@@ -137,8 +145,31 @@ final class AppSettingsStore {
             measurementSystem = MeasurementSystem.preferredForCurrentLocale
         }
         TimerAlarmSoundInstaller.ensureInstalled(timerAlarmSound)
-        categories = Self.loadCategories()
+        hasCompletedOnboarding = Self.loadHasCompletedOnboarding()
+        if !hasCompletedOnboarding, UserDefaults.standard.bool(forKey: "didSeedSampleData") {
+            hasCompletedOnboarding = true
+        }
+        categories = Self.loadCategories(hasCompletedOnboarding: hasCompletedOnboarding)
         recipeFilterActiveCategoryIDs = Self.loadRecipeFilterActiveCategoryIDs()
+    }
+
+    func applyStarterCategories(_ categoryIDs: [String]) {
+        let selected = Set(categoryIDs)
+        categories = Self.defaultCategories.filter { selected.contains($0.id) }
+        recipeFilterActiveCategoryIDs = []
+    }
+
+    func markOnboardingCompleted() {
+        hasCompletedOnboarding = true
+        shouldPresentOnboarding = false
+    }
+
+    func resetOnboardingTutorial() {
+        shouldPresentOnboarding = true
+    }
+
+    func dismissOnboardingPresentation() {
+        shouldPresentOnboarding = false
     }
 
     func resetToDefaults() {
@@ -147,8 +178,10 @@ final class AppSettingsStore {
         timerAlarmSound = .defaultSound
         weekStart = .monday
         measurementSystem = MeasurementSystem.preferredForCurrentLocale
-        categories = Self.defaultCategories
+        categories = []
         recipeFilterActiveCategoryIDs = []
+        hasCompletedOnboarding = false
+        shouldPresentOnboarding = false
     }
 
     func effectiveRecipeFilterActiveCategoryIDs() -> [String] {
@@ -240,12 +273,14 @@ final class AppSettingsStore {
             .replacingOccurrences(of: " ", with: "-")
     }
 
-    private static func loadCategories() -> [AppCategory] {
-        if let data = UserDefaults.standard.data(forKey: Keys.categories),
-           let decoded = try? JSONDecoder().decode([AppCategory].self, from: data),
-           !decoded.isEmpty {
+    private static func loadCategories(hasCompletedOnboarding: Bool) -> [AppCategory] {
+        if UserDefaults.standard.object(forKey: Keys.categories) != nil,
+           let data = UserDefaults.standard.data(forKey: Keys.categories),
+           let decoded = try? JSONDecoder().decode([AppCategory].self, from: data) {
             return decoded
         }
+
+        guard hasCompletedOnboarding else { return [] }
 
         let legacyCustom = loadLegacyCustomCategories()
         if legacyCustom.isEmpty, UserDefaults.standard.data(forKey: Keys.customCategories) == nil {
@@ -285,6 +320,10 @@ final class AppSettingsStore {
 
     private static func loadRecipeFilterActiveCategoryIDs() -> [String] {
         UserDefaults.standard.stringArray(forKey: Keys.recipeFilterActiveCategoryIDs) ?? []
+    }
+
+    private static func loadHasCompletedOnboarding() -> Bool {
+        UserDefaults.standard.bool(forKey: Keys.hasCompletedOnboarding)
     }
 }
 

@@ -12,6 +12,8 @@ struct ContentView: View {
     @Environment(CookingSessionManager.self) private var cookingSession
     @Environment(AppNavigationStore.self) private var navigation
 
+    @State private var showOnboarding = false
+
     @Query(filter: #Predicate<GroceryItem> { !$0.isChecked })
     private var pendingGroceryItems: [GroceryItem]
 
@@ -54,6 +56,30 @@ struct ContentView: View {
                 navigation.openRecipe(id: destination.recipeID, stepID: destination.stepID)
             }
         }
+        .onAppear {
+            updateOnboardingPresentation()
+        }
+        .onChange(of: settings.hasCompletedOnboarding) { _, _ in
+            updateOnboardingPresentation()
+        }
+        .onChange(of: settings.shouldPresentOnboarding) { _, _ in
+            updateOnboardingPresentation()
+        }
+        .overlay {
+            if showOnboarding {
+                OnboardingView(
+                    isReplay: settings.hasCompletedOnboarding,
+                    onDismiss: {
+                        showOnboarding = false
+                    }
+                )
+                .transition(.opacity)
+            }
+        }
+    }
+
+    private func updateOnboardingPresentation() {
+        showOnboarding = !settings.hasCompletedOnboarding || settings.shouldPresentOnboarding
     }
 }
 

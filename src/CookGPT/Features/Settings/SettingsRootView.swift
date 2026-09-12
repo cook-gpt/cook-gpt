@@ -25,6 +25,7 @@ struct SettingsRootView: View {
             SettingsNavigationSection(settings: settings)
             SettingsInformationSection()
             SettingsLinksSection()
+            SettingsTutorialSection()
             SettingsResetSection(
                 isResetting: isResetting,
                 showResetConfirmation: $showResetConfirmation
@@ -186,6 +187,22 @@ private struct SettingsLinksSection: View {
     }
 }
 
+// MARK: - Tutorial
+
+private struct SettingsTutorialSection: View {
+    @Environment(AppSettingsStore.self) private var settings
+
+    var body: some View {
+        Section {
+            Button("Reset tutorial") {
+                settings.resetOnboardingTutorial()
+            }
+        } footer: {
+            Text("Shows the first-launch walkthrough again without changing your recipes or categories.")
+        }
+    }
+}
+
 // MARK: - Destructive action
 
 private struct SettingsResetSection: View {
@@ -209,7 +226,7 @@ private struct SettingsResetSection: View {
             }
             .disabled(isResetting)
         } footer: {
-            Text("Deletes all recipes, meals, groceries, timers, and custom settings, then restores the default install data.")
+            Text("Deletes all recipes, meals, groceries, timers, and custom settings, then shows the first-launch walkthrough again.")
         }
     }
 }
