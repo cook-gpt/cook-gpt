@@ -57,10 +57,12 @@ enum SampleDataSeeder {
         context: ModelContext,
         settings: AppSettingsStore
     ) {
-        settings.applyStarterCategories(categoryIDs)
-
         let recipeIDs = RecipePackCatalog.recipeIDs(for: categoryIDs)
         guard !recipeIDs.isEmpty else {
+            settings.applyImportedRecipeCategories(
+                selectedPackCategoryIDs: categoryIDs,
+                recipeTagIDs: []
+            )
             markRecipeDataSeeded()
             return
         }
@@ -69,7 +71,10 @@ enum SampleDataSeeder {
         let recipes = recipeIDs.map { makeRecipe(id: $0, pool: &pool, context: context) }
         recipes.forEach { context.insert($0) }
 
-        seedSampleMealsIfPossible(recipes: recipes, context: context)
+        settings.applyImportedRecipeCategories(
+            selectedPackCategoryIDs: categoryIDs,
+            recipeTagIDs: Set(recipes.flatMap(\.tags))
+        )
 
         try? context.save()
         markRecipeDataSeeded()
@@ -84,22 +89,6 @@ enum SampleDataSeeder {
     private static func markRecipeDataSeeded() {
         UserDefaults.standard.set(true, forKey: seedFlagKey)
         UserDefaults.standard.set(currentRecipeStructureVersion, forKey: recipeStructureVersionKey)
-    }
-
-    private static func seedSampleMealsIfPossible(recipes: [Recipe], context: ModelContext) {
-        guard recipes.count >= 2 else { return }
-
-        let today = MealScheduleCalendar.startOfDay(.now)
-        let tomorrow = MealScheduleCalendar.calendar.date(byAdding: .day, value: 1, to: today) ?? today
-
-        let sampleMeals = [
-            ScheduledMeal(day: today, mealSlot: .lunch, recipe: recipes[0], servings: 1),
-            ScheduledMeal(day: today, mealSlot: .dinner, recipe: recipes[min(1, recipes.count - 1)], servings: 1),
-            ScheduledMeal(day: tomorrow, mealSlot: .lunch, recipe: recipes[min(2, recipes.count - 1)], servings: 1),
-            ScheduledMeal(day: tomorrow, mealSlot: .dinner, recipe: recipes[min(3, recipes.count - 1)], servings: 1),
-        ]
-
-        sampleMeals.forEach { context.insert($0) }
     }
 
     private static func makeRecipe(

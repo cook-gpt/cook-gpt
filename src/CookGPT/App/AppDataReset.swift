@@ -12,11 +12,10 @@ enum AppDataReset {
     static func resetToDefaults(
         context: ModelContext,
         settings: AppSettingsStore,
-        cookingSession: CookingSessionManager,
-        navigation: AppNavigationStore = .shared
+        cookingSession: CookingSessionManager
     ) async {
         cookingSession.reset()
-        navigation.reset()
+        AppNavigationStore.shared.reset()
         await CookingTimerLiveActivityManager.endAll()
 
         settings.beginDataReset()

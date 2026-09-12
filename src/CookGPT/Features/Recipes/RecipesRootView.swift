@@ -220,6 +220,7 @@ struct RecipesRootView: View {
         }
         }
         .onAppear {
+            settings.ensureCategoriesExist(tagIDs: Set(recipes.flatMap(\.tags)))
             navigateToPendingRecipeIfNeeded()
         }
         .onChange(of: navigation.pendingRecipeNavigationID) { _, _ in

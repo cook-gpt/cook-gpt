@@ -9,6 +9,7 @@ import SwiftUI
 
 struct RecipeCategoryFilterEditorSheet: View {
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
     @Environment(AppSettingsStore.self) private var settings
     @Query(sort: \Recipe.title) private var recipes: [Recipe]
 
@@ -80,6 +81,7 @@ struct RecipeCategoryFilterEditorSheet: View {
                 }
             }
             .onAppear {
+                syncCategoriesFromRecipes()
                 reloadCategoryState()
             }
             .alert("Add category", isPresented: $isAddingCategory) {
@@ -92,10 +94,13 @@ struct RecipeCategoryFilterEditorSheet: View {
         }
     }
 
+    private func syncCategoriesFromRecipes() {
+        settings.ensureCategoriesExist(tagIDs: Set(recipes.flatMap(\.tags)))
+    }
+
     private func reloadCategoryState() {
         activeCategoryIDs = Set(settings.effectiveRecipeFilterActiveCategoryIDs())
-        orderedCategoryIDs = settings.effectiveRecipeFilterActiveCategoryIDs()
-            + settings.inactiveRecipeFilterCategoryIDs()
+        orderedCategoryIDs = settings.categoryIDsInDisplayOrder()
     }
 
     private func recipeCount(for categoryID: String) -> Int {
@@ -113,6 +118,7 @@ struct RecipeCategoryFilterEditorSheet: View {
 
     private func moveCategories(from source: IndexSet, to destination: Int) {
         orderedCategoryIDs.move(fromOffsets: source, toOffset: destination)
+        settings.reorderCategories(to: orderedCategoryIDs)
         saveActiveFilter()
     }
 
@@ -126,6 +132,11 @@ struct RecipeCategoryFilterEditorSheet: View {
     }
 
     private func deleteCategory(_ categoryID: String) {
+        for recipe in recipes where recipe.tags.contains(categoryID) {
+            recipe.tags.removeAll { $0 == categoryID }
+        }
+        try? modelContext.save()
+
         settings.removeCategory(id: categoryID)
         orderedCategoryIDs.removeAll { $0 == categoryID }
         activeCategoryIDs.remove(categoryID)
@@ -133,6 +144,8 @@ struct RecipeCategoryFilterEditorSheet: View {
     }
 
     private func saveActiveFilter() {
+        settings.reorderCategories(to: orderedCategoryIDs)
+
         let orderedActive = orderedCategoryIDs.filter { activeCategoryIDs.contains($0) }
         if orderedActive.count == settings.allCategories.count {
             settings.setRecipeFilterActiveCategoryIDs([])

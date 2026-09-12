@@ -12,11 +12,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **First-launch onboarding** — three-step tutorial for app overview, starter recipe pack selection, and timer notifications
 - **Starter recipe packs** — eleven collections with six recipes each; only selected packs are installed on first launch
 - **Reset tutorial** — Settings option to replay onboarding without resetting recipe data
+- **Meal planning diet picker** — choose Balanced, Vegetarian, Vegan, or High protein when enough matching recipes exist
+- **Breakfast planning guidance** — warning when breakfast cannot be planned until a breakfast-tagged recipe exists
 
 ### Changed
 
 - **Onboarding recipe packs** — grid of icon tiles with tap-to-select instead of list rows with descriptions
 - **Edit categories** — unified checklist-style list with recipe counts (`Recipes: N`), back and pencil toolbar icons, and delete/reorder in edit mode
+- **Categories** — all recipe tags sync into the categories list; deleting a category removes that tag from recipes (recipes are kept)
+- **Onboarding categories** — selected collection categories are active in the filter bar; secondary recipe tags are added but inactive
+- **Plan your meals** — back chevron and checkmark toolbar buttons; lunch and dinner on the same day use different recipes when possible
+- **Meals planner access** — `+` is disabled when no meals can be planned; with only one lunch/dinner recipe, lunch and dinner are mutually exclusive
+- **Factory reset** — no sample scheduled meals are created after reset or starter pack import
 
 ## [1.0.1] - 2026-09-12
 

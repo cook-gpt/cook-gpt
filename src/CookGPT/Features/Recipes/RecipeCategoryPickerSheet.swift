@@ -10,6 +10,7 @@ import SwiftData
 struct RecipeCategoryPickerSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    @Environment(AppSettingsStore.self) private var settings
 
     @Bindable var recipe: Recipe
     @State private var selectedCategoryIDs: Set<String> = []
@@ -35,6 +36,7 @@ struct RecipeCategoryPickerSheet: View {
 
     private func save() {
         recipe.tags = selectedCategoryIDs.sorted()
+        settings.ensureCategoriesExist(tagIDs: selectedCategoryIDs)
         try? modelContext.save()
         dismiss()
     }

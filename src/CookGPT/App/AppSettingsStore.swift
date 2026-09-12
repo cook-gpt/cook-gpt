@@ -153,10 +153,62 @@ final class AppSettingsStore {
         recipeFilterActiveCategoryIDs = Self.loadRecipeFilterActiveCategoryIDs()
     }
 
-    func applyStarterCategories(_ categoryIDs: [String]) {
-        let selected = Set(categoryIDs)
-        categories = Self.defaultCategories.filter { selected.contains($0.id) }
-        recipeFilterActiveCategoryIDs = []
+    func applyImportedRecipeCategories(
+        selectedPackCategoryIDs: [String],
+        recipeTagIDs: Set<String>
+    ) {
+        ensureCategoriesExist(tagIDs: recipeTagIDs.union(Set(selectedPackCategoryIDs)))
+
+        let activeOrdered = Self.uniquePreservingOrder(selectedPackCategoryIDs).filter { id in
+            categories.contains { $0.id == id }
+        }
+        setRecipeFilterActiveCategoryIDs(activeOrdered)
+
+        let activeSet = Set(activeOrdered)
+        let inactive = categories.map(\.id).filter { !activeSet.contains($0) }
+        reorderCategories(to: activeOrdered + inactive)
+    }
+
+    func ensureCategoriesExist(tagIDs: Set<String>) {
+        guard !tagIDs.isEmpty else { return }
+
+        var existingIDs = Set(categories.map(\.id))
+        let defaultLookup = Dictionary(uniqueKeysWithValues: Self.defaultCategories.map { ($0.id, $0) })
+        let missing = tagIDs.filter { !existingIDs.contains($0) }
+        guard !missing.isEmpty else { return }
+
+        var updated = categories
+        let missingSet = Set(missing)
+
+        for defaultCategory in Self.defaultCategories where missingSet.contains(defaultCategory.id) {
+            updated.append(defaultCategory)
+            existingIDs.insert(defaultCategory.id)
+        }
+
+        for tagID in missing.sorted() where !existingIDs.contains(tagID) {
+            let label = tagID.replacingOccurrences(of: "-", with: " ").capitalized
+            updated.append(AppCategory(id: tagID, label: label))
+        }
+
+        categories = updated
+    }
+
+    func categoryIDsInDisplayOrder() -> [String] {
+        let allIDs = allCategories.map(\.id)
+        guard !recipeFilterActiveCategoryIDs.isEmpty else {
+            return allIDs
+        }
+
+        let active = recipeFilterActiveCategoryIDs.filter { allIDs.contains($0) }
+        let inactive = allIDs.filter { !Set(active).contains($0) }
+        return active + inactive
+    }
+
+    func reorderCategories(to ids: [String]) {
+        let lookup = Dictionary(uniqueKeysWithValues: categories.map { ($0.id, $0) })
+        let reordered = ids.compactMap { lookup[$0] }
+        let trailing = categories.filter { !ids.contains($0.id) }
+        categories = reordered + trailing
     }
 
     func markOnboardingCompleted() {
@@ -263,6 +315,11 @@ final class AppSettingsStore {
                 recipeFilterActiveCategoryIDs.filter { $0 != id }
             )
         }
+    }
+
+    private static func uniquePreservingOrder(_ ids: [String]) -> [String] {
+        var seen = Set<String>()
+        return ids.filter { seen.insert($0).inserted }
     }
 
     private static func slugify(_ text: String) -> String {

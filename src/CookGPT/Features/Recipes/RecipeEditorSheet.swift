@@ -183,6 +183,7 @@ struct RecipeEditorSheet: View {
             appendSteps(to: targetRecipe)
         }
 
+        settings.ensureCategoriesExist(tagIDs: Set(tags))
         try? modelContext.save()
         dismiss()
     }

@@ -23,9 +23,11 @@ struct PlanMealsSheet: View {
     @State private var selectedStartDate: Date
     @State private var selectedNumberOfDays: Int
     @State private var servings = 1
+    @State private var selectedDietType: DietType
     @State private var includeBreakfast = false
     @State private var includeLunch = true
     @State private var includeDinner = true
+    @State private var showBreakfastUnavailableAlert = false
 
     init(
         profile: DietProfile,
@@ -44,6 +46,7 @@ struct PlanMealsSheet: View {
         _selectedStartDate = State(initialValue: startDate)
         _selectedNumberOfDays = State(initialValue: numberOfDays)
         _servings = State(initialValue: initialServings ?? AppSettingsStore.shared.defaultPlannerServings)
+        _selectedDietType = State(initialValue: profile.dietType)
         _includeBreakfast = State(initialValue: includedMealSlots.contains(.breakfast))
         _includeLunch = State(initialValue: includedMealSlots.contains(.lunch))
         _includeDinner = State(initialValue: includedMealSlots.contains(.dinner))
@@ -61,10 +64,14 @@ struct PlanMealsSheet: View {
         return slots
     }
 
+    private var availableDietTypes: [DietType] {
+        MealPlanner.availableDietTypes(from: recipes, for: selectedMealSlots)
+    }
+
     private var eligibleRecipesDescription: String {
         selectedMealSlots.map { slot in
             let count = MealPlanner.eligibleRecipes(
-                dietType: profile.dietType,
+                dietType: selectedDietType,
                 from: recipes,
                 for: slot
             ).count
@@ -73,14 +80,48 @@ struct PlanMealsSheet: View {
         .joined(separator: " · ")
     }
 
+    private var canEnableBreakfastPlanning: Bool {
+        !MealPlanner.eligibleRecipes(
+            dietType: selectedDietType,
+            from: recipes,
+            for: .breakfast
+        ).isEmpty
+    }
+
+    private var requiresExclusiveLunchOrDinner: Bool {
+        MealPlanner.requiresExclusiveLunchOrDinner(
+            dietType: selectedDietType,
+            from: recipes
+        )
+    }
+
     private var canPlan: Bool {
-        !selectedMealSlots.isEmpty && selectedMealSlots.allSatisfy { slot in
-            !MealPlanner.eligibleRecipes(
-                dietType: profile.dietType,
-                from: recipes,
-                for: slot
-            ).isEmpty
-        }
+        MealPlanner.canPlanMeals(
+            dietType: selectedDietType,
+            from: recipes,
+            for: selectedMealSlots
+        )
+    }
+
+    private var lunchBinding: Binding<Bool> {
+        Binding(
+            get: { includeLunch },
+            set: { setIncludeLunch($0) }
+        )
+    }
+
+    private var dinnerBinding: Binding<Bool> {
+        Binding(
+            get: { includeDinner },
+            set: { setIncludeDinner($0) }
+        )
+    }
+
+    private var breakfastBinding: Binding<Bool> {
+        Binding(
+            get: { includeBreakfast },
+            set: { setIncludeBreakfast($0) }
+        )
     }
 
     private var plannedSlotsDescription: String {
@@ -95,18 +136,26 @@ struct PlanMealsSheet: View {
         NavigationStack {
             Form {
                 Section("Diet") {
-                    LabeledContent("Type", value: profile.dietType.label)
-                    Text("Favorites are prioritized. Recipes are matched to your diet type. Breakfast recipes are used only for breakfast. Dessert recipes are excluded.")
+                    Picker("Type", selection: $selectedDietType) {
+                        ForEach(availableDietTypes, id: \.self) { dietType in
+                            Text(dietType.label).tag(dietType)
+                        }
+                    }
+                    Text("Favorites are prioritized. Recipes are matched to your diet type. More diet types appear when at least one category has two or more matching recipes. Breakfast recipes are used only for breakfast. Dessert recipes are excluded.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
 
                 Section {
-                    Toggle("Breakfast", isOn: $includeBreakfast)
-                    Toggle("Lunch", isOn: $includeLunch)
-                    Toggle("Dinner", isOn: $includeDinner)
+                    breakfastToggleRow
+                    Toggle("Lunch", isOn: lunchBinding)
+                    Toggle("Dinner", isOn: dinnerBinding)
                 } footer: {
-                    Text("Choose which meals to plan each day. Breakfast uses only recipes tagged Breakfast. Lunch and dinner never use breakfast recipes.")
+                    if requiresExclusiveLunchOrDinner {
+                        Text("Only one lunch or dinner recipe is available for this diet type, so choose lunch or dinner.")
+                    } else {
+                        Text("Choose which meals to plan each day. Breakfast uses only recipes tagged Breakfast. Lunch and dinner never use breakfast recipes. Lunch and dinner on the same day always use different recipes when possible.")
+                    }
                 }
 
                 Section("Schedule") {
@@ -127,11 +176,23 @@ struct PlanMealsSheet: View {
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "chevron.left")
+                            .fontWeight(.semibold)
+                    }
+                    .accessibilityLabel("Back")
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Plan") { plan() }
-                        .disabled(!canPlan)
+                    Button {
+                        plan()
+                    } label: {
+                        Image(systemName: "checkmark")
+                            .fontWeight(.semibold)
+                    }
+                    .disabled(!canPlan)
+                    .accessibilityLabel("Plan meals")
                 }
             }
             .onAppear {
@@ -140,7 +201,113 @@ struct PlanMealsSheet: View {
                 } else {
                     servings = settings.defaultPlannerServings
                 }
+                syncSelectedDietType()
+                applyMealSlotConstraints()
             }
+            .onChange(of: selectedDietType) { _, _ in
+                syncSelectedDietType()
+                applyMealSlotConstraints()
+            }
+            .onChange(of: includeBreakfast) { _, _ in syncSelectedDietType() }
+            .onChange(of: includeLunch) { _, _ in syncSelectedDietType() }
+            .onChange(of: includeDinner) { _, _ in syncSelectedDietType() }
+            .alert(
+                "Breakfast planning unavailable",
+                isPresented: $showBreakfastUnavailableAlert
+            ) {
+                Button("OK", role: .cancel) {}
+            } message: {
+                Text("Add at least one recipe to breakfast category to allow breakfast planning")
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var breakfastToggleRow: some View {
+        HStack(spacing: 12) {
+            if !canEnableBreakfastPlanning {
+                Button {
+                    showBreakfastUnavailableAlert = true
+                } label: {
+                    Image(systemName: "exclamationmark.triangle.fill")
+                        .foregroundStyle(.orange)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel("Breakfast planning unavailable")
+            }
+
+            Toggle("Breakfast", isOn: breakfastBinding)
+        }
+    }
+
+    private func setIncludeBreakfast(_ isOn: Bool) {
+        if isOn && !canEnableBreakfastPlanning {
+            showBreakfastUnavailableAlert = true
+            includeBreakfast = false
+            return
+        }
+
+        includeBreakfast = isOn
+    }
+
+    private func setIncludeLunch(_ isOn: Bool) {
+        if requiresExclusiveLunchOrDinner {
+            if isOn {
+                includeLunch = true
+                includeDinner = false
+            } else if includeDinner {
+                includeLunch = false
+            } else {
+                includeLunch = true
+            }
+            return
+        }
+
+        includeLunch = isOn
+    }
+
+    private func setIncludeDinner(_ isOn: Bool) {
+        if requiresExclusiveLunchOrDinner {
+            if isOn {
+                includeDinner = true
+                includeLunch = false
+            } else if includeLunch {
+                includeDinner = false
+            } else {
+                includeDinner = true
+            }
+            return
+        }
+
+        includeDinner = isOn
+    }
+
+    private func applyMealSlotConstraints() {
+        if !canEnableBreakfastPlanning {
+            includeBreakfast = false
+        }
+
+        guard requiresExclusiveLunchOrDinner else { return }
+
+        if includeLunch && includeDinner {
+            includeDinner = false
+        } else if !includeLunch && !includeDinner {
+            includeLunch = true
+        }
+    }
+
+    private func syncSelectedDietType() {
+        let available = availableDietTypes
+        guard !available.isEmpty else { return }
+
+        if available.contains(selectedDietType) {
+            return
+        }
+
+        if available.contains(profile.dietType) {
+            selectedDietType = profile.dietType
+        } else {
+            selectedDietType = available[0]
         }
     }
 
@@ -150,7 +317,7 @@ struct PlanMealsSheet: View {
                 startDate: selectedStartDate,
                 numberOfDays: selectedNumberOfDays,
                 servings: servings,
-                dietType: profile.dietType,
+                dietType: selectedDietType,
                 mealSlots: selectedMealSlots
             )
         )

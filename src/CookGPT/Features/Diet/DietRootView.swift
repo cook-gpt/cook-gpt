@@ -90,6 +90,10 @@ struct DietRootView: View {
         !visibleMeals.isEmpty
     }
 
+    private var canOpenMealPlanner: Bool {
+        MealPlanner.canOpenMealPlanner(from: recipes)
+    }
+
     var body: some View {
         Group {
             if settings.isResettingData {
@@ -550,7 +554,11 @@ struct DietRootView: View {
     }
 
     private var defaultPlanMealSlots: Set<MealSlot> {
-        [.lunch, .dinner]
+        let dietType = activeProfile?.dietType ?? .balanced
+        if MealPlanner.requiresExclusiveLunchOrDinner(dietType: dietType, from: recipes) {
+            return [.lunch]
+        }
+        return [.lunch, .dinner]
     }
 
     private func planMealsDefaults(for day: Date? = nil) -> (start: Date, days: Int) {
