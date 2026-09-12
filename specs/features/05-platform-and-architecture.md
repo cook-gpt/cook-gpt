@@ -25,7 +25,7 @@ Toolchain: **Xcode 26.6** (Swift 5, `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`)
 | Persistence | SwiftData (`@Model`) | First-party, integrates with SwiftUI `@Query` |
 | Concurrency | Swift concurrency + `@MainActor` views | Matches project build settings |
 | Navigation | `TabView` + `NavigationStack` | Three primary domains map cleanly to tabs |
-| Localization | String catalogs (`STRING_CATALOG_GENERATE_SYMBOLS`) | Enabled in project |
+| Localization | String catalogs (`Localizable.xcstrings`, `InfoPlist.xcstrings`) | Eleven locales; see [12 — Localization](12-localization.md) |
 
 ## Source layout
 

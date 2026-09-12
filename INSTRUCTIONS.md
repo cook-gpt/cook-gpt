@@ -21,7 +21,7 @@ Use `feat:`, `fix:`, `docs:` prefixes. Group changes per release — see [Keep a
 ## Agent checklist
 
 1. Read **INSTRUCTIONS.md** (this file), [docs/README.md](docs/README.md), and [.cursor/rules.md](.cursor/rules.md)
-2. Read [.agents/skills/README.md](.agents/skills/README.md) and [.agents/skills/xcode-tools/SKILL.md](.agents/skills/xcode-tools/SKILL.md)
+2. Read [.agents/skills/README.md](.agents/skills/README.md), [.agents/skills/xcode-tools/SKILL.md](.agents/skills/xcode-tools/SKILL.md), and [.agents/skills/localization/SKILL.md](.agents/skills/localization/SKILL.md) when changing UI strings
 3. Add numbered concepts under `specs/features/` when adding user-visible behavior
 4. Use conventional commits for features/fixes destined for CHANGELOG
 

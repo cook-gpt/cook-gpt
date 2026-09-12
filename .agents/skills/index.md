@@ -15,6 +15,7 @@ okf_version: "0.1"
 * [swiftdata](swiftdata/SKILL.md) — SwiftData models and schema versioning
 * [live-activity](live-activity/SKILL.md) — timer Live Activity + widget
 * [marketing-website](marketing-website/SKILL.md) — `website/` landing site
+* [localization](localization/SKILL.md) — string catalogs and per-app language
 
 ## Local modules
 

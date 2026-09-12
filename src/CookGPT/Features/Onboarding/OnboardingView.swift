@@ -236,7 +236,7 @@ struct OnboardingView: View {
 
                 Spacer(minLength: 0)
 
-                Text(pack.label)
+                Text(pack.localizedLabel)
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(.primary)
                     .multilineTextAlignment(.center)
@@ -262,7 +262,7 @@ struct OnboardingView: View {
         }
         .buttonStyle(.plain)
         .disabled(isReplay)
-        .accessibilityLabel(pack.label)
+        .accessibilityLabel(pack.localizedLabel)
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 

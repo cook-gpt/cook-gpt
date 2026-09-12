@@ -10,3 +10,4 @@
 * [09 — Diet and nutrition](09-diet-and-nutrition.md)
 * [10 — Groceries and pantry](10-groceries-and-pantry.md)
 * [11 — MVP implementation](11-mvp-implementation.md)
+* [12 — Localization](12-localization.md)

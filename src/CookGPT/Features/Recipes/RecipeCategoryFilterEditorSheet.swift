@@ -188,7 +188,7 @@ private struct RecipeCategoryFilterRow: View {
             Spacer(minLength: 8)
 
             if !isEditing {
-                Text("Recipes: \(recipeCount)")
+                Text(String(format: String(localized: "Recipes: %lld"), recipeCount))
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .accessibilityLabel("\(recipeCount) recipes")

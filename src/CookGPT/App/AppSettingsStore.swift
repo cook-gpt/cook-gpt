@@ -280,7 +280,10 @@ final class AppSettingsStore {
     }
 
     func label(forCategoryID id: String) -> String {
-        allCategories.first { $0.id == id }?.label
+        if let defaultCategory = Self.defaultCategories.first(where: { $0.id == id }) {
+            return String(localized: String.LocalizationValue(defaultCategory.label))
+        }
+        return allCategories.first { $0.id == id }?.label
             ?? id.replacingOccurrences(of: "-", with: " ").capitalized
     }
 
@@ -388,11 +391,17 @@ enum AppMetadata {
     static let privacyPolicyURL = URL(string: "https://cook-gpt.pages.dev/privacy")!
     static let sourceCodeURL = URL(string: "https://github.com/cook-gpt/cook-gpt")!
 
-    static let advancedProFeaturesStatus = "Coming soon"
-    static let advancedSectionFooter =
-        "Additional pro features are planned for a future update. The current version is free and includes no in-app purchases or subscriptions."
+    static var advancedProFeaturesStatus: String {
+        String(localized: "Coming soon")
+    }
 
-    static let shareAttribution = "Made with CookGPT: Gourmet Plan & Taste"
+    static var advancedSectionFooter: String {
+        String(localized: "Additional pro features are planned for a future update. The current version is free and includes no in-app purchases or subscriptions.")
+    }
+
+    static var shareAttribution: String {
+        String(localized: "Made with CookGPT: Gourmet Plan & Taste")
+    }
 
     static var version: String {
         Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "—"

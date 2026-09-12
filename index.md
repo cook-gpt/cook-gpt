@@ -21,6 +21,7 @@ OKF knowledge bundle for the cook-gpt iOS app — recipe guidance, health diets,
 * [09 — Diet and nutrition](specs/features/09-diet-and-nutrition.md) - goals and meal logging
 * [10 — Groceries and pantry](specs/features/10-groceries-and-pantry.md) - shopping and inventory
 * [11 — MVP implementation](specs/features/11-mvp-implementation.md) - v0.2.0 scope
+* [12 — Localization](specs/features/12-localization.md) - supported languages and string catalogs
 
 ## Skills
 

@@ -15,10 +15,10 @@ private enum RecipeSortOption: String, CaseIterable {
 
     var label: String {
         switch self {
-        case .alphabetical: "Alphabetical"
-        case .difficulty: "Difficulty"
-        case .totalTime: "Total time"
-        case .ingredients: "Ingredients"
+        case .alphabetical: String(localized: "Alphabetical")
+        case .difficulty: String(localized: "Difficulty")
+        case .totalTime: String(localized: "Total time")
+        case .ingredients: String(localized: "Ingredients")
         }
     }
 }

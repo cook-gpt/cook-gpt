@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- **Localization** — Spanish (Spain), Catalan, French, Dutch, German, Chinese (Simplified), Japanese, Italian, Portuguese, English, and Russian; per-app language picker in iOS Settings → CookGPT → Language
 - **First-launch onboarding** — three-step tutorial for app overview, starter recipe pack selection, and timer notifications
 - **Starter recipe packs** — eleven collections with six recipes each; only selected packs are installed on first launch
 - **Reset tutorial** — Settings option to replay onboarding without resetting recipe data

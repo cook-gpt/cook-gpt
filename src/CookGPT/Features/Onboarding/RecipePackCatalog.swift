@@ -57,6 +57,14 @@ struct RecipePackDefinition: Identifiable, Hashable {
     var id: String { categoryID }
 
     var recipeCount: Int { recipeIDs.count }
+
+    var localizedLabel: String {
+        String(localized: String.LocalizationValue(label))
+    }
+
+    var localizedSummary: String {
+        String(localized: String.LocalizationValue(summary))
+    }
 }
 
 enum RecipePackCatalog {

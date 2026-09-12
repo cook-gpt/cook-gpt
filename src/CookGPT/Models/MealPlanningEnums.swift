@@ -12,7 +12,11 @@ enum MealSlot: String, Codable, CaseIterable {
     case dinner
 
     var label: String {
-        rawValue.capitalized
+        switch self {
+        case .breakfast: String(localized: "Breakfast")
+        case .lunch: String(localized: "Lunch")
+        case .dinner: String(localized: "Dinner")
+        }
     }
 
     var displayOrder: Int {
@@ -36,9 +40,10 @@ enum DietType: String, Codable, CaseIterable {
 
     var label: String {
         switch self {
-        case .balanced: "Balanced"
-        case .highProtein: "High protein"
-        default: rawValue.capitalized
+        case .balanced: String(localized: "Balanced")
+        case .vegetarian: String(localized: "Vegetarian")
+        case .vegan: String(localized: "Vegan")
+        case .highProtein: String(localized: "High protein")
         }
     }
 
@@ -58,7 +63,11 @@ enum ScheduleViewMode: String, CaseIterable {
     case month
 
     var label: String {
-        rawValue.capitalized
+        switch self {
+        case .day: String(localized: "Day")
+        case .week: String(localized: "Week")
+        case .month: String(localized: "Month")
+        }
     }
 }
 
@@ -72,10 +81,10 @@ enum ShoppingListScope: String, CaseIterable, Identifiable {
 
     var label: String {
         switch self {
-        case .today: "Today"
-        case .week: "This week"
-        case .month: "This month"
-        case .custom: "Custom range"
+        case .today: String(localized: "Today")
+        case .week: String(localized: "This week")
+        case .month: String(localized: "This month")
+        case .custom: String(localized: "Custom range")
         }
     }
 }
@@ -93,13 +102,13 @@ enum WeekStartSetting: String, CaseIterable, Identifiable, Codable {
 
     var label: String {
         switch self {
-        case .monday: "Monday"
-        case .tuesday: "Tuesday"
-        case .wednesday: "Wednesday"
-        case .thursday: "Thursday"
-        case .friday: "Friday"
-        case .saturday: "Saturday"
-        case .sunday: "Sunday"
+        case .monday: String(localized: "Monday")
+        case .tuesday: String(localized: "Tuesday")
+        case .wednesday: String(localized: "Wednesday")
+        case .thursday: String(localized: "Thursday")
+        case .friday: String(localized: "Friday")
+        case .saturday: String(localized: "Saturday")
+        case .sunday: String(localized: "Sunday")
         }
     }
 

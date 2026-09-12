@@ -11,6 +11,7 @@ Cursor skill packs and module guides for **CookGPT**.
 | [swiftdata](swiftdata/SKILL.md) | `@Model` types and schema versioning |
 | [live-activity](live-activity/SKILL.md) | Cooking timer Live Activity + widget extension |
 | [marketing-website](marketing-website/SKILL.md) | React marketing site in `website/` |
+| [localization](localization/SKILL.md) | String catalogs, translations, per-app language |
 
 ## Layers
 

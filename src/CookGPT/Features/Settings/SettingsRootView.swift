@@ -115,7 +115,10 @@ private struct SettingsStepperSection: View {
     var body: some View {
         Section {
             Stepper(
-                "Default servings: \(settings.defaultPlannerServings)",
+                String(
+                    format: String(localized: "Default servings: %lld"),
+                    settings.defaultPlannerServings
+                ),
                 value: $settings.defaultPlannerServings,
                 in: 1...12
             )
@@ -172,7 +175,7 @@ private struct SettingsInformationSection: View {
         } footer: {
             VStack(alignment: .leading, spacing: 8) {
                 Text(AppMetadata.advancedSectionFooter)
-                Text("Language follows your device settings.")
+                Text("Change language in Settings → CookGPT → Language.")
             }
         }
     }

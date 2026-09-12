@@ -23,6 +23,16 @@ End users install **CookGPT - Gourmet Plan & Taste** from the App Store. To run 
 | `src/CookGPTTimerLiveActivity/` | Widget extension for Lock Screen / Dynamic Island |
 | `website/` | Marketing site (React + Vite, Cloudflare Pages) |
 | `specs/features/` | Numbered feature specifications |
+| `scripts/translation_data.py` | UI string translations (source for i18n) |
+| `scripts/generate_localizations.py` | Regenerates `Localizable.xcstrings` |
+
+## Localization
+
+See [specs/features/12-localization.md](../specs/features/12-localization.md). After editing `scripts/translation_data.py`:
+
+```bash
+python3 scripts/generate_localizations.py
+```
 
 ## Workflow
 

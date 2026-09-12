@@ -21,7 +21,11 @@ enum RecipeDifficulty: String, Codable, CaseIterable {
     case hard
 
     var label: String {
-        rawValue.capitalized
+        switch self {
+        case .easy: String(localized: "Easy")
+        case .medium: String(localized: "Medium")
+        case .hard: String(localized: "Hard")
+        }
     }
 
     var sortOrder: Int {
@@ -45,12 +49,12 @@ enum RecipeCookingTool: String, Codable, CaseIterable, Identifiable {
 
     var label: String {
         switch self {
-        case .oven: "Oven"
-        case .pan: "Pan"
-        case .fryer: "Fryer"
-        case .airFryer: "Air fryer"
-        case .fridge: "Fridge"
-        case .freezer: "Freezer"
+        case .oven: String(localized: "Oven")
+        case .pan: String(localized: "Pan")
+        case .fryer: String(localized: "Fryer")
+        case .airFryer: String(localized: "Air fryer")
+        case .fridge: String(localized: "Fridge")
+        case .freezer: String(localized: "Freezer")
         }
     }
 

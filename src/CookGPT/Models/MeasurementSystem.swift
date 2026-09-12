@@ -14,8 +14,8 @@ enum MeasurementSystem: String, CaseIterable, Identifiable, Codable {
 
     var label: String {
         switch self {
-        case .metric: "Metric"
-        case .imperial: "Imperial"
+        case .metric: String(localized: "Metric")
+        case .imperial: String(localized: "Imperial")
         }
     }
 
