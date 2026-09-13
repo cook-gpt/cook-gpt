@@ -8,14 +8,10 @@ import SwiftUI
 
 struct EmptyStateView: View {
     let systemImage: String
-    let title: String
-    let subtitle: String
+    let title: LocalizedStringKey
+    let subtitle: LocalizedStringKey
 
     var body: some View {
-        ContentUnavailableView {
-            Label(title, systemImage: systemImage)
-        } description: {
-            Text(subtitle)
-        }
+        ContentUnavailableView(title, systemImage: systemImage, description: Text(subtitle))
     }
 }

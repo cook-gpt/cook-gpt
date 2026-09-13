@@ -118,11 +118,26 @@ enum MealPlanner {
         }
 
         return filtered.sorted { lhs, rhs in
-            if lhs.isFavorite != rhs.isFavorite {
-                return lhs.isFavorite && !rhs.isFavorite
+            let lhsPriority = mealPlanningPriority(for: lhs)
+            let rhsPriority = mealPlanningPriority(for: rhs)
+            if lhsPriority != rhsPriority {
+                return lhsPriority > rhsPriority
             }
             return lhs.title.localizedCaseInsensitiveCompare(rhs.title) == .orderedAscending
         }
+    }
+
+    /// Higher scores are preferred when auto-planning meals.
+    private static func mealPlanningPriority(for recipe: Recipe) -> Int {
+        let ratingPoints = (recipe.rating ?? 0) * 10
+        let difficultyPoints: Int
+        switch recipe.difficulty {
+        case .easy: difficultyPoints = 10
+        case .medium: difficultyPoints = 6
+        case .hard: difficultyPoints = 2
+        }
+        let ratedBonus = recipe.rating != nil ? 100 : 0
+        return ratedBonus + ratingPoints + difficultyPoints
     }
 
     @MainActor

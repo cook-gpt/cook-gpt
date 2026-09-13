@@ -34,10 +34,17 @@ All locales are declared in `src/CookGPT.xcodeproj` `knownRegions`.
 
 | Asset | Path | Purpose |
 |-------|------|---------|
-| String catalog | `src/CookGPT/Localizable.xcstrings` | UI strings (~200 keys) |
-| InfoPlist catalog | `src/CookGPT/InfoPlist.xcstrings` | `CFBundleDisplayName` |
+| UI strings | `src/CookGPT/<locale>.lproj/Localizable.strings` | Per-locale UI strings (~230 keys) |
+| App name | `src/CookGPT/<locale>.lproj/InfoPlist.strings` | `CFBundleDisplayName` |
 | Translation source | `scripts/translation_data.py` | English key → locale map |
-| Generator | `scripts/generate_localizations.py` | Regenerates both `.xcstrings` files |
+| Generator | `scripts/generate_localizations.py` | Regenerates all `.lproj` files |
+
+### Build settings
+
+- `LOCALIZATION_PREFERS_STRING_CATALOGS = NO` — uses classic `.strings` files, not `.xcstrings`.
+- `STRING_CATALOG_GENERATE_SYMBOLS = NO` — symbol generation disabled.
+- `SWIFT_EMIT_LOC_STRINGS = YES` — SwiftUI literals resolve from `Localizable.strings` at runtime.
+- **Do not use `Localizable.xcstrings`** — Xcode merges auto-extracted junk keys on Run (`%@ %@`, empty keys) which caused extreme Xcode memory use (~180 GB). The generator deletes legacy `.xcstrings` files if present.
 
 ### Adding or updating strings
 
@@ -52,6 +59,10 @@ All locales are declared in `src/CookGPT.xcodeproj` `knownRegions`.
 ### Format strings
 
 Use `%lld` / `%@` in the catalog and `String(format: String(localized: "…"), …)` in code (e.g. `"Default servings: %lld"`, `"Recipes: %lld"`).
+
+### Plural units
+
+`cup`/`cups`, `piece`/`pieces`, and `unit`/`units` use static catalog keys (`unit_cup.one`, `unit_cup.other`, …) selected via `switch` — never build localization keys dynamically. Read-only views call `localizedLabel(for:quantity:)` (**one** when quantity is `1`, otherwise **other**). Edit-mode pickers call `localizedPickerLabel(for:)` with combined forms like `cup(s)` / `taza(s)` / `unidad(es)`.
 
 ## Non-goals
 

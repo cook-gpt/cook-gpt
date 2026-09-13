@@ -720,7 +720,7 @@ private struct GroceryItemRow: View {
                 VStack(alignment: .leading) {
                     Text(item.name)
                         .strikethrough(item.isChecked)
-                    Text("\(QuantityFormatter.string(item.quantity)) \(item.unit)")
+                    Text("\(QuantityFormatter.string(item.quantity)) \(IngredientUnitFormatting.localizedLabel(for: item.unit, quantity: item.quantity))")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

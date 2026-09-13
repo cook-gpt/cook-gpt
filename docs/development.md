@@ -24,7 +24,7 @@ End users install **CookGPT - Gourmet Plan & Taste** from the App Store. To run 
 | `website/` | Marketing site (React + Vite, Cloudflare Pages) |
 | `specs/features/` | Numbered feature specifications |
 | `scripts/translation_data.py` | UI string translations (source for i18n) |
-| `scripts/generate_localizations.py` | Regenerates `Localizable.xcstrings` |
+| `scripts/generate_localizations.py` | Regenerates `<locale>.lproj/Localizable.strings` |
 
 ## Localization
 

@@ -19,7 +19,8 @@ final class Recipe {
     var difficulty: RecipeDifficulty
     var tags: [String]
     var cookingTools: [String]
-    var isFavorite: Bool
+    /// Explicit 1–5 star rating. `nil` means the recipe has not been rated.
+    var rating: Int?
 
     @Relationship(deleteRule: .cascade, inverse: \RecipeIngredient.recipe)
     var ingredients: [RecipeIngredient]
@@ -40,7 +41,7 @@ final class Recipe {
         difficulty: RecipeDifficulty,
         tags: [String] = [],
         cookingTools: [String] = [],
-        isFavorite: Bool = false,
+        rating: Int? = nil,
         ingredients: [RecipeIngredient] = [],
         steps: [RecipeStep] = [],
         scheduledMeals: [ScheduledMeal] = []
@@ -54,7 +55,7 @@ final class Recipe {
         self.difficulty = difficulty
         self.tags = tags
         self.cookingTools = cookingTools
-        self.isFavorite = isFavorite
+        self.rating = rating
         self.ingredients = ingredients
         self.steps = steps
         self.scheduledMeals = scheduledMeals

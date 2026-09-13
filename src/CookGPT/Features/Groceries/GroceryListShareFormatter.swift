@@ -40,6 +40,7 @@ enum GroceryListShareFormatter {
             return "- \(quantityText) of \(name)"
         }
 
-        return "- \(quantityText) \(unitText) of \(name)"
+        let localizedUnit = IngredientUnitFormatting.localizedLabel(for: unitText, quantity: quantity)
+        return "- \(quantityText) \(localizedUnit) of \(name)"
     }
 }

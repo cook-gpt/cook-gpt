@@ -43,9 +43,13 @@ struct SettingsRootView: View {
     }
 
     private var defaultUnitsDetail: String {
-        let metric = MeasurementSystem.metric.units.joined(separator: ", ")
-        let imperial = MeasurementSystem.imperial.units.joined(separator: ", ")
-        return "Metric: \(metric)\nImperial: \(imperial)"
+        let metric = MeasurementSystem.metric.units
+            .map { IngredientUnitFormatting.localizedLabel(for: $0) }
+            .joined(separator: ", ")
+        let imperial = MeasurementSystem.imperial.units
+            .map { IngredientUnitFormatting.localizedLabel(for: $0) }
+            .joined(separator: ", ")
+        return String(format: String(localized: "Metric: %@\nImperial: %@"), metric, imperial)
     }
 
     private func performReset() async {

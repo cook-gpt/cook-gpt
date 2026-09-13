@@ -48,11 +48,17 @@ struct RecipeDetailView: View {
                     .foregroundStyle(.secondary)
 
                 Stepper(value: $selectedServings, in: 1...24) {
-                    LabeledContent("Servings", value: "\(selectedServings)")
+                    LabeledContent(String(localized: "Servings"), value: "\(selectedServings)")
                 }
 
-                LabeledContent("Prep", value: "\(recipe.prepMinutes) min")
-                LabeledContent("Cook", value: "\(recipe.cookMinutes) min")
+                LabeledContent(
+                    String(localized: "Prep"),
+                    value: String(format: String(localized: "%lld min"), recipe.prepMinutes)
+                )
+                LabeledContent(
+                    String(localized: "Cook"),
+                    value: String(format: String(localized: "%lld min"), recipe.cookMinutes)
+                )
 
                 if !recipe.tags.isEmpty {
                     ScrollView(.horizontal, showsIndicators: false) {
@@ -81,7 +87,7 @@ struct RecipeDetailView: View {
             Section {
                 ForEach(recipe.ingredients, id: \.persistentModelID) { item in
                     let scaled = recipe.scaledQuantity(item.quantity, servings: selectedServings)
-                    Text("\(QuantityFormatter.string(scaled)) \(item.unit) \(item.displayName)")
+                    Text("\(QuantityFormatter.string(scaled)) \(IngredientUnitFormatting.localizedLabel(for: item.unit, quantity: scaled)) \(item.displayName)")
                 }
             } header: {
                 HStack(spacing: 8) {

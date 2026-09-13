@@ -10,7 +10,7 @@ Guidance for AI assistants working in this repository.
 - Bump `schemaVersion` in `ModelContainer+CookGPT.swift` when SwiftData models change incompatibly
 - `CookingTimerAttributes.swift` is duplicated in the main app and widget extension — keep both copies in sync
 - Marketing site changes belong in `website/` (React + Vite)
-- **Localization**: UI strings live in `src/CookGPT/Localizable.xcstrings` (generated from `scripts/translation_data.py`). Supported locales: `en`, `es`, `ca`, `fr`, `nl`, `de`, `zh-Hans`, `ja`, `it`, `pt`, `ru`. Use `String(localized:)` for enum labels and dynamic strings; run `python3 scripts/generate_localizations.py` after editing translations. See [specs/features/12-localization.md](../specs/features/12-localization.md).
+- **Localization**: UI strings live in `src/CookGPT/<locale>.lproj/Localizable.strings` (generated from `scripts/translation_data.py`). Do **not** use `Localizable.xcstrings` — Xcode pollutes it on Run and can exhaust RAM. Run `python3 scripts/generate_localizations.py` after editing translations. See [specs/features/12-localization.md](../specs/features/12-localization.md).
 
 ## Workflow
 

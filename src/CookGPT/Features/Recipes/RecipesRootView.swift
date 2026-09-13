@@ -1,7 +1,7 @@
 //  RecipesRootView.swift
 //  CookGPT
 //
-//  Recipes tab: browse, filter, favorite, and open recipes.
+//  Recipes tab: browse, filter, rate, and open recipes.
 //
 
 import SwiftUI
@@ -9,6 +9,7 @@ import SwiftData
 
 private enum RecipeSortOption: String, CaseIterable {
     case alphabetical
+    case rating
     case difficulty
     case totalTime
     case ingredients
@@ -16,6 +17,7 @@ private enum RecipeSortOption: String, CaseIterable {
     var label: String {
         switch self {
         case .alphabetical: String(localized: "Alphabetical")
+        case .rating: String(localized: "Rating")
         case .difficulty: String(localized: "Difficulty")
         case .totalTime: String(localized: "Total time")
         case .ingredients: String(localized: "Ingredients")
@@ -34,32 +36,40 @@ struct RecipesRootView: View {
     @State private var isAddingRecipe = false
     @State private var recipeToEdit: Recipe?
     @State private var recipeForCategories: Recipe?
+    @State private var recipeForRating: Recipe?
     @State private var sortOption: RecipeSortOption = .alphabetical
     @State private var sortAscending = true
     @State private var selectedCategoryFilter: String?
     @State private var isEditingCategoryFilters = false
     @State private var searchText = ""
+    @State private var pendingDeleteRecipeIDs: Set<UUID> = []
+
+    private var recipesForDisplay: [Recipe] {
+        recipes.filter { !pendingDeleteRecipeIDs.contains($0.id) }
+    }
 
     private var sortedRecipes: [Recipe] {
         switch sortOption {
         case .alphabetical:
-            recipes.sorted { compareTitles($0.title, $1.title) }
+            recipesForDisplay.sorted { compareTitles($0.title, $1.title) }
+        case .rating:
+            recipesForDisplay.sorted { compareByRating($0, $1) }
         case .difficulty:
-            recipes.sorted {
+            recipesForDisplay.sorted {
                 if $0.difficulty.sortOrder != $1.difficulty.sortOrder {
                     return compare($0.difficulty.sortOrder, $1.difficulty.sortOrder)
                 }
                 return compareTitles($0.title, $1.title)
             }
         case .totalTime:
-            recipes.sorted {
+            recipesForDisplay.sorted {
                 if $0.totalMinutes != $1.totalMinutes {
                     return compare($0.totalMinutes, $1.totalMinutes)
                 }
                 return compareTitles($0.title, $1.title)
             }
         case .ingredients:
-            recipes.sorted {
+            recipesForDisplay.sorted {
                 if $0.ingredients.count != $1.ingredients.count {
                     return compare($0.ingredients.count, $1.ingredients.count)
                 }
@@ -75,6 +85,21 @@ struct RecipesRootView: View {
     private func compareTitles(_ lhs: String, _ rhs: String) -> Bool {
         let result = lhs.localizedCaseInsensitiveCompare(rhs)
         return sortAscending ? result == .orderedAscending : result == .orderedDescending
+    }
+
+    private func compareByRating(_ lhs: Recipe, _ rhs: Recipe) -> Bool {
+        let lhsRated = lhs.rating != nil
+        let rhsRated = rhs.rating != nil
+
+        if lhsRated != rhsRated {
+            return lhsRated && !rhsRated
+        }
+
+        if lhsRated, rhsRated, let left = lhs.rating, let right = rhs.rating, left != right {
+            return sortAscending ? left < right : left > right
+        }
+
+        return compareTitles(lhs.title, rhs.title)
     }
 
     private var categoryFilteredRecipes: [Recipe] {
@@ -148,7 +173,7 @@ struct RecipesRootView: View {
                     } else {
                         if !activeDisplayedRecipes.isEmpty {
                             Section {
-                                ForEach(activeDisplayedRecipes) { recipe in
+                                ForEach(activeDisplayedRecipes, id: \.id) { recipe in
                                     recipeListRow(recipe)
                                 }
                             }
@@ -156,7 +181,7 @@ struct RecipesRootView: View {
 
                         if !inactiveDisplayedRecipes.isEmpty {
                             Section {
-                                ForEach(inactiveDisplayedRecipes) { recipe in
+                                ForEach(inactiveDisplayedRecipes, id: \.id) { recipe in
                                     recipeListRow(recipe)
                                 }
                             }
@@ -207,6 +232,16 @@ struct RecipesRootView: View {
         .sheet(isPresented: $isEditingCategoryFilters) {
             RecipeCategoryFilterEditorSheet()
         }
+        .sheet(item: $recipeForRating) { recipe in
+            RecipeRatingSheet(
+                recipeTitle: recipe.title,
+                initialRating: recipe.rating,
+                onSave: { rating in
+                    recipe.rating = rating
+                    try? modelContext.save()
+                }
+            )
+        }
         .onChange(of: settings.visibleRecipeFilterCategories.map(\.id)) { _, visibleIDs in
             if let selectedCategoryFilter,
                !visibleIDs.contains(selectedCategoryFilter) {
@@ -234,27 +269,21 @@ struct RecipesRootView: View {
         navigationPath.append(recipeID)
     }
 
-    private func toggleFavorite(_ recipe: Recipe) {
-        recipe.isFavorite.toggle()
-        try? modelContext.save()
-    }
-
     @ViewBuilder
     private func recipeListRow(_ recipe: Recipe) -> some View {
-        NavigationLink(value: recipe.id) {
-            RecipeRowView(
-                recipe: recipe,
-                isInProgress: cookingSession.isInProgress(recipe: recipe)
-            )
+        let display = RecipeRowDisplayData(
+            recipe: recipe,
+            isInProgress: cookingSession.isInProgress(recipe: recipe)
+        )
+
+        NavigationLink(value: display.id) {
+            RecipeRowView(display: display)
         }
-        .swipeActions(edge: .leading, allowsFullSwipe: true) {
+        .swipeActions(edge: .leading, allowsFullSwipe: false) {
             Button {
-                toggleFavorite(recipe)
+                recipeForRating = recipe
             } label: {
-                Label(
-                    recipe.isFavorite ? "Unfavorite" : "Favorite",
-                    systemImage: recipe.isFavorite ? "star.slash.fill" : "star.fill"
-                )
+                Label("Rating", systemImage: "star")
             }
             .tint(.yellow)
 
@@ -267,7 +296,7 @@ struct RecipesRootView: View {
         }
         .swipeActions(edge: .trailing, allowsFullSwipe: true) {
             Button(role: .destructive) {
-                deleteRecipe(id: recipe.id)
+                deleteRecipe(id: display.id)
             } label: {
                 Label("Delete", systemImage: "trash")
             }
@@ -291,11 +320,23 @@ struct RecipesRootView: View {
 
         cookingSession.timerStore.stopAll(for: recipeID)
 
-        Task { @MainActor in
-            guard let recipe = recipes.first(where: { $0.id == recipeID }) else { return }
+        withAnimation {
+            pendingDeleteRecipeIDs.insert(recipeID)
+        }
+
+        DispatchQueue.main.async {
             ScheduledMeal.deleteMeals(referencing: recipeID, in: modelContext)
-            modelContext.delete(recipe)
-            try? modelContext.save()
+
+            let predicate = #Predicate<Recipe> { $0.id == recipeID }
+            var descriptor = FetchDescriptor<Recipe>(predicate: predicate)
+            descriptor.fetchLimit = 1
+
+            if let recipe = try? modelContext.fetch(descriptor).first {
+                modelContext.delete(recipe)
+                try? modelContext.save()
+            }
+
+            pendingDeleteRecipeIDs.remove(recipeID)
         }
     }
 }

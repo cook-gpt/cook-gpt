@@ -28,7 +28,7 @@ struct IngredientUnitPicker: View {
     @ViewBuilder
     private var unitOptions: some View {
         ForEach(pickerUnits, id: \.self) { option in
-            Text(option).tag(option)
+            Text(IngredientUnitFormatting.localizedPickerLabel(for: option)).tag(option)
         }
     }
 

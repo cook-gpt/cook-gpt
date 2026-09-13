@@ -20,6 +20,7 @@ struct RecipeEditorSheet: View {
     @State private var prepMinutes = 15
     @State private var cookMinutes = 30
     @State private var difficulty: RecipeDifficulty = .medium
+    @State private var rating: Int?
     @State private var selectedCategoryIDs: Set<String> = []
     @State private var selectedCookingTools: Set<RecipeCookingTool> = []
     @State private var ingredients: [DraftIngredient] = [DraftIngredient()]
@@ -36,15 +37,31 @@ struct RecipeEditorSheet: View {
                     TextField("Summary", text: $summary, axis: .vertical)
                         .lineLimit(2...4)
 
-                    Stepper("Servings: \(servings)", value: $servings, in: 1...24)
-                    Stepper("Prep: \(prepMinutes) min", value: $prepMinutes, in: 0...240, step: 5)
-                    Stepper("Cook: \(cookMinutes) min", value: $cookMinutes, in: 0...480, step: 5)
+                    Stepper(
+                        String(format: String(localized: "Servings: %lld"), servings),
+                        value: $servings,
+                        in: 1...24
+                    )
+                    Stepper(
+                        String(format: String(localized: "Prep: %lld min"), prepMinutes),
+                        value: $prepMinutes,
+                        in: 0...240,
+                        step: 5
+                    )
+                    Stepper(
+                        String(format: String(localized: "Cook: %lld min"), cookMinutes),
+                        value: $cookMinutes,
+                        in: 0...480,
+                        step: 5
+                    )
 
                     Picker("Difficulty", selection: $difficulty) {
                         ForEach(RecipeDifficulty.allCases, id: \.self) { level in
                             Text(level.label).tag(level)
                         }
                     }
+
+                    RecipeRatingPicker(rating: $rating)
                 }
 
                 RecipeCategorySelectionSection(selectedCategoryIDs: $selectedCategoryIDs)
@@ -81,15 +98,25 @@ struct RecipeEditorSheet: View {
                     Text("Steps")
                 }
             }
-            .navigationTitle(isEditing ? "Edit recipe" : "Add recipe")
+            .navigationTitle(isEditing ? String(localized: "Edit recipe") : String(localized: "Add recipe"))
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
+                    Button {
+                        dismiss()
+                    } label: {
+                        Image(systemName: "xmark")
+                    }
+                    .accessibilityLabel(String(localized: "Cancel"))
                 }
                 ToolbarItem(placement: .confirmationAction) {
-                    Button(isEditing ? "Save" : "Add") { save() }
-                        .disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    Button {
+                        save()
+                    } label: {
+                        Image(systemName: "checkmark")
+                    }
+                    .disabled(title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                    .accessibilityLabel(isEditing ? String(localized: "Save") : String(localized: "Add"))
                 }
             }
             .onAppear {
@@ -110,6 +137,7 @@ struct RecipeEditorSheet: View {
         prepMinutes = recipe.prepMinutes
         cookMinutes = recipe.cookMinutes
         difficulty = recipe.difficulty
+        rating = recipe.rating
         selectedCategoryIDs = Set(recipe.tags)
         selectedCookingTools = Set(recipe.selectedCookingTools)
 
@@ -163,6 +191,7 @@ struct RecipeEditorSheet: View {
             targetRecipe.prepMinutes = prepMinutes
             targetRecipe.cookMinutes = cookMinutes
             targetRecipe.difficulty = difficulty
+            targetRecipe.rating = rating
             targetRecipe.tags = tags
             targetRecipe.cookingTools = cookingTools
             replaceIngredients(for: targetRecipe)
@@ -176,7 +205,8 @@ struct RecipeEditorSheet: View {
                 cookMinutes: cookMinutes,
                 difficulty: difficulty,
                 tags: tags,
-                cookingTools: cookingTools
+                cookingTools: cookingTools,
+                rating: rating
             )
             modelContext.insert(targetRecipe)
             appendIngredients(to: targetRecipe)

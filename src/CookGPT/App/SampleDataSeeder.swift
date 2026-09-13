@@ -11,7 +11,7 @@ enum SampleDataSeeder {
     private static let seedFlagKey = "didSeedSampleData"
     private static let minimalShellFlagKey = "didSeedMinimalShell"
     private static let recipeStructureVersionKey = "sampleRecipeStructureVersion"
-    private static let currentRecipeStructureVersion = 9
+    private static let currentRecipeStructureVersion = 10
 
     static func seedIfNeeded(context: ModelContext) {
         if !UserDefaults.standard.bool(forKey: seedFlagKey) {

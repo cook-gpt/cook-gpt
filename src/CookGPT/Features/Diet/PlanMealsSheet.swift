@@ -141,7 +141,7 @@ struct PlanMealsSheet: View {
                             Text(dietType.label).tag(dietType)
                         }
                     }
-                    Text("Favorites are prioritized. Recipes are matched to your diet type. More diet types appear when at least one category has two or more matching recipes. Breakfast recipes are used only for breakfast. Dessert recipes are excluded.")
+                    Text("Rated recipes are prioritized using a mix of star rating and difficulty. Recipes are matched to your diet type. More diet types appear when at least one category has two or more matching recipes. Breakfast recipes are used only for breakfast. Dessert recipes are excluded.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -160,8 +160,16 @@ struct PlanMealsSheet: View {
 
                 Section("Schedule") {
                     DatePicker("Start", selection: $selectedStartDate, displayedComponents: .date)
-                    Stepper("Days: \(selectedNumberOfDays)", value: $selectedNumberOfDays, in: 1...31)
-                    Stepper("Servings per meal: \(servings)", value: $servings, in: 1...12)
+                    Stepper(
+                        String(format: String(localized: "Days: %lld"), selectedNumberOfDays),
+                        value: $selectedNumberOfDays,
+                        in: 1...31
+                    )
+                    Stepper(
+                        String(format: String(localized: "Servings per meal: %lld"), servings),
+                        value: $servings,
+                        in: 1...12
+                    )
                 }
 
                 Section {

@@ -6,6 +6,34 @@
 
 import SwiftUI
 
+struct RecipeRowDisplayData: Identifiable {
+    let id: UUID
+    let title: String
+    let summary: String
+    let rating: Int?
+    let totalMinutes: Int
+    let servings: Int
+    let ingredientCount: Int
+    let difficulty: RecipeDifficulty
+    let tags: [String]
+    let cookingTools: [RecipeCookingTool]
+    let isInProgress: Bool
+
+    init(recipe: Recipe, isInProgress: Bool, servings: Int? = nil) {
+        id = recipe.id
+        title = recipe.title
+        summary = recipe.summary
+        rating = recipe.rating
+        totalMinutes = recipe.totalMinutes
+        self.servings = servings ?? recipe.servings
+        ingredientCount = recipe.ingredients.count
+        difficulty = recipe.difficulty
+        tags = recipe.tags
+        cookingTools = recipe.selectedCookingTools
+        self.isInProgress = isInProgress
+    }
+}
+
 struct RecipeMetaItem: View {
     let systemImage: String
     let text: String
@@ -19,20 +47,33 @@ struct RecipeMetaItem: View {
 }
 
 struct RecipeRowView: View {
-    let recipe: Recipe
-    var isInProgress: Bool = false
+    let display: RecipeRowDisplayData
     var showsSummary: Bool = true
-    var servings: Int? = nil
     @Environment(AppSettingsStore.self) private var settings
 
-    private var displayedServings: Int {
-        servings ?? recipe.servings
+    init(
+        recipe: Recipe,
+        isInProgress: Bool = false,
+        showsSummary: Bool = true,
+        servings: Int? = nil
+    ) {
+        display = RecipeRowDisplayData(
+            recipe: recipe,
+            isInProgress: isInProgress,
+            servings: servings
+        )
+        self.showsSummary = showsSummary
+    }
+
+    init(display: RecipeRowDisplayData, showsSummary: Bool = true) {
+        self.display = display
+        self.showsSummary = showsSummary
     }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             HStack {
-                if isInProgress {
+                if display.isInProgress {
                     Image(systemName: "timer")
                         .font(.caption2.weight(.semibold))
                         .padding(.horizontal, 6)
@@ -42,16 +83,14 @@ struct RecipeRowView: View {
                         .clipShape(Capsule())
                         .accessibilityLabel("Timer running")
                 }
-                Text(recipe.title)
+                Text(display.title)
                     .font(.headline)
-                if recipe.isFavorite {
-                    Image(systemName: "star.fill")
-                        .font(.caption)
-                        .foregroundStyle(.yellow)
-                }
             }
-            if showsSummary, !recipe.summary.isEmpty {
-                Text(recipe.summary)
+            if let rating = display.rating {
+                StarRatingView(rating: rating, starSize: 13)
+            }
+            if showsSummary, !display.summary.isEmpty {
+                Text(display.summary)
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .lineLimit(2)
@@ -59,22 +98,22 @@ struct RecipeRowView: View {
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
             HStack(spacing: 10) {
-                RecipeMetaItem(systemImage: "clock", text: "\(recipe.totalMinutes) min")
-                    .accessibilityLabel("\(recipe.totalMinutes) minutes")
-                RecipeMetaItem(systemImage: "fork.knife", text: "\(displayedServings)")
-                    .accessibilityLabel("\(displayedServings) servings")
-                RecipeMetaItem(systemImage: "list.bullet", text: "\(recipe.ingredients.count)")
-                    .accessibilityLabel("\(recipe.ingredients.count) ingredients")
-                DifficultyBadge(difficulty: recipe.difficulty)
-                RecipeCookingToolsBadgeRow(tools: recipe.selectedCookingTools)
+                RecipeMetaItem(systemImage: "clock", text: "\(display.totalMinutes) min")
+                    .accessibilityLabel("\(display.totalMinutes) minutes")
+                RecipeMetaItem(systemImage: "fork.knife", text: "\(display.servings)")
+                    .accessibilityLabel("\(display.servings) servings")
+                RecipeMetaItem(systemImage: "list.bullet", text: "\(display.ingredientCount)")
+                    .accessibilityLabel("\(display.ingredientCount) ingredients")
+                DifficultyBadge(difficulty: display.difficulty)
+                RecipeCookingToolsBadgeRow(tools: display.cookingTools)
             }
             .font(.caption)
             .foregroundStyle(.secondary)
 
-            if !recipe.tags.isEmpty {
+            if !display.tags.isEmpty {
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 6) {
-                        ForEach(settings.labels(forTagIDs: recipe.tags), id: \.self) { label in
+                        ForEach(settings.labels(forTagIDs: display.tags), id: \.self) { label in
                             Text(label)
                                 .font(.caption2)
                                 .padding(.horizontal, 8)

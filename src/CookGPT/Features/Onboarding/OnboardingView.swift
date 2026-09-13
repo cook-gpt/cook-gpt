@@ -102,7 +102,7 @@ struct OnboardingView: View {
                 onboardingFeatureRow(
                     systemImage: "book.closed",
                     title: "Recipes",
-                    subtitle: "Browse, favorite, and filter recipes by category."
+                    subtitle: "Browse, rate, and filter recipes by category."
                 )
                 onboardingFeatureRow(
                     systemImage: "calendar",
@@ -192,7 +192,7 @@ struct OnboardingView: View {
     }
 
     @ViewBuilder
-    private func onboardingFeatureRow(systemImage: String, title: String, subtitle: String) -> some View {
+    private func onboardingFeatureRow(systemImage: String, title: LocalizedStringKey, subtitle: LocalizedStringKey) -> some View {
         HStack(alignment: .top, spacing: 12) {
             Image(systemName: systemImage)
                 .font(.title3)

@@ -24,11 +24,13 @@ CookGPT ships eleven languages and supports per-app language selection in **Sett
 
    Locales in order: `es`, `ca`, `fr`, `nl`, `de`, `zh-Hans`, `ja`, `it`, `pt`, `ru`.
 
-2. Regenerate catalogs:
+2. Regenerate `.lproj` string files:
 
    ```bash
    python3 scripts/generate_localizations.py
    ```
+
+   This writes `src/CookGPT/<locale>.lproj/Localizable.strings` and removes any legacy `Localizable.xcstrings`.
 
 3. Use the string in Swift:
    - **SwiftUI** — `Text("My new label")` (auto-localized when key matches catalog).
@@ -39,7 +41,8 @@ CookGPT ships eleven languages and supports per-app language selection in **Sett
 
 ## Do not
 
-- Edit `Localizable.xcstrings` by hand (regenerate from `translation_data.py`).
+- Create or edit `Localizable.xcstrings` — Xcode merges auto-extracted junk on Run and can use ~180 GB RAM. This project uses `.lproj/Localizable.strings` only.
+- Enable `STRING_CATALOG_GENERATE_SYMBOLS` or `LOCALIZATION_PREFERS_STRING_CATALOGS` — both are **off**.
 - Add a new locale without updating `knownRegions` in `project.pbxproj` and all entries in `translation_data.py`.
 - Localize user-entered recipe text or custom category names.
 - Commit partial translations (every key needs all ten non-English locales).
@@ -50,8 +53,8 @@ CookGPT ships eleven languages and supports per-app language selection in **Sett
 |------|------|
 | `scripts/translation_data.py` | Source of truth for translations |
 | `scripts/generate_localizations.py` | Builds `.xcstrings` files |
-| `src/CookGPT/Localizable.xcstrings` | Generated UI string catalog |
-| `src/CookGPT/InfoPlist.xcstrings` | Generated display name catalog |
+| `src/CookGPT/<locale>.lproj/Localizable.strings` | Generated UI strings per locale |
+| `src/CookGPT/<locale>.lproj/InfoPlist.strings` | Generated display name per locale |
 | `src/CookGPT/App/AppSettingsStore.swift` | `label(forCategoryID:)` localizes default categories |
 | `src/CookGPT/Features/Onboarding/RecipePackCatalog.swift` | `localizedLabel` / `localizedSummary` |
 
