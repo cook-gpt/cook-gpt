@@ -7,30 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-09-13
+
 ### Added
 
+- **Localization** — Spanish (Spain), Catalan, French, Dutch, German, Chinese (Simplified), Japanese, Italian, Portuguese, English, and Russian; per-app language picker in **Settings → CookGPT → Preferred Language → Language**; UI strings in `<locale>.lproj/Localizable.strings` (generated from `scripts/translation_data.py`)
 - **Recipe ratings** — replace favorites with optional 1–5 star ratings; stars appear between title and summary on recipe rows
 - **Rating sort** — new Recipes sort option; rated recipes always appear before unrated ones, then sort by star count
 - **Rating sheet** — swipe right on a recipe to open an App Store–style star picker
 - **Rating editor** — set or clear a rating from the recipe editor via a picker menu (No rating, ★ … ★★★★★)
 - **Ingredient unit pluralization** — singular/plural labels for cups, pieces, and units based on quantity in recipes, groceries, and share text
-
-### Changed
-
-- **Meal planning** — prioritize recipes using a mix of star rating and difficulty instead of favorites
-- **Recipe editor & rating sheet** — Cancel/Save and Cancel/Done toolbar labels replaced with ✕ and ✓ icons
-- **Localization** — migrate from String Catalogs to classic `.lproj/Localizable.strings` to avoid Xcode memory issues; add missing strings for empty states, onboarding, recipe editor, and measurement units
-- **Onboarding copy** — “favorite” wording updated to “rate” recipes
-
-### Fixed
-
-- **Recipe swipe-delete** — prevent SwiftData crash when deleting a recipe while the list still reads detached model properties (e.g. difficulty)
-
-## [1.0.1] - 2026-09-13
-
-### Added
-
-- **Localization** — Spanish (Spain), Catalan, French, Dutch, German, Chinese (Simplified), Japanese, Italian, Portuguese, English, and Russian; per-app language picker in **Settings → CookGPT → Preferred Language → Language**; UI strings in `<locale>.lproj/Localizable.strings`
 - **First-launch onboarding** — three-step tutorial for app overview, starter recipe pack selection, and timer notifications
 - **Starter recipe packs** — eleven collections with six recipes each; only selected packs are installed on first launch
 - **Reset tutorial** — Settings option to replay onboarding without resetting recipe data
@@ -51,6 +37,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Factory reset** — no sample scheduled meals are created after reset or starter pack import
 - **Groceries** — new ingredient rows stay as drafts until named; blank lines are never saved to the list
 - **Settings** — Privacy Policy and Source Code moved to their own section
+- **Meal planning** — prioritize recipes using a mix of star rating and difficulty instead of favorites
+- **Recipe editor & rating sheet** — Cancel/Save and Cancel/Done toolbar labels replaced with ✕ and ✓ icons
+- **Localization pipeline** — migrate from String Catalogs to classic `.lproj` files to avoid Xcode memory issues; add missing strings for empty states, onboarding, recipe editor, and measurement units
+- **Onboarding copy** — “favorite” wording updated to “rate” recipes
+
+### Fixed
+
+- **Recipe swipe-delete** — prevent SwiftData crash when deleting a recipe while the list still reads detached model properties (e.g. difficulty)
 
 ## [1.0.0] - 2026-08-27
 
