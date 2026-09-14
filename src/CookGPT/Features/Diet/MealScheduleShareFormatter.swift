@@ -26,7 +26,8 @@ enum MealScheduleShareFormatter {
     static func text(
         days: [Date],
         meals: [ScheduledMeal],
-        recipes: [Recipe]
+        recipes: [Recipe],
+        navigation: AppNavigationStore
     ) -> String {
         guard let rangeStart = days.first, let rangeEnd = days.last else { return "" }
 
@@ -39,13 +40,13 @@ enum MealScheduleShareFormatter {
         for day in days {
             let dayMeals = meals
                 .filter { MealScheduleCalendar.isSameDay($0.day, day) }
-                .sortedByMealSlot()
+                .sortedByMealSlot(using: navigation)
                 .compactMap { meal -> (MealSlot, String)? in
                     guard let recipeID = meal.recipeID,
                           let title = recipeTitlesByID[recipeID] else {
                         return nil
                     }
-                    return (meal.mealSlot, title)
+                    return (navigation.mealSlot(for: meal.id), title)
                 }
 
             guard !dayMeals.isEmpty else { continue }

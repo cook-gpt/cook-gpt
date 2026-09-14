@@ -43,6 +43,13 @@ struct RecipesRootView: View {
     @State private var isEditingCategoryFilters = false
     @State private var searchText = ""
     @State private var pendingDeleteRecipeIDs: Set<UUID> = []
+    @State private var recipeDeleteConfirmation: RecipeDeleteConfirmation?
+
+    private struct RecipeDeleteConfirmation: Identifiable {
+        let id: UUID
+        let title: String
+        let plannedMealCount: Int
+    }
 
     private var recipesForDisplay: [Recipe] {
         recipes.filter { !pendingDeleteRecipeIDs.contains($0.id) }
@@ -261,6 +268,31 @@ struct RecipesRootView: View {
         .onChange(of: navigation.pendingRecipeNavigationID) { _, _ in
             navigateToPendingRecipeIfNeeded()
         }
+        .alert(
+            "Delete recipe?",
+            isPresented: Binding(
+                get: { recipeDeleteConfirmation != nil },
+                set: { isPresented in
+                    if !isPresented {
+                        recipeDeleteConfirmation = nil
+                    }
+                }
+            )
+        ) {
+            Button("Cancel", role: .cancel) {
+                recipeDeleteConfirmation = nil
+            }
+            Button("Delete", role: .destructive) {
+                if let confirmation = recipeDeleteConfirmation {
+                    deleteRecipe(id: confirmation.id)
+                }
+                recipeDeleteConfirmation = nil
+            }
+        } message: {
+            if let confirmation = recipeDeleteConfirmation {
+                Text(deleteConfirmationMessage(for: confirmation))
+            }
+        }
     }
 
     private func navigateToPendingRecipeIfNeeded() {
@@ -294,9 +326,13 @@ struct RecipesRootView: View {
             }
             .tint(.blue)
         }
-        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
             Button(role: .destructive) {
-                deleteRecipe(id: display.id)
+                recipeDeleteConfirmation = RecipeDeleteConfirmation(
+                    id: display.id,
+                    title: display.title,
+                    plannedMealCount: countPlannedMeals(for: display.id)
+                )
             } label: {
                 Label("Delete", systemImage: "trash")
             }
@@ -310,6 +346,37 @@ struct RecipesRootView: View {
         }
     }
 
+    private func deleteConfirmationMessage(for confirmation: RecipeDeleteConfirmation) -> String {
+        switch confirmation.plannedMealCount {
+        case 1:
+            return String(
+                format: String(
+                    localized: "“%@” and 1 planned meal on your schedule will be permanently deleted."
+                ),
+                confirmation.title
+            )
+        case let count where count > 1:
+            return String(
+                format: String(
+                    localized: "“%@” and %lld planned meals on your schedule will be permanently deleted."
+                ),
+                confirmation.title,
+                count
+            )
+        default:
+            return String(
+                format: String(localized: "“%@” will be permanently deleted."),
+                confirmation.title
+            )
+        }
+    }
+
+    private func countPlannedMeals(for recipeID: UUID) -> Int {
+        let predicate = #Predicate<ScheduledMeal> { $0.recipeID == recipeID }
+        let descriptor = FetchDescriptor<ScheduledMeal>(predicate: predicate)
+        return (try? modelContext.fetch(descriptor).count) ?? 0
+    }
+
     private func deleteRecipe(id recipeID: UUID) {
         if recipeToEdit?.id == recipeID {
             recipeToEdit = nil
@@ -317,27 +384,23 @@ struct RecipesRootView: View {
         if recipeForCategories?.id == recipeID {
             recipeForCategories = nil
         }
+        if recipeForRating?.id == recipeID {
+            recipeForRating = nil
+        }
 
         cookingSession.timerStore.stopAll(for: recipeID)
 
-        withAnimation {
-            pendingDeleteRecipeIDs.insert(recipeID)
-        }
-
-        DispatchQueue.main.async {
-            ScheduledMeal.deleteMeals(referencing: recipeID, in: modelContext)
-
-            let predicate = #Predicate<Recipe> { $0.id == recipeID }
-            var descriptor = FetchDescriptor<Recipe>(predicate: predicate)
-            descriptor.fetchLimit = 1
-
-            if let recipe = try? modelContext.fetch(descriptor).first {
-                modelContext.delete(recipe)
-                try? modelContext.save()
+        RecipeDeletionCoordinator.shared.deleteRecipe(
+            id: recipeID,
+            navigation: navigation,
+            context: modelContext,
+            onWillHide: {
+                pendingDeleteRecipeIDs.insert(recipeID)
+            },
+            onDidFinish: { deletedRecipeID in
+                pendingDeleteRecipeIDs.remove(deletedRecipeID)
             }
-
-            pendingDeleteRecipeIDs.remove(recipeID)
-        }
+        )
     }
 }
 

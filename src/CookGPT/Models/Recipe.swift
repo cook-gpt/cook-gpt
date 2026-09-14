@@ -21,6 +21,8 @@ final class Recipe {
     var cookingTools: [String]
     /// Explicit 1–5 star rating. `nil` means the recipe has not been rated.
     var rating: Int?
+    /// Set for bundled starter recipes (`SampleRecipeID.rawValue`) so upgrades can match them.
+    var sampleRecipeID: String?
 
     @Relationship(deleteRule: .cascade, inverse: \RecipeIngredient.recipe)
     var ingredients: [RecipeIngredient]
@@ -42,6 +44,7 @@ final class Recipe {
         tags: [String] = [],
         cookingTools: [String] = [],
         rating: Int? = nil,
+        sampleRecipeID: String? = nil,
         ingredients: [RecipeIngredient] = [],
         steps: [RecipeStep] = [],
         scheduledMeals: [ScheduledMeal] = []
@@ -56,6 +59,7 @@ final class Recipe {
         self.tags = tags
         self.cookingTools = cookingTools
         self.rating = rating
+        self.sampleRecipeID = sampleRecipeID
         self.ingredients = ingredients
         self.steps = steps
         self.scheduledMeals = scheduledMeals

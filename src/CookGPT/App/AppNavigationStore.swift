@@ -27,8 +27,76 @@ final class AppNavigationStore {
     private(set) var highlightedGroceryItemKeys: Set<String> = []
     private(set) var pendingRecipeNavigationID: UUID?
     private(set) var pendingRecipeScrollRequest: RecipeScrollRequest?
+    private(set) var recipeIDsPendingDeletion: Set<UUID> = []
+    private(set) var mealIDsPendingDeletion: Set<UUID> = []
+    /// Meal IDs removed from the schedule. Kept for the session so stale @Query rows are never rendered.
+    private(set) var hiddenMealIDs: Set<UUID> = []
+    private(set) var mealSlotByMealID: [UUID: MealSlot] = [:]
+    private(set) var mealSlotLabelByMealID: [UUID: String] = [:]
+    private(set) var mealSlotDisplayOrderByMealID: [UUID: Int] = [:]
+    private(set) var mealScheduleSyncToken = 0
 
     private init() {}
+
+    func notifyMealScheduleChanged() {
+        mealScheduleSyncToken += 1
+    }
+
+    func beginRecipeDeletion(recipeID: UUID, mealSnapshots: [ScheduledMealDeletionSnapshot]) {
+        recipeIDsPendingDeletion.insert(recipeID)
+
+        for snapshot in mealSnapshots {
+            mealIDsPendingDeletion.insert(snapshot.id)
+            hiddenMealIDs.insert(snapshot.id)
+            mealSlotByMealID[snapshot.id] = snapshot.mealSlot
+            mealSlotLabelByMealID[snapshot.id] = snapshot.label
+            mealSlotDisplayOrderByMealID[snapshot.id] = snapshot.displayOrder
+        }
+    }
+
+    func endRecipeDeletion(recipeID: UUID) {
+        recipeIDsPendingDeletion.remove(recipeID)
+    }
+
+    func registerDeletedMealIDs(_ mealIDs: Set<UUID>) {
+        hiddenMealIDs.formUnion(mealIDs)
+        mealIDsPendingDeletion.formUnion(mealIDs)
+    }
+
+    func pruneDeletedMeals(stillPresentMealIDs: Set<UUID>) {
+        let deletedMealIDs = mealIDsPendingDeletion.subtracting(stillPresentMealIDs)
+        guard !deletedMealIDs.isEmpty else { return }
+        mealIDsPendingDeletion.subtract(deletedMealIDs)
+    }
+
+    func cacheMealSlotsIfNeeded(from meals: [ScheduledMeal], trustedMealIDs: Set<UUID>) {
+        for meal in meals {
+            guard trustedMealIDs.contains(meal.id) else { continue }
+            guard !hiddenMealIDs.contains(meal.id) else { continue }
+            guard mealSlotByMealID[meal.id] == nil else { continue }
+            cacheMealSlot(from: meal)
+        }
+    }
+
+    func cacheMealSlot(from meal: ScheduledMeal) {
+        guard !hiddenMealIDs.contains(meal.id) else { return }
+
+        mealSlotByMealID[meal.id] = meal.mealSlot
+        mealSlotLabelByMealID[meal.id] = meal.mealSlot.label
+        mealSlotDisplayOrderByMealID[meal.id] = meal.mealSlot.displayOrder
+    }
+
+    func mealSlotLabel(for mealID: UUID) -> String {
+        mealSlotLabelByMealID[mealID] ?? MealSlot.lunch.label
+    }
+
+    func mealSlot(for mealID: UUID) -> MealSlot {
+        mealSlotByMealID[mealID] ?? .lunch
+    }
+
+    func mealSlotDisplayOrder(for mealID: UUID) -> Int {
+        mealSlotDisplayOrderByMealID[mealID] ?? MealSlot.lunch.displayOrder
+    }
 
     func openGroceries(highlightingItemKeys keys: Set<String>) {
         highlightedGroceryItemKeys = keys
@@ -64,5 +132,11 @@ final class AppNavigationStore {
         highlightedGroceryItemKeys = []
         pendingRecipeNavigationID = nil
         pendingRecipeScrollRequest = nil
+        recipeIDsPendingDeletion = []
+        mealIDsPendingDeletion = []
+        hiddenMealIDs = []
+        mealSlotByMealID = [:]
+        mealSlotLabelByMealID = [:]
+        mealSlotDisplayOrderByMealID = [:]
     }
 }

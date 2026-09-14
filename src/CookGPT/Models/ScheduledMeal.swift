@@ -36,13 +36,17 @@ final class ScheduledMeal {
 extension ScheduledMeal {
     @MainActor
     static func deleteMeals(referencing recipeID: UUID, in context: ModelContext) {
-        let predicate = #Predicate<ScheduledMeal> { meal in
-            meal.recipeID == recipeID
-        }
-        let descriptor = FetchDescriptor(predicate: predicate)
+        let descriptor = FetchDescriptor<ScheduledMeal>()
         guard let meals = try? context.fetch(descriptor) else { return }
-        for meal in meals {
+
+        var deletedAny = false
+        for meal in meals where meal.recipeID == recipeID {
             context.delete(meal)
+            deletedAny = true
+        }
+
+        if deletedAny {
+            try? context.save()
         }
     }
 
@@ -68,7 +72,9 @@ extension ScheduledMeal {
 }
 
 extension Array where Element == ScheduledMeal {
-    func sortedByMealSlot() -> [ScheduledMeal] {
-        sorted { $0.mealSlot.displayOrder < $1.mealSlot.displayOrder }
+    func sortedByMealSlot(using navigation: AppNavigationStore) -> [ScheduledMeal] {
+        sorted {
+            navigation.mealSlotDisplayOrder(for: $0.id) < navigation.mealSlotDisplayOrder(for: $1.id)
+        }
     }
 }

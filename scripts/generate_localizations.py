@@ -22,8 +22,11 @@ LEGACY_CATALOGS = (
 
 def load_translations() -> dict[str, dict[str, str]]:
     from translation_data import TRANSLATIONS
+    from sample_recipe_translations import translations as sample_recipe_translations
 
-    return TRANSLATIONS
+    merged = dict(TRANSLATIONS)
+    merged.update(sample_recipe_translations())
+    return merged
 
 
 def escape_strings_value(value: str) -> str:

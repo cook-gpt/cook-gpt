@@ -12,6 +12,14 @@ private struct MealRecipeDetailRoute: Hashable {
     let servings: Int
 }
 
+private struct PlanMealsPresentation: Identifiable {
+    let id = UUID()
+    let startDate: Date
+    let numberOfDays: Int
+    let includedMealSlots: Set<MealSlot>
+    let initialServings: Int?
+}
+
 struct DietRootView: View {
     @Query(filter: #Predicate<DietProfile> { $0.isActive == true })
     private var activeProfiles: [DietProfile]
@@ -20,21 +28,50 @@ struct DietRootView: View {
     @Query(sort: \ScheduledMeal.day) private var scheduledMeals: [ScheduledMeal]
     @Environment(\.modelContext) private var modelContext
     @Environment(AppSettingsStore.self) private var settings
+    @Environment(AppNavigationStore.self) private var navigation
+    @Environment(CookingSessionManager.self) private var cookingSession
 
     @State private var viewMode: ScheduleViewMode = .week
     @State private var selectedDate = Date()
-    @State private var isPlanningMeals = false
-    @State private var planMealsStartDate = Date()
-    @State private var planMealsNumberOfDays = 7
-    @State private var planMealsIncludedSlots: Set<MealSlot> = [.lunch, .dinner]
-    @State private var planMealsInitialServings: Int?
+    @State private var planMealsPresentation: PlanMealsPresentation?
     @State private var isApplyingMealPlan = false
     @State private var isEditingMeals = false
     @State private var mealRecipePickerContext: MealRecipePickerContext?
     @State private var showDeleteRangeConfirmation = false
+    @State private var mealDeleteConfirmation: MealDeleteConfirmation?
+    @State private var trustedScheduledMealIDs: Set<UUID>?
+
+    private struct MealDeleteConfirmation: Identifiable {
+        let id: UUID
+        let message: String
+    }
 
     private var activeProfile: DietProfile? {
         activeProfiles.first
+    }
+
+    private var activeRecipes: [Recipe] {
+        recipes.filter { !navigation.recipeIDsPendingDeletion.contains($0.id) }
+    }
+
+    private var validRecipeIDs: Set<UUID> {
+        Set(activeRecipes.map(\.id))
+    }
+
+    private var effectiveTrustedMealIDs: Set<UUID> {
+        trustedScheduledMealIDs ?? Set(scheduledMeals.map(\.id))
+    }
+
+    /// Meals whose recipe still exists, plus empty meal slots awaiting a recipe.
+    private var activeScheduledMeals: [ScheduledMeal] {
+        scheduledMeals.filter { meal in
+            guard effectiveTrustedMealIDs.contains(meal.id) else { return false }
+            if navigation.hiddenMealIDs.contains(meal.id) { return false }
+            if navigation.mealIDsPendingDeletion.contains(meal.id) { return false }
+            guard let recipeID = meal.recipeID else { return true }
+            if navigation.recipeIDsPendingDeletion.contains(recipeID) { return false }
+            return validRecipeIDs.contains(recipeID)
+        }
     }
 
     private var weekDays: [Date] {
@@ -46,17 +83,17 @@ struct DietRootView: View {
     private var visibleMeals: [ScheduledMeal] {
         switch viewMode {
         case .day:
-            return scheduledMeals.filter { MealScheduleCalendar.isSameDay($0.day, selectedDate) }
+            return activeScheduledMeals.filter { MealScheduleCalendar.isSameDay($0.day, selectedDate) }
         case .week:
             let days = Set(weekDays.map { MealScheduleCalendar.startOfDay($0) })
-            return scheduledMeals.filter { days.contains(MealScheduleCalendar.startOfDay($0.day)) }
+            return activeScheduledMeals.filter { days.contains(MealScheduleCalendar.startOfDay($0.day)) }
         case .month:
             let days = Set(
                 MealScheduleCalendar.daysInMonth(containing: selectedDate).map {
                     MealScheduleCalendar.startOfDay($0)
                 }
             )
-            return scheduledMeals.filter { days.contains(MealScheduleCalendar.startOfDay($0.day)) }
+            return activeScheduledMeals.filter { days.contains(MealScheduleCalendar.startOfDay($0.day)) }
         }
     }
 
@@ -75,14 +112,15 @@ struct DietRootView: View {
         MealScheduleShareFormatter.text(
             days: exportDays,
             meals: visibleMeals,
-            recipes: recipes
+            recipes: activeRecipes,
+            navigation: navigation
         )
     }
 
     private var hasExportableMeals: Bool {
         visibleMeals.contains { meal in
             guard let recipeID = meal.recipeID else { return false }
-            return recipes.contains { $0.id == recipeID }
+            return activeRecipes.contains { $0.id == recipeID }
         }
     }
 
@@ -135,7 +173,7 @@ struct DietRootView: View {
         }
         .navigationTitle("Meals")
         .navigationDestination(for: MealRecipeDetailRoute.self) { route in
-            if let recipe = recipes.first(where: { $0.id == route.recipeID }) {
+            if let recipe = activeRecipes.first(where: { $0.id == route.recipeID }) {
                 RecipeDetailView(recipe: recipe, initialServings: route.servings)
             }
         }
@@ -190,10 +228,10 @@ struct DietRootView: View {
         .sheet(item: $mealRecipePickerContext) { context in
             NavigationStack {
                 RecipeImportPickerContent(
-                    recipes: recipes,
+                    recipes: activeRecipes,
                     excludedRecipeIDs: [],
                     onSelect: { selectedRecipe in
-                        if let meal = scheduledMeals.first(where: { $0.id == context.mealID }) {
+                        if let meal = activeScheduledMeals.first(where: { $0.id == context.mealID }) {
                             meal.recipeID = selectedRecipe.id
                             meal.recipe = selectedRecipe
                         }
@@ -211,17 +249,16 @@ struct DietRootView: View {
                 }
             }
         }
-        .sheet(isPresented: $isPlanningMeals) {
+        .sheet(item: $planMealsPresentation) { presentation in
             if let profile = activeProfile {
                 PlanMealsSheet(
                     profile: profile,
-                    startDate: planMealsStartDate,
-                    numberOfDays: planMealsNumberOfDays,
-                    includedMealSlots: planMealsIncludedSlots,
-                    initialServings: planMealsInitialServings,
+                    startDate: presentation.startDate,
+                    numberOfDays: presentation.numberOfDays,
+                    includedMealSlots: presentation.includedMealSlots,
+                    initialServings: presentation.initialServings,
                     onPlan: applyMealPlan
                 )
-                .id(planMealsSheetID)
             }
         }
         .alert("Delete meals?", isPresented: $showDeleteRangeConfirmation) {
@@ -232,14 +269,40 @@ struct DietRootView: View {
         } message: {
             Text("This will remove all scheduled meals for \(periodTitle).")
         }
+        .alert(
+            "Delete meal?",
+            isPresented: Binding(
+                get: { mealDeleteConfirmation != nil },
+                set: { isPresented in
+                    if !isPresented {
+                        mealDeleteConfirmation = nil
+                    }
+                }
+            )
+        ) {
+            Button("Cancel", role: .cancel) {
+                mealDeleteConfirmation = nil
+            }
+            Button("Delete", role: .destructive) {
+                if let confirmation = mealDeleteConfirmation,
+                   let meal = scheduledMeals.first(where: { $0.id == confirmation.id }) {
+                    deleteMeal(meal)
+                }
+                mealDeleteConfirmation = nil
+            }
+        } message: {
+            if let confirmation = mealDeleteConfirmation {
+                Text(confirmation.message)
+            }
+        }
         .onChange(of: settings.isResettingData) { _, isResetting in
             if isResetting {
-                isPlanningMeals = false
+                planMealsPresentation = nil
                 isApplyingMealPlan = false
                 isEditingMeals = false
                 mealRecipePickerContext = nil
-                planMealsInitialServings = nil
                 showDeleteRangeConfirmation = false
+                mealDeleteConfirmation = nil
             }
         }
         .onAppear {
@@ -247,13 +310,21 @@ struct DietRootView: View {
                 validRecipeIDs: Set(recipes.map(\.id)),
                 in: modelContext
             )
+            syncMealSlotCache()
+        }
+        .onChange(of: scheduledMeals.map(\.id)) { _, _ in
+            syncMealSlotCache()
+        }
+        .onChange(of: navigation.mealScheduleSyncToken) { _, _ in
+            syncMealSlotCache()
         }
     }
 
-    private var planMealsSheetID: String {
-        let slots = planMealsIncludedSlots.map(\.rawValue).sorted().joined(separator: "-")
-        let servings = planMealsInitialServings.map(String.init) ?? "default"
-        return "\(planMealsStartDate.timeIntervalSince1970)-\(planMealsNumberOfDays)-\(slots)-\(servings)"
+    private func syncMealSlotCache() {
+        let trustedMealIDs = RecipeDeletion.presentMealIDs(in: modelContext)
+        trustedScheduledMealIDs = trustedMealIDs
+        navigation.cacheMealSlotsIfNeeded(from: scheduledMeals, trustedMealIDs: trustedMealIDs)
+        navigation.pruneDeletedMeals(stillPresentMealIDs: trustedMealIDs)
     }
 
     private func applyMealPlan(_ request: MealPlanRequest) {
@@ -276,6 +347,8 @@ struct DietRootView: View {
                 recipes: recipes,
                 context: modelContext
             )
+
+            syncMealSlotCache()
         }
     }
 
@@ -403,14 +476,15 @@ struct DietRootView: View {
     }
 
     private func meals(for day: Date) -> [ScheduledMeal] {
-        scheduledMeals
+        activeScheduledMeals
             .filter { MealScheduleCalendar.isSameDay($0.day, day) }
-            .sortedByMealSlot()
+            .sortedByMealSlot(using: navigation)
     }
 
     private func meal(for day: Date, slot: MealSlot) -> ScheduledMeal? {
-        scheduledMeals.first {
-            MealScheduleCalendar.isSameDay($0.day, day) && $0.mealSlot == slot
+        activeScheduledMeals.first { meal in
+            MealScheduleCalendar.isSameDay(meal.day, day)
+                && navigation.mealSlot(for: meal.id) == slot
         }
     }
 
@@ -422,6 +496,7 @@ struct DietRootView: View {
             servings: settings.defaultPlannerServings
         )
         modelContext.insert(meal)
+        navigation.cacheMealSlot(from: meal)
         try? modelContext.save()
         mealRecipePickerContext = MealRecipePickerContext(mealID: meal.id)
     }
@@ -468,7 +543,8 @@ struct DietRootView: View {
     private func scheduledMealEditRow(_ meal: ScheduledMeal, showsMealSlotLabel: Bool = true) -> some View {
         ScheduledMealEditRow(
             meal: meal,
-            recipes: recipes,
+            mealSlotLabel: navigation.mealSlotLabel(for: meal.id),
+            recipes: activeRecipes,
             showsMealSlotLabel: showsMealSlotLabel,
             onOpenPicker: { mealRecipePickerContext = MealRecipePickerContext(mealID: meal.id) },
             onDelete: { deleteMeal(meal) }
@@ -478,50 +554,77 @@ struct DietRootView: View {
 
     @ViewBuilder
     private func scheduledMealListRow(_ meal: ScheduledMeal, showsMealSlotLabel: Bool = true) -> some View {
+        let recipeDisplay = recipeRowDisplay(for: meal)
+
         Group {
-            if let recipe = recipe(for: meal) {
+            if let recipeDisplay {
                 NavigationLink(
-                    value: MealRecipeDetailRoute(recipeID: recipe.id, servings: meal.servings)
+                    value: MealRecipeDetailRoute(recipeID: recipeDisplay.id, servings: meal.servings)
                 ) {
                     ScheduledMealRow(
-                        meal: meal,
-                        recipe: recipe,
+                        mealSlotLabel: navigation.mealSlotLabel(for: meal.id),
+                        recipeDisplay: recipeDisplay,
                         showsMealSlotLabel: showsMealSlotLabel
                     )
                 }
             } else {
                 ScheduledMealRow(
-                    meal: meal,
-                    recipe: nil,
+                    mealSlotLabel: navigation.mealSlotLabel(for: meal.id),
+                    recipeDisplay: nil,
                     showsMealSlotLabel: showsMealSlotLabel
                 )
             }
         }
         .listRowInsets(EdgeInsets(top: 10, leading: 16, bottom: 10, trailing: 12))
-        .swipeActions(edge: .trailing, allowsFullSwipe: true) {
+        .swipeActions(edge: .trailing, allowsFullSwipe: false) {
             Button(role: .destructive) {
-                deleteMeal(meal)
+                mealDeleteConfirmation = MealDeleteConfirmation(
+                    id: meal.id,
+                    message: mealDeleteMessage(for: meal)
+                )
             } label: {
                 Label("Delete", systemImage: "trash")
             }
         }
     }
 
-    private func recipe(for meal: ScheduledMeal) -> Recipe? {
+    private func mealDeleteMessage(for meal: ScheduledMeal) -> String {
+        if let recipeDisplay = recipeRowDisplay(for: meal) {
+            return String(
+                format: String(localized: "“%@” will be removed from your meal schedule."),
+                recipeDisplay.title
+            )
+        }
+
+        return String(localized: "This planned meal will be removed from your meal schedule.")
+    }
+
+    private func recipeRowDisplay(for meal: ScheduledMeal) -> RecipeRowDisplayData? {
         guard let recipeID = meal.recipeID else { return nil }
-        return recipes.first { $0.id == recipeID }
+        guard !navigation.recipeIDsPendingDeletion.contains(recipeID) else { return nil }
+        guard let recipe = activeRecipes.first(where: { $0.id == recipeID }) else { return nil }
+
+        return RecipeRowDisplayData(
+            recipe: recipe,
+            isInProgress: cookingSession.isInProgress(recipe: recipe),
+            servings: meal.servings
+        )
     }
 
     private func deleteMeal(_ meal: ScheduledMeal) {
+        navigation.registerDeletedMealIDs([meal.id])
         modelContext.delete(meal)
         try? modelContext.save()
+        syncMealSlotCache()
     }
 
     private func deleteVisibleMeals() {
+        navigation.registerDeletedMealIDs(Set(visibleMeals.map(\.id)))
         for meal in visibleMeals {
             modelContext.delete(meal)
         }
         try? modelContext.save()
+        syncMealSlotCache()
     }
 
     private func finishEditingMeals() {
@@ -529,9 +632,10 @@ struct DietRootView: View {
             meal.servings = min(max(meal.servings, 1), 24)
 
             if let recipeID = meal.recipeID,
-               let recipe = recipes.first(where: { $0.id == recipeID }) {
+               let recipe = activeRecipes.first(where: { $0.id == recipeID }) {
                 meal.recipe = recipe
             } else {
+                navigation.registerDeletedMealIDs([meal.id])
                 modelContext.delete(meal)
             }
         }
@@ -546,11 +650,12 @@ struct DietRootView: View {
         servings: Int? = nil
     ) {
         let defaults = planMealsDefaults(for: day)
-        planMealsStartDate = defaults.start
-        planMealsNumberOfDays = defaults.days
-        planMealsIncludedSlots = mealSlots ?? defaultPlanMealSlots
-        planMealsInitialServings = servings
-        isPlanningMeals = true
+        planMealsPresentation = PlanMealsPresentation(
+            startDate: defaults.start,
+            numberOfDays: defaults.days,
+            includedMealSlots: mealSlots ?? defaultPlanMealSlots,
+            initialServings: servings
+        )
     }
 
     private var defaultPlanMealSlots: Set<MealSlot> {
@@ -612,15 +717,32 @@ private struct MealRecipePickerContext: Identifiable {
 
 private struct ScheduledMealEditRow: View {
     @Bindable var meal: ScheduledMeal
+    let mealSlotLabel: String
     let recipes: [Recipe]
     var showsMealSlotLabel: Bool = true
     let onOpenPicker: () -> Void
     let onDelete: () -> Void
 
+    init(
+        meal: ScheduledMeal,
+        mealSlotLabel: String,
+        recipes: [Recipe],
+        showsMealSlotLabel: Bool = true,
+        onOpenPicker: @escaping () -> Void,
+        onDelete: @escaping () -> Void
+    ) {
+        self.meal = meal
+        self.mealSlotLabel = mealSlotLabel
+        self.recipes = recipes
+        self.showsMealSlotLabel = showsMealSlotLabel
+        self.onOpenPicker = onOpenPicker
+        self.onDelete = onDelete
+    }
+
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             if showsMealSlotLabel {
-                Text(meal.mealSlot.label)
+                Text(mealSlotLabel)
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.secondary)
             }
@@ -647,26 +769,20 @@ private struct ScheduledMealEditRow: View {
 }
 
 private struct ScheduledMealRow: View {
-    let meal: ScheduledMeal
-    let recipe: Recipe?
+    let mealSlotLabel: String
+    let recipeDisplay: RecipeRowDisplayData?
     var showsMealSlotLabel: Bool = true
-    @Environment(CookingSessionManager.self) private var cookingSession
 
     var body: some View {
         VStack(alignment: .leading, spacing: 6) {
             if showsMealSlotLabel {
-                Text(meal.mealSlot.label)
+                Text(mealSlotLabel)
                     .font(.caption.weight(.semibold))
                     .foregroundStyle(.secondary)
             }
 
-            if let recipe {
-                RecipeRowView(
-                    recipe: recipe,
-                    isInProgress: cookingSession.isInProgress(recipe: recipe),
-                    showsSummary: false,
-                    servings: meal.servings
-                )
+            if let recipeDisplay {
+                RecipeRowView(display: recipeDisplay, showsSummary: false)
             } else {
                 Text("Recipe unavailable")
                     .foregroundStyle(.secondary)
@@ -682,4 +798,5 @@ private struct ScheduledMealRow: View {
     .modelContainer(try! CookGPTModelContainer.make())
     .environment(CookingSessionManager.shared)
     .environment(AppSettingsStore.shared)
+    .environment(AppNavigationStore.shared)
 }

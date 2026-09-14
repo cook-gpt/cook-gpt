@@ -43,7 +43,7 @@ struct PlanMealsSheet: View {
         self.includedMealSlots = includedMealSlots
         self.initialServings = initialServings
         self.onPlan = onPlan
-        _selectedStartDate = State(initialValue: startDate)
+        _selectedStartDate = State(initialValue: MealScheduleCalendar.startOfDay(startDate))
         _selectedNumberOfDays = State(initialValue: numberOfDays)
         _servings = State(initialValue: initialServings ?? AppSettingsStore.shared.defaultPlannerServings)
         _selectedDietType = State(initialValue: profile.dietType)

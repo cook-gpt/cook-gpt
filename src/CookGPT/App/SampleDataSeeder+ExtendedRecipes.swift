@@ -164,8 +164,9 @@ extension SampleDataSeeder {
 
     // MARK: - Recipes
 
-    private static func makeChickpeaCurryRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeChickpeaCurryRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .chickpeaCurry,
             title: "Chickpea Coconut Curry",
             summary: "Creamy one-pot curry with chickpeas and spinach.",
             servings: 4,
@@ -189,8 +190,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeVeggieStirFryRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeVeggieStirFryRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .veggieStirFry,
             title: "Rainbow Veggie Stir-Fry",
             summary: "Colorful vegetables tossed in a ginger soy glaze.",
             servings: 3,
@@ -214,8 +216,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeAvocadoToastRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeAvocadoToastRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .avocadoToast,
             title: "Avocado Toast",
             summary: "Smashed avocado on toasted sourdough with chili flakes.",
             servings: 2,
@@ -238,8 +241,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeCapreseSaladRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeCapreseSaladRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .capreseSalad,
             title: "Caprese Salad",
             summary: "Tomatoes, mozzarella, and basil with balsamic.",
             servings: 2,
@@ -262,8 +266,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeMushroomRisottoRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeMushroomRisottoRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .mushroomRisotto,
             title: "Mushroom Risotto",
             summary: "Creamy arborio rice with sautéed mushrooms.",
             servings: 3,
@@ -286,8 +291,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeTurkeyMeatballsRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeTurkeyMeatballsRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .turkeyMeatballs,
             title: "Turkey Meatballs",
             summary: "Lean turkey meatballs in tomato sauce.",
             servings: 4,
@@ -310,8 +316,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeEggWhiteOmeletteRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeEggWhiteOmeletteRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .eggWhiteOmelette,
             title: "Egg White Omelette",
             summary: "Light omelette with spinach and herbs.",
             servings: 1,
@@ -334,8 +341,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeCobbSaladRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeCobbSaladRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .cobbSalad,
             title: "Cobb Salad",
             summary: "Chicken, egg, avocado, and greens with ranch.",
             servings: 2,
@@ -359,8 +367,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeZucchiniNoodlesRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeZucchiniNoodlesRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .zucchiniNoodles,
             title: "Zucchini Noodles with Marinara",
             summary: "Spiralized zucchini in a quick tomato sauce.",
             servings: 2,
@@ -383,8 +392,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeGrilledChickenRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeGrilledChickenRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .grilledChicken,
             title: "Grilled Lemon Chicken",
             summary: "Simple grilled chicken with lemon and herbs.",
             servings: 2,
@@ -407,8 +417,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeSteakBitesRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeSteakBitesRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .steakBites,
             title: "Garlic Steak Bites",
             summary: "Seared steak cubes with garlic butter.",
             servings: 2,
@@ -431,8 +442,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeShrimpScampiRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeShrimpScampiRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .shrimpScampi,
             title: "Shrimp Scampi",
             summary: "Garlicky shrimp with lemon and parsley.",
             servings: 2,
@@ -455,8 +467,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeEggMuffinsRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeEggMuffinsRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .eggMuffins,
             title: "Spinach Egg Muffins",
             summary: "Bake-ahead egg cups with spinach and cheese.",
             servings: 6,
@@ -479,8 +492,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeTunaSaladRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeTunaSaladRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .tunaSalad,
             title: "Tuna Salad Bowl",
             summary: "Protein-packed tuna over crisp greens.",
             servings: 2,
@@ -503,8 +517,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeSteamedVeggiesRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeSteamedVeggiesRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .steamedVeggies,
             title: "Steamed Veggie Medley",
             summary: "Broccoli, carrots, and green beans steamed until tender.",
             servings: 3,
@@ -527,8 +542,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeBerrySmoothieBowlRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeBerrySmoothieBowlRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .berrySmoothieBowl,
             title: "Berry Smoothie Bowl",
             summary: "Thick blended berries topped with granola.",
             servings: 1,
@@ -551,8 +567,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeBakedCodRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeBakedCodRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .bakedCod,
             title: "Baked Cod with Herbs",
             summary: "Flaky cod baked with lemon and parsley.",
             servings: 2,
@@ -575,8 +592,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeRiceAndBeansRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeRiceAndBeansRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .riceAndBeans,
             title: "Rice and Black Beans",
             summary: "Simple plant-based bowl with seasoned beans.",
             servings: 4,
@@ -599,8 +617,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeCucumberSaladRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeCucumberSaladRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .cucumberSalad,
             title: "Cucumber Dill Salad",
             summary: "Cool cucumber salad with dill and vinegar.",
             servings: 3,
@@ -623,8 +642,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeMargheritaFlatbreadRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeMargheritaFlatbreadRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .margheritaFlatbread,
             title: "Margherita Flatbread",
             summary: "Crispy flatbread with tomato, mozzarella, and basil.",
             servings: 2,
@@ -647,8 +667,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makePestoPastaRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makePestoPastaRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .pestoPasta,
             title: "Pesto Pasta",
             summary: "Basil pesto tossed with al dente pasta.",
             servings: 3,
@@ -671,8 +692,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeBurritoBowlRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeBurritoBowlRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .burritoBowl,
             title: "Chicken Burrito Bowl",
             summary: "Rice, beans, chicken, and salsa in one bowl.",
             servings: 3,
@@ -695,8 +717,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeQuinoaSaladRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeQuinoaSaladRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .quinoaSalad,
             title: "Quinoa Power Salad",
             summary: "Quinoa with chickpeas, cucumber, and lemon.",
             servings: 3,
@@ -719,8 +742,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeYogurtParfaitRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeYogurtParfaitRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .yogurtParfait,
             title: "Yogurt Berry Parfait",
             summary: "Layered yogurt, berries, and honey.",
             servings: 1,
@@ -743,8 +767,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeChocolateMousseRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeChocolateMousseRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .chocolateMousse,
             title: "Chocolate Avocado Mousse",
             summary: "Rich dairy-free chocolate mousse.",
             servings: 2,
@@ -767,8 +792,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeAppleCrumbleRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeAppleCrumbleRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .appleCrumble,
             title: "Apple Cinnamon Crumble",
             summary: "Baked apples with an oat crumble topping.",
             servings: 4,
@@ -791,8 +817,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeChiaPuddingRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeChiaPuddingRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .chiaPudding,
             title: "Vanilla Chia Pudding",
             summary: "Creamy make-ahead chia pudding.",
             servings: 2,
@@ -815,8 +842,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeBakedPeachesRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeBakedPeachesRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .bakedPeaches,
             title: "Baked Cinnamon Peaches",
             summary: "Warm peaches with cinnamon and oats.",
             servings: 2,
@@ -839,8 +867,9 @@ extension SampleDataSeeder {
         return recipe
     }
 
-    private static func makeCoconutCookiesRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+    static func makeCoconutCookiesRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
+        let recipe = makeSampleRecipe(
+            id: .coconutCookies,
             title: "Coconut Almond Cookies",
             summary: "Chewy cookies with coconut and almonds.",
             servings: 12,
@@ -865,7 +894,7 @@ extension SampleDataSeeder {
 
     // MARK: - Steps
 
-    private static func chickpeaCurrySteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func chickpeaCurrySteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Dice onion and sauté until soft.", 240),
             ("Add chickpeas, coconut milk, and spinach. Simmer.", 900),
@@ -873,7 +902,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func veggieStirFrySteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func veggieStirFrySteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Slice peppers and broccoli.", nil),
             ("Stir-fry vegetables over high heat.", 360),
@@ -881,7 +910,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func avocadoToastSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func avocadoToastSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Toast bread until golden.", 240),
             ("Mash avocado with salt and chili flakes.", nil),
@@ -889,7 +918,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func capreseSaladSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func capreseSaladSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Slice tomatoes and mozzarella.", nil),
             ("Arrange with basil leaves.", nil),
@@ -897,7 +926,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func mushroomRisottoSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func mushroomRisottoSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Sauté sliced mushrooms.", 300),
             ("Toast rice and add warm broth gradually.", 1200),
@@ -905,7 +934,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func turkeyMeatballsSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func turkeyMeatballsSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Mix turkey, egg, and seasonings. Form meatballs.", nil),
             ("Brown meatballs in a pan.", 480),
@@ -913,7 +942,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func eggWhiteOmeletteSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func eggWhiteOmeletteSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Whisk egg whites with herbs.", nil),
             ("Cook in a nonstick pan over medium heat.", 180),
@@ -921,7 +950,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func cobbSaladSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func cobbSaladSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Cook chicken and hard-boil eggs.", 600),
             ("Chop avocado and arrange greens.", nil),
@@ -929,7 +958,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func zucchiniNoodlesSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func zucchiniNoodlesSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Spiralize zucchini into noodles.", nil),
             ("Simmer garlic and tomatoes into sauce.", 480),
@@ -937,7 +966,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func grilledChickenSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func grilledChickenSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Marinate chicken with lemon and herbs.", nil),
             ("Grill or pan-sear until cooked through.", 540),
@@ -945,7 +974,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func steakBitesSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func steakBitesSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Cut steak into bite-size cubes.", nil),
             ("Sear in a hot pan.", 240),
@@ -953,7 +982,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func shrimpScampiSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func shrimpScampiSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Pat shrimp dry and season.", nil),
             ("Sauté garlic in butter.", 60),
@@ -961,7 +990,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func eggMuffinsSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func eggMuffinsSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Whisk eggs with spinach and cheese.", nil),
             ("Divide into a greased muffin tin.", nil),
@@ -969,7 +998,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func tunaSaladSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func tunaSaladSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Drain tuna and flake into a bowl.", nil),
             ("Chop cucumber and greens.", nil),
@@ -977,7 +1006,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func steamedVeggiesSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func steamedVeggiesSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Trim and chop vegetables.", nil),
             ("Steam until tender-crisp.", 480),
@@ -985,7 +1014,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func berrySmoothieBowlSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func berrySmoothieBowlSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Blend berries and banana until thick.", nil),
             ("Pour into a bowl.", nil),
@@ -993,7 +1022,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func bakedCodSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func bakedCodSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Season cod with herbs and lemon.", nil),
             ("Bake until flaky.", 900),
@@ -1001,7 +1030,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func riceAndBeansSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func riceAndBeansSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Cook rice according to package directions.", 1200),
             ("Warm beans with cumin.", 300),
@@ -1009,7 +1038,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func cucumberSaladSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func cucumberSaladSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Slice cucumber thinly.", nil),
             ("Toss with vinegar and dill.", nil),
@@ -1017,7 +1046,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func margheritaFlatbreadSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func margheritaFlatbreadSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Top flatbread with tomato and mozzarella.", nil),
             ("Bake or pan-toast until cheese melts.", 720),
@@ -1025,7 +1054,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func pestoPastaSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func pestoPastaSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Boil pasta until al dente.", 600),
             ("Reserve a little pasta water.", nil),
@@ -1033,7 +1062,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func burritoBowlSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func burritoBowlSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Cook rice and warm beans.", 1200),
             ("Season and cook chicken.", 480),
@@ -1041,7 +1070,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func quinoaSaladSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func quinoaSaladSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Cook quinoa until fluffy.", 900),
             ("Dice cucumber and rinse chickpeas.", nil),
@@ -1049,7 +1078,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func yogurtParfaitSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func yogurtParfaitSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Layer yogurt and berries in a glass.", nil),
             ("Drizzle with honey.", nil),
@@ -1057,7 +1086,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func chocolateMousseSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func chocolateMousseSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Blend avocado, melted chocolate, and maple syrup.", nil),
             ("Chill until set.", 1800),
@@ -1065,7 +1094,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func appleCrumbleSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func appleCrumbleSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Slice apples and toss with cinnamon.", nil),
             ("Mix oat crumble topping.", nil),
@@ -1073,7 +1102,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func chiaPuddingSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func chiaPuddingSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Whisk chia seeds, milk, and vanilla.", nil),
             ("Refrigerate until thickened.", nil),
@@ -1081,7 +1110,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func bakedPeachesSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func bakedPeachesSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Halve peaches and sprinkle with cinnamon.", nil),
             ("Top with oats.", nil),
@@ -1089,7 +1118,7 @@ extension SampleDataSeeder {
         ])
     }
 
-    private static func coconutCookiesSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
+    static func coconutCookiesSteps(recipe: Recipe, context: ModelContext) -> [RecipeStep] {
         makeSteps(recipe: recipe, context: context, steps: [
             ("Mix coconut, almond flour, and eggs.", nil),
             ("Shape into cookies.", nil),

@@ -17,6 +17,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Rating sheet** — swipe right on a recipe to open an App Store–style star picker
 - **Rating editor** — set or clear a rating from the recipe editor via a picker menu (No rating, ★ … ★★★★★)
 - **Ingredient unit pluralization** — singular/plural labels for cups, pieces, and units based on quantity in recipes, groceries, and share text
+- **Localized starter recipes** — onboarding collection recipes (titles, summaries, ingredients, and steps) seed in the app’s active language
+- **Recipe delete confirmation** — confirm before deleting a recipe from the list; message states how many planned meals will also be removed
+- **Meal delete confirmation** — confirm before removing a planned meal via swipe on the Meals tab
 - **First-launch onboarding** — three-step tutorial for app overview, starter recipe pack selection, and timer notifications
 - **Starter recipe packs** — eleven collections with six recipes each; only selected packs are installed on first launch
 - **Reset tutorial** — Settings option to replay onboarding without resetting recipe data
@@ -32,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Edit categories** — unified checklist-style list with recipe counts (`Recipes: N`), back and pencil toolbar icons, and delete/reorder in edit mode
 - **Categories** — all recipe tags sync into the categories list; deleting a category removes that tag from recipes (recipes are kept)
 - **Onboarding categories** — selected collection categories are active in the filter bar; secondary recipe tags are added but inactive
-- **Plan your meals** — back chevron and checkmark toolbar buttons; lunch and dinner on the same day use different recipes when possible
+- **Plan your meals** — back chevron and checkmark toolbar buttons; lunch and dinner on the same day use different recipes when possible; opening from the toolbar or a day’s “+ Plan meals” uses the correct start date on first open and when reopening the same day
 - **Meals planner access** — `+` is disabled when no meals can be planned; with only one lunch/dinner recipe, lunch and dinner are mutually exclusive
 - **Factory reset** — no sample scheduled meals are created after reset or starter pack import
 - **Groceries** — new ingredient rows stay as drafts until named; blank lines are never saved to the list
@@ -44,7 +47,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- **Recipe swipe-delete** — prevent SwiftData crash when deleting a recipe while the list still reads detached model properties (e.g. difficulty)
+- **Recipe swipe-delete** — prevent SwiftData crashes when deleting recipes, including those with planned meals and consecutive deletes, while the Meals tab still holds stale schedule rows
+- **Plan meals start date** — sheet no longer defaults to today when opened from the selected day, week, or month
 
 ## [1.0.0] - 2026-08-27
 

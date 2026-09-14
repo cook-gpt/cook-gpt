@@ -11,7 +11,7 @@ enum SampleDataSeeder {
     private static let seedFlagKey = "didSeedSampleData"
     private static let minimalShellFlagKey = "didSeedMinimalShell"
     private static let recipeStructureVersionKey = "sampleRecipeStructureVersion"
-    private static let currentRecipeStructureVersion = 10
+    private static let currentRecipeStructureVersion = 11
 
     static func seedIfNeeded(context: ModelContext) {
         if !UserDefaults.standard.bool(forKey: seedFlagKey) {
@@ -148,6 +148,11 @@ enum SampleDataSeeder {
         recipe.steps.forEach { context.delete($0) }
         recipe.steps = []
 
+        if let sampleID = recipe.sampleRecipeID.flatMap(SampleRecipeID.init(rawValue:)) {
+            recipe.steps = sampleSteps(for: sampleID, recipe: recipe, context: context)
+            return
+        }
+
         if rebuildExtendedRecipeSteps(recipe: recipe, context: context) {
             return
         }
@@ -177,17 +182,24 @@ enum SampleDataSeeder {
     }
 
     private static func applyDefaultCategoryTags(recipe: Recipe) {
-        switch recipe.title {
-        case "Classic Scrambled Eggs":
+        switch recipe.sampleRecipeID.flatMap(SampleRecipeID.init(rawValue:)) {
+        case .scrambledEggs, .overnightOats:
             recipe.tags = uniqueTags(recipe.tags + ["breakfast"])
-        case "Overnight Oats":
-            recipe.tags = uniqueTags(recipe.tags + ["breakfast"])
-        case "Greek Salad":
+        case .greekSalad:
             recipe.tags = uniqueTags(recipe.tags + ["no-fats"])
-        case "Banana Nice Cream":
+        case .bananaNiceCream:
             recipe.tags = uniqueTags(recipe.tags + ["dessert", "vegan", "quick"])
         default:
-            break
+            switch recipe.title {
+            case "Classic Scrambled Eggs", "Overnight Oats":
+                recipe.tags = uniqueTags(recipe.tags + ["breakfast"])
+            case "Greek Salad":
+                recipe.tags = uniqueTags(recipe.tags + ["no-fats"])
+            case "Banana Nice Cream":
+                recipe.tags = uniqueTags(recipe.tags + ["dessert", "vegan", "quick"])
+            default:
+                break
+            }
         }
     }
 
@@ -234,7 +246,12 @@ enum SampleDataSeeder {
         let recipes = (try? context.fetch(descriptor)) ?? []
         let titles = Set(recipes.map(\.title))
 
-        guard !titles.contains("Banana Nice Cream") else { return }
+        let hasBananaNiceCream = recipes.contains {
+            $0.sampleRecipeID == SampleRecipeID.bananaNiceCream.rawValue
+                || $0.title == "Banana Nice Cream"
+                || $0.title == SampleRecipeText.localized("Banana Nice Cream")
+        }
+        guard !hasBananaNiceCream else { return }
 
         var pool = IngredientPool(context: context)
         let dessert = makeBananaNiceCreamRecipe(pool: &pool, context: context)
@@ -250,19 +267,47 @@ enum SampleDataSeeder {
             self.context = context
         }
 
-        mutating func ingredient(_ name: String, category: IngredientCategory) -> Ingredient {
-            if let existing = cache[name] { return existing }
-            let item = Ingredient(name: name, category: category)
+        mutating func ingredient(_ englishName: String, category: IngredientCategory) -> Ingredient {
+            if let existing = cache[englishName] { return existing }
+            let item = Ingredient(
+                name: SampleRecipeText.localized(englishName),
+                category: category
+            )
             context.insert(item)
-            cache[name] = item
+            cache[englishName] = item
             return item
         }
     }
 
     // MARK: - Recipes
 
+    static func makeSampleRecipe(
+        id: SampleRecipeID,
+        title: String,
+        summary: String,
+        servings: Int,
+        prepMinutes: Int,
+        cookMinutes: Int,
+        difficulty: RecipeDifficulty,
+        tags: [String],
+        cookingTools: [String] = []
+    ) -> Recipe {
+        Recipe(
+            title: SampleRecipeText.localized(title),
+            summary: SampleRecipeText.localized(summary),
+            servings: servings,
+            prepMinutes: prepMinutes,
+            cookMinutes: cookMinutes,
+            difficulty: difficulty,
+            tags: tags,
+            cookingTools: cookingTools,
+            sampleRecipeID: id.rawValue
+        )
+    }
+
     private static func makeAglioOlioRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+        let recipe = makeSampleRecipe(
+            id: .aglioOlio,
             title: "Spaghetti Aglio e Olio",
             summary: "Classic garlic and olive oil pasta — quick weeknight dinner.",
             servings: 2,
@@ -286,7 +331,8 @@ enum SampleDataSeeder {
     }
 
     private static func makeChickenBowlRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+        let recipe = makeSampleRecipe(
+            id: .chickenBowl,
             title: "Chicken & Broccoli Rice Bowl",
             summary: "Balanced bowl with lean protein and greens.",
             servings: 2,
@@ -311,7 +357,8 @@ enum SampleDataSeeder {
     }
 
     private static func makeScrambledEggsRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+        let recipe = makeSampleRecipe(
+            id: .scrambledEggs,
             title: "Classic Scrambled Eggs",
             summary: "Fluffy eggs ready in minutes — perfect for breakfast.",
             servings: 2,
@@ -335,7 +382,8 @@ enum SampleDataSeeder {
     }
 
     private static func makeGreekSaladRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+        let recipe = makeSampleRecipe(
+            id: .greekSalad,
             title: "Greek Salad",
             summary: "Crisp cucumbers, tomatoes, and feta with a lemon dressing.",
             servings: 2,
@@ -359,7 +407,8 @@ enum SampleDataSeeder {
     }
 
     private static func makeLentilSoupRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+        let recipe = makeSampleRecipe(
+            id: .lentilSoup,
             title: "Hearty Lentil Soup",
             summary: "Comforting one-pot soup that keeps well for the week.",
             servings: 4,
@@ -384,7 +433,8 @@ enum SampleDataSeeder {
     }
 
     private static func makeSalmonRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+        let recipe = makeSampleRecipe(
+            id: .salmon,
             title: "Pan-Seared Salmon",
             summary: "Golden salmon fillets with lemon and herbs.",
             servings: 2,
@@ -408,7 +458,8 @@ enum SampleDataSeeder {
     }
 
     private static func makeOvernightOatsRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+        let recipe = makeSampleRecipe(
+            id: .overnightOats,
             title: "Overnight Oats",
             summary: "No-cook oats with fruit — prep tonight, eat tomorrow.",
             servings: 1,
@@ -433,7 +484,8 @@ enum SampleDataSeeder {
     }
 
     private static func makeTomatoSoupRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+        let recipe = makeSampleRecipe(
+            id: .tomatoSoup,
             title: "Tomato Basil Soup",
             summary: "Smooth tomato soup with fresh basil.",
             servings: 4,
@@ -458,7 +510,8 @@ enum SampleDataSeeder {
     }
 
     private static func makeBananaNiceCreamRecipe(pool: inout IngredientPool, context: ModelContext) -> Recipe {
-        let recipe = Recipe(
+        let recipe = makeSampleRecipe(
+            id: .bananaNiceCream,
             title: "Banana Nice Cream",
             summary: "Two-ingredient frozen banana soft serve.",
             servings: 2,
@@ -493,6 +546,53 @@ enum SampleDataSeeder {
         }
         recipe.ingredients = recipeIngredients
         recipe.steps = steps
+    }
+
+    static func sampleSteps(
+        for id: SampleRecipeID,
+        recipe: Recipe,
+        context: ModelContext
+    ) -> [RecipeStep] {
+        switch id {
+        case .aglioOlio: return aglioOlioSteps(recipe: recipe, context: context)
+        case .chickenBowl: return chickenBowlSteps(recipe: recipe, context: context)
+        case .scrambledEggs: return scrambledEggsSteps(recipe: recipe, context: context)
+        case .greekSalad: return greekSaladSteps(recipe: recipe, context: context)
+        case .lentilSoup: return lentilSoupSteps(recipe: recipe, context: context)
+        case .salmon: return salmonSteps(recipe: recipe, context: context)
+        case .overnightOats: return overnightOatsSteps(recipe: recipe, context: context)
+        case .tomatoSoup: return tomatoSoupSteps(recipe: recipe, context: context)
+        case .bananaNiceCream: return bananaNiceCreamSteps(recipe: recipe, context: context)
+        case .chickpeaCurry: return chickpeaCurrySteps(recipe: recipe, context: context)
+        case .veggieStirFry: return veggieStirFrySteps(recipe: recipe, context: context)
+        case .avocadoToast: return avocadoToastSteps(recipe: recipe, context: context)
+        case .capreseSalad: return capreseSaladSteps(recipe: recipe, context: context)
+        case .mushroomRisotto: return mushroomRisottoSteps(recipe: recipe, context: context)
+        case .turkeyMeatballs: return turkeyMeatballsSteps(recipe: recipe, context: context)
+        case .eggWhiteOmelette: return eggWhiteOmeletteSteps(recipe: recipe, context: context)
+        case .cobbSalad: return cobbSaladSteps(recipe: recipe, context: context)
+        case .zucchiniNoodles: return zucchiniNoodlesSteps(recipe: recipe, context: context)
+        case .grilledChicken: return grilledChickenSteps(recipe: recipe, context: context)
+        case .steakBites: return steakBitesSteps(recipe: recipe, context: context)
+        case .shrimpScampi: return shrimpScampiSteps(recipe: recipe, context: context)
+        case .eggMuffins: return eggMuffinsSteps(recipe: recipe, context: context)
+        case .tunaSalad: return tunaSaladSteps(recipe: recipe, context: context)
+        case .steamedVeggies: return steamedVeggiesSteps(recipe: recipe, context: context)
+        case .berrySmoothieBowl: return berrySmoothieBowlSteps(recipe: recipe, context: context)
+        case .bakedCod: return bakedCodSteps(recipe: recipe, context: context)
+        case .riceAndBeans: return riceAndBeansSteps(recipe: recipe, context: context)
+        case .cucumberSalad: return cucumberSaladSteps(recipe: recipe, context: context)
+        case .margheritaFlatbread: return margheritaFlatbreadSteps(recipe: recipe, context: context)
+        case .pestoPasta: return pestoPastaSteps(recipe: recipe, context: context)
+        case .burritoBowl: return burritoBowlSteps(recipe: recipe, context: context)
+        case .quinoaSalad: return quinoaSaladSteps(recipe: recipe, context: context)
+        case .yogurtParfait: return yogurtParfaitSteps(recipe: recipe, context: context)
+        case .chocolateMousse: return chocolateMousseSteps(recipe: recipe, context: context)
+        case .appleCrumble: return appleCrumbleSteps(recipe: recipe, context: context)
+        case .chiaPudding: return chiaPuddingSteps(recipe: recipe, context: context)
+        case .bakedPeaches: return bakedPeachesSteps(recipe: recipe, context: context)
+        case .coconutCookies: return coconutCookiesSteps(recipe: recipe, context: context)
+        }
     }
 
     // MARK: - Steps
@@ -578,7 +678,7 @@ enum SampleDataSeeder {
         steps.enumerated().map { index, entry in
             let step = RecipeStep(
                 order: index,
-                instruction: entry.0,
+                instruction: SampleRecipeText.localized(entry.0),
                 timerSeconds: entry.1,
                 recipe: recipe
             )
