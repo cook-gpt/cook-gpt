@@ -20,6 +20,13 @@ private struct PlanMealsPresentation: Identifiable {
     let initialServings: Int?
 }
 
+private struct AddToGroceriesPresentation: Identifiable {
+    let id = UUID()
+    let startDate: Date
+    let endDate: Date
+    let includedMealSlots: Set<MealSlot>
+}
+
 struct DietRootView: View {
     @Query(filter: #Predicate<DietProfile> { $0.isActive == true })
     private var activeProfiles: [DietProfile]
@@ -28,6 +35,7 @@ struct DietRootView: View {
 
     @Query(sort: \Recipe.title) private var recipes: [Recipe]
     @Query(sort: \ScheduledMeal.day) private var scheduledMeals: [ScheduledMeal]
+    @Query(sort: \GroceryList.name) private var groceryLists: [GroceryList]
     @Environment(\.modelContext) private var modelContext
     @Environment(AppSettingsStore.self) private var settings
     @Environment(AppNavigationStore.self) private var navigation
@@ -36,6 +44,7 @@ struct DietRootView: View {
     @State private var viewMode: ScheduleViewMode = .week
     @State private var selectedDate = Date()
     @State private var planMealsPresentation: PlanMealsPresentation?
+    @State private var addToGroceriesPresentation: AddToGroceriesPresentation?
     @State private var isApplyingMealPlan = false
     @State private var isEditingMeals = false
     @State private var mealRecipePickerContext: MealRecipePickerContext?
@@ -119,11 +128,19 @@ struct DietRootView: View {
         )
     }
 
+    private var primaryGroceryList: GroceryList? {
+        groceryLists.first
+    }
+
     private var hasExportableMeals: Bool {
         visibleMeals.contains { meal in
             guard let recipeID = meal.recipeID else { return false }
             return activeRecipes.contains { $0.id == recipeID }
         }
+    }
+
+    private var canAddVisibleMealsToGroceries: Bool {
+        primaryGroceryList != nil
     }
 
     private var canDeleteVisibleMeals: Bool {
@@ -180,7 +197,7 @@ struct DietRootView: View {
             }
         }
         .toolbar {
-            ToolbarItem(placement: .topBarLeading) {
+            ToolbarItemGroup(placement: .topBarLeading) {
                 if activeProfile != nil && !isApplyingMealPlan {
                     if isEditingMeals {
                         Button {
@@ -192,6 +209,14 @@ struct DietRootView: View {
                         .disabled(!canDeleteVisibleMeals)
                         .accessibilityLabel("Delete meals in current range")
                     } else {
+                        Button {
+                            openAddToGroceriesSheet()
+                        } label: {
+                            Image(systemName: "cart.badge.plus")
+                        }
+                        .disabled(!canAddVisibleMealsToGroceries)
+                        .accessibilityLabel("Add scheduled meals to shopping list")
+
                         ShareLink(
                             item: exportShareText,
                             subject: Text("Scheduled meals")
@@ -263,6 +288,16 @@ struct DietRootView: View {
                 )
             }
         }
+        .sheet(item: $addToGroceriesPresentation) { presentation in
+            AddMealsToGroceriesSheet(
+                meals: activeScheduledMeals,
+                recipes: activeRecipes,
+                startDate: presentation.startDate,
+                endDate: presentation.endDate,
+                includedMealSlots: presentation.includedMealSlots,
+                onAdd: addMealsToGroceries
+            )
+        }
         .alert("Delete meals?", isPresented: $showDeleteRangeConfirmation) {
             Button("Cancel", role: .cancel) {}
             Button("Delete", role: .destructive) {
@@ -300,6 +335,7 @@ struct DietRootView: View {
         .onChange(of: settings.isResettingData) { _, isResetting in
             if isResetting {
                 planMealsPresentation = nil
+                addToGroceriesPresentation = nil
                 isApplyingMealPlan = false
                 isEditingMeals = false
                 mealRecipePickerContext = nil
@@ -632,6 +668,79 @@ struct DietRootView: View {
         }
         try? modelContext.save()
         syncMealSlotCache()
+    }
+
+    private func addToGroceriesDefaults() -> (start: Date, end: Date, mealSlots: Set<MealSlot>) {
+        let days = exportDays
+        let start = days.first ?? MealScheduleCalendar.startOfDay(selectedDate)
+        let end = days.last ?? start
+
+        let slotsInRange = Set(
+            visibleMeals.compactMap { meal -> MealSlot? in
+                guard meal.recipeID != nil else { return nil }
+                return navigation.mealSlot(for: meal.id)
+            }
+        )
+        let defaultSlots = slotsInRange.isEmpty
+            ? Set([MealSlot.lunch, .dinner])
+            : slotsInRange
+
+        return (start, end, defaultSlots)
+    }
+
+    private func openAddToGroceriesSheet() {
+        let defaults = addToGroceriesDefaults()
+        addToGroceriesPresentation = AddToGroceriesPresentation(
+            startDate: defaults.start,
+            endDate: defaults.end,
+            includedMealSlots: defaults.mealSlots
+        )
+    }
+
+    private func addMealsToGroceries(_ meals: [ScheduledMeal], startDate: Date, endDate: Date) {
+        guard let list = primaryGroceryList else { return }
+
+        let recipeEntries = ShoppingListGenerator.recipes(
+            from: meals,
+            allRecipes: activeRecipes
+        )
+        guard !recipeEntries.isEmpty else { return }
+
+        let imported = ShoppingListGenerator.aggregate(recipes: recipeEntries)
+        let finalItems = ShoppingListGenerator.merge(aggregated: imported, with: list.items)
+
+        list.items.forEach { modelContext.delete($0) }
+        list.items = []
+
+        for item in finalItems {
+            let groceryItem = GroceryItem(
+                name: item.name,
+                quantity: item.quantity,
+                unit: item.unit,
+                isChecked: item.isChecked,
+                sortOrder: 0,
+                list: list
+            )
+            modelContext.insert(groceryItem)
+            list.items.append(groceryItem)
+        }
+
+        list.normalizePartitionedSortOrders()
+
+        let sourceDescription = ShoppingListGenerator.sourceLabel(
+            for: .custom,
+            start: startDate,
+            end: endDate
+        )
+        if list.sourceDescription.isEmpty {
+            list.sourceDescription = sourceDescription
+        } else {
+            list.sourceDescription = "\(list.sourceDescription) + \(sourceDescription)"
+        }
+        list.generatedAt = .now
+        try? modelContext.save()
+
+        navigation.openGroceries(highlightingItemKeys: Set(imported.map(\.identityKey)))
     }
 
     private func finishEditingMeals() {

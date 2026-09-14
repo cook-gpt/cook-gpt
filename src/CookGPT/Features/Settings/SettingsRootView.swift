@@ -19,14 +19,11 @@ struct SettingsRootView: View {
         @Bindable var settings = settings
 
         List {
-            SettingsSegmentedSection(settings: settings, unitsDetail: defaultUnitsDetail)
-            SettingsStepperSection(settings: settings)
-            SettingsMenuPickerSection(settings: settings)
-            SettingsNavigationSection(settings: settings)
+            SettingsAppearanceSection(settings: settings)
+            SettingsAlarmSoundSection(settings: settings)
             SettingsAdvancedSection()
             SettingsInformationSection()
             SettingsLinksSection()
-            SettingsTutorialSection()
             SettingsResetSection(
                 isResetting: isResetting,
                 showResetConfirmation: $showResetConfirmation
@@ -43,16 +40,6 @@ struct SettingsRootView: View {
         }
     }
 
-    private var defaultUnitsDetail: String {
-        let metric = MeasurementSystem.metric.units
-            .map { IngredientUnitFormatting.localizedLabel(for: $0) }
-            .joined(separator: ", ")
-        let imperial = MeasurementSystem.imperial.units
-            .map { IngredientUnitFormatting.localizedLabel(for: $0) }
-            .joined(separator: ", ")
-        return String(format: String(localized: "Metric: %@\nImperial: %@"), metric, imperial)
-    }
-
     private func performReset() async {
         isResetting = true
         await AppDataReset.resetToDefaults(
@@ -64,96 +51,53 @@ struct SettingsRootView: View {
     }
 }
 
-// MARK: - Segmented controls
+// MARK: - Appearance
 
-private struct SettingsSegmentedSection: View {
+private struct SettingsAppearanceSection: View {
     @Bindable var settings: AppSettingsStore
-    let unitsDetail: String
+
+    private var unitsDifferenceFooter: String {
+        let imperialUnits = Set(MeasurementSystem.imperial.units)
+        let metricOnly = MeasurementSystem.metric.units.filter { !imperialUnits.contains($0) }
+        let metricUnits = Set(MeasurementSystem.metric.units)
+        let imperialOnly = MeasurementSystem.imperial.units.filter { !metricUnits.contains($0) }
+
+        let metricLabels = metricOnly
+            .map { IngredientUnitFormatting.localizedLabel(for: $0) }
+            .joined(separator: ", ")
+        let imperialLabels = imperialOnly
+            .map { IngredientUnitFormatting.localizedLabel(for: $0) }
+            .joined(separator: ", ")
+
+        return String(
+            format: String(localized: "Metric uses %@. Imperial uses %@."),
+            metricLabels,
+            imperialLabels
+        )
+    }
 
     var body: some View {
         Section {
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Theme")
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-
-                Picker("Theme", selection: $settings.appTheme) {
-                    ForEach(AppTheme.allCases) { theme in
-                        Text(theme.label).tag(theme)
-                    }
+            Picker("Theme", selection: $settings.appTheme) {
+                ForEach(AppTheme.allCases) { theme in
+                    Text(theme.label).tag(theme)
                 }
-                .pickerStyle(.segmented)
-                .labelsHidden()
             }
+            .pickerStyle(.segmented)
 
-            VStack(alignment: .leading, spacing: 8) {
-                HStack {
-                    Text("Units")
-                    SettingsInfoButton(
-                        detail: unitsDetail,
-                        accessibilityLabel: "Units information"
-                    )
-                    Spacer(minLength: 0)
+            Picker("Units", selection: $settings.measurementSystem) {
+                ForEach(MeasurementSystem.allCases) { system in
+                    Text(system.label).tag(system)
                 }
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-
-                Picker("Units", selection: $settings.measurementSystem) {
-                    ForEach(MeasurementSystem.allCases) { system in
-                        Text(system.label).tag(system)
-                    }
-                }
-                .pickerStyle(.segmented)
-                .labelsHidden()
             }
+            .pickerStyle(.segmented)
         } footer: {
-            Text("Metric or imperial units for ingredients and grocery items.")
+            Text(unitsDifferenceFooter)
         }
     }
 }
 
-// MARK: - Stepper
-
-private struct SettingsStepperSection: View {
-    @Bindable var settings: AppSettingsStore
-
-    var body: some View {
-        Section {
-            Stepper(
-                String(
-                    format: String(localized: "Default servings: %lld"),
-                    settings.defaultPlannerServings
-                ),
-                value: $settings.defaultPlannerServings,
-                in: 1...12
-            )
-        } footer: {
-            Text("Used when planning meals and as the default for new scheduled meals.")
-        }
-    }
-}
-
-// MARK: - Menu picker
-
-private struct SettingsMenuPickerSection: View {
-    @Bindable var settings: AppSettingsStore
-
-    var body: some View {
-        Section {
-            Picker("Week starts on", selection: $settings.weekStart) {
-                ForEach(WeekStartSetting.allCases) { option in
-                    Text(option.label).tag(option)
-                }
-            }
-        } footer: {
-            Text("Used when navigating weeks on the Meals page.")
-        }
-    }
-}
-
-// MARK: - Navigation
-
-private struct SettingsNavigationSection: View {
+private struct SettingsAlarmSoundSection: View {
     @Bindable var settings: AppSettingsStore
 
     var body: some View {
@@ -210,22 +154,6 @@ private struct SettingsLinksSection: View {
         Section {
             Link("Privacy Policy", destination: AppMetadata.privacyPolicyURL)
             Link("Source Code", destination: AppMetadata.sourceCodeURL)
-        }
-    }
-}
-
-// MARK: - Tutorial
-
-private struct SettingsTutorialSection: View {
-    @Environment(AppSettingsStore.self) private var settings
-
-    var body: some View {
-        Section {
-            Button("Reset tutorial") {
-                settings.resetOnboardingTutorial()
-            }
-        } footer: {
-            Text("Shows the first-launch walkthrough again without changing your recipes or categories.")
         }
     }
 }

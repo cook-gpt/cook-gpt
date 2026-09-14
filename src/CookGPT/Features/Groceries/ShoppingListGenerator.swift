@@ -149,6 +149,30 @@ enum ShoppingListGenerator {
         }
     }
 
+    static func meals(
+        from meals: [ScheduledMeal],
+        allRecipes: [Recipe],
+        navigation: AppNavigationStore,
+        startDate: Date,
+        endDate: Date,
+        mealSlots: Set<MealSlot>
+    ) -> [ScheduledMeal] {
+        guard !mealSlots.isEmpty else { return [] }
+
+        let validRecipeIDs = Set(allRecipes.map(\.id))
+        let start = MealScheduleCalendar.startOfDay(startDate)
+        let end = MealScheduleCalendar.startOfDay(endDate)
+
+        return meals.filter { meal in
+            guard let recipeID = meal.recipeID, validRecipeIDs.contains(recipeID) else { return false }
+
+            let day = MealScheduleCalendar.startOfDay(meal.day)
+            guard day >= start, day <= end else { return false }
+
+            return mealSlots.contains(navigation.mealSlot(for: meal.id))
+        }
+    }
+
     static func sourceLabel(for scope: ShoppingListScope, start: Date, end: Date) -> String {
         switch scope {
         case .today:

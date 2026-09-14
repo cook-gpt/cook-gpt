@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- **Meals → Groceries** — cart button on the Meals tab adds scheduled meal ingredients to your shopping list for the current day, week, or month
+- **Add to shopping list sheet** — pick a date range, toggle breakfast/lunch/dinner, preview selected meals, then merge ingredients into Groceries (with highlights for newly added items)
+- **Meal slot availability** — breakfast, lunch, and dinner toggles show a warning and stay disabled when no meals exist for that slot in the selected range
+
+### Changed
+
+- **Settings** — theme and units live in one section with a concise metric vs imperial footer; alarm sound moved directly below units
+- **Settings** — removed default servings (always 1), week start (always Monday), and reset tutorial from the screen
+
 ## [1.1.0] - 2026-09-14
 
 ### Added
