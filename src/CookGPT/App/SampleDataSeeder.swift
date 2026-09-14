@@ -1,7 +1,7 @@
 //  SampleDataSeeder.swift
 //  CookGPT
 //
-//  Installs default recipes, diet profile, groceries, and meals; migrates sample data by version.
+//  Installs default recipes, diet profile, groceries, and meals.
 //
 
 import Foundation
@@ -11,7 +11,7 @@ enum SampleDataSeeder {
     private static let seedFlagKey = "didSeedSampleData"
     private static let minimalShellFlagKey = "didSeedMinimalShell"
     private static let recipeStructureVersionKey = "sampleRecipeStructureVersion"
-    private static let currentRecipeStructureVersion = 11
+    private static let currentRecipeStructureVersion = 1
 
     static func seedIfNeeded(context: ModelContext) {
         if !UserDefaults.standard.bool(forKey: seedFlagKey) {
@@ -22,8 +22,6 @@ enum SampleDataSeeder {
             }
             UserDefaults.standard.set(true, forKey: seedFlagKey)
         }
-
-        upgradeRecipeStructureIfNeeded(context: context)
     }
 
     static func resetInstallFlags() {
@@ -119,144 +117,17 @@ enum SampleDataSeeder {
              .steakBites, .shrimpScampi, .eggMuffins, .tunaSalad, .steamedVeggies, .berrySmoothieBowl,
              .bakedCod, .riceAndBeans, .cucumberSalad, .margheritaFlatbread, .pestoPasta, .burritoBowl,
              .quinoaSalad, .yogurtParfait, .chocolateMousse, .appleCrumble, .chiaPudding, .bakedPeaches,
-             .coconutCookies:
-            makeExtendedRecipe(id: id, pool: &pool, context: context)!
+             .coconutCookies, .paella, .sopaDeAjo, .tortillaDePatatas, .gazpacho, .fabadaAsturiana,
+             .torrijas, .raguBolognese, .onionFocaccia, .shrimpZucchiniRisotto, .carbonara, .bruschetta:
+            makeExtendedRecipe(id: id, pool: &pool, context: context)
+                ?? makeSpanishRecipe(id: id, pool: &pool, context: context)
+                ?? makeItalianRecipe(id: id, pool: &pool, context: context)!
         }
-    }
-
-    private static func upgradeRecipeStructureIfNeeded(context: ModelContext) {
-        let version = UserDefaults.standard.integer(forKey: recipeStructureVersionKey)
-        guard version < currentRecipeStructureVersion else { return }
-
-        let descriptor = FetchDescriptor<Recipe>()
-        let recipes = (try? context.fetch(descriptor)) ?? []
-
-        for recipe in recipes {
-            rebuildRecipeSteps(recipe: recipe, context: context)
-            applyDefaultCategoryTags(recipe: recipe)
-            applyDefaultCookingTools(recipe: recipe)
-        }
-
-        addMissingDefaultRecipesIfNeeded(context: context)
-
-        try? context.save()
-        UserDefaults.standard.set(currentRecipeStructureVersion, forKey: recipeStructureVersionKey)
-    }
-
-    private static func rebuildRecipeSteps(recipe: Recipe, context: ModelContext) {
-        recipe.steps.forEach { context.delete($0) }
-        recipe.steps = []
-
-        if let sampleID = recipe.sampleRecipeID.flatMap(SampleRecipeID.init(rawValue:)) {
-            recipe.steps = sampleSteps(for: sampleID, recipe: recipe, context: context)
-            return
-        }
-
-        if rebuildExtendedRecipeSteps(recipe: recipe, context: context) {
-            return
-        }
-
-        switch recipe.title {
-        case "Spaghetti Aglio e Olio":
-            recipe.steps = aglioOlioSteps(recipe: recipe, context: context)
-        case "Chicken & Broccoli Rice Bowl":
-            recipe.steps = chickenBowlSteps(recipe: recipe, context: context)
-        case "Classic Scrambled Eggs":
-            recipe.steps = scrambledEggsSteps(recipe: recipe, context: context)
-        case "Greek Salad":
-            recipe.steps = greekSaladSteps(recipe: recipe, context: context)
-        case "Hearty Lentil Soup":
-            recipe.steps = lentilSoupSteps(recipe: recipe, context: context)
-        case "Pan-Seared Salmon":
-            recipe.steps = salmonSteps(recipe: recipe, context: context)
-        case "Overnight Oats":
-            recipe.steps = overnightOatsSteps(recipe: recipe, context: context)
-        case "Tomato Basil Soup":
-            recipe.steps = tomatoSoupSteps(recipe: recipe, context: context)
-        case "Banana Nice Cream":
-            recipe.steps = bananaNiceCreamSteps(recipe: recipe, context: context)
-        default:
-            break
-        }
-    }
-
-    private static func applyDefaultCategoryTags(recipe: Recipe) {
-        switch recipe.sampleRecipeID.flatMap(SampleRecipeID.init(rawValue:)) {
-        case .scrambledEggs, .overnightOats:
-            recipe.tags = uniqueTags(recipe.tags + ["breakfast"])
-        case .greekSalad:
-            recipe.tags = uniqueTags(recipe.tags + ["no-fats"])
-        case .bananaNiceCream:
-            recipe.tags = uniqueTags(recipe.tags + ["dessert", "vegan", "quick"])
-        default:
-            switch recipe.title {
-            case "Classic Scrambled Eggs", "Overnight Oats":
-                recipe.tags = uniqueTags(recipe.tags + ["breakfast"])
-            case "Greek Salad":
-                recipe.tags = uniqueTags(recipe.tags + ["no-fats"])
-            case "Banana Nice Cream":
-                recipe.tags = uniqueTags(recipe.tags + ["dessert", "vegan", "quick"])
-            default:
-                break
-            }
-        }
-    }
-
-    private static func uniqueTags(_ tags: [String]) -> [String] {
-        var seen = Set<String>()
-        return tags.filter { seen.insert($0).inserted }
     }
 
     static func cookingTools(_ tools: RecipeCookingTool...) -> [String] {
         tools.map(\.rawValue)
     }
-
-    private static func applyDefaultCookingTools(recipe: Recipe) {
-        if applyExtendedCookingTools(recipe: recipe) {
-            return
-        }
-
-        switch recipe.title {
-        case "Spaghetti Aglio e Olio":
-            recipe.cookingTools = cookingTools(.pan)
-        case "Chicken & Broccoli Rice Bowl":
-            recipe.cookingTools = cookingTools(.pan)
-        case "Classic Scrambled Eggs":
-            recipe.cookingTools = cookingTools(.pan)
-        case "Greek Salad":
-            recipe.cookingTools = []
-        case "Hearty Lentil Soup":
-            recipe.cookingTools = cookingTools(.pan)
-        case "Pan-Seared Salmon":
-            recipe.cookingTools = cookingTools(.pan)
-        case "Overnight Oats":
-            recipe.cookingTools = cookingTools(.fridge)
-        case "Tomato Basil Soup":
-            recipe.cookingTools = cookingTools(.pan)
-        case "Banana Nice Cream":
-            recipe.cookingTools = cookingTools(.freezer)
-        default:
-            break
-        }
-    }
-
-    private static func addMissingDefaultRecipesIfNeeded(context: ModelContext) {
-        let descriptor = FetchDescriptor<Recipe>()
-        let recipes = (try? context.fetch(descriptor)) ?? []
-        let titles = Set(recipes.map(\.title))
-
-        let hasBananaNiceCream = recipes.contains {
-            $0.sampleRecipeID == SampleRecipeID.bananaNiceCream.rawValue
-                || $0.title == "Banana Nice Cream"
-                || $0.title == SampleRecipeText.localized("Banana Nice Cream")
-        }
-        guard !hasBananaNiceCream else { return }
-
-        var pool = IngredientPool(context: context)
-        let dessert = makeBananaNiceCreamRecipe(pool: &pool, context: context)
-        context.insert(dessert)
-    }
-
 
     struct IngredientPool {
         let context: ModelContext
@@ -545,53 +416,6 @@ enum SampleDataSeeder {
         }
         recipe.ingredients = recipeIngredients
         recipe.steps = steps
-    }
-
-    static func sampleSteps(
-        for id: SampleRecipeID,
-        recipe: Recipe,
-        context: ModelContext
-    ) -> [RecipeStep] {
-        switch id {
-        case .aglioOlio: return aglioOlioSteps(recipe: recipe, context: context)
-        case .chickenBowl: return chickenBowlSteps(recipe: recipe, context: context)
-        case .scrambledEggs: return scrambledEggsSteps(recipe: recipe, context: context)
-        case .greekSalad: return greekSaladSteps(recipe: recipe, context: context)
-        case .lentilSoup: return lentilSoupSteps(recipe: recipe, context: context)
-        case .salmon: return salmonSteps(recipe: recipe, context: context)
-        case .overnightOats: return overnightOatsSteps(recipe: recipe, context: context)
-        case .tomatoSoup: return tomatoSoupSteps(recipe: recipe, context: context)
-        case .bananaNiceCream: return bananaNiceCreamSteps(recipe: recipe, context: context)
-        case .chickpeaCurry: return chickpeaCurrySteps(recipe: recipe, context: context)
-        case .veggieStirFry: return veggieStirFrySteps(recipe: recipe, context: context)
-        case .avocadoToast: return avocadoToastSteps(recipe: recipe, context: context)
-        case .capreseSalad: return capreseSaladSteps(recipe: recipe, context: context)
-        case .mushroomRisotto: return mushroomRisottoSteps(recipe: recipe, context: context)
-        case .turkeyMeatballs: return turkeyMeatballsSteps(recipe: recipe, context: context)
-        case .eggWhiteOmelette: return eggWhiteOmeletteSteps(recipe: recipe, context: context)
-        case .cobbSalad: return cobbSaladSteps(recipe: recipe, context: context)
-        case .zucchiniNoodles: return zucchiniNoodlesSteps(recipe: recipe, context: context)
-        case .grilledChicken: return grilledChickenSteps(recipe: recipe, context: context)
-        case .steakBites: return steakBitesSteps(recipe: recipe, context: context)
-        case .shrimpScampi: return shrimpScampiSteps(recipe: recipe, context: context)
-        case .eggMuffins: return eggMuffinsSteps(recipe: recipe, context: context)
-        case .tunaSalad: return tunaSaladSteps(recipe: recipe, context: context)
-        case .steamedVeggies: return steamedVeggiesSteps(recipe: recipe, context: context)
-        case .berrySmoothieBowl: return berrySmoothieBowlSteps(recipe: recipe, context: context)
-        case .bakedCod: return bakedCodSteps(recipe: recipe, context: context)
-        case .riceAndBeans: return riceAndBeansSteps(recipe: recipe, context: context)
-        case .cucumberSalad: return cucumberSaladSteps(recipe: recipe, context: context)
-        case .margheritaFlatbread: return margheritaFlatbreadSteps(recipe: recipe, context: context)
-        case .pestoPasta: return pestoPastaSteps(recipe: recipe, context: context)
-        case .burritoBowl: return burritoBowlSteps(recipe: recipe, context: context)
-        case .quinoaSalad: return quinoaSaladSteps(recipe: recipe, context: context)
-        case .yogurtParfait: return yogurtParfaitSteps(recipe: recipe, context: context)
-        case .chocolateMousse: return chocolateMousseSteps(recipe: recipe, context: context)
-        case .appleCrumble: return appleCrumbleSteps(recipe: recipe, context: context)
-        case .chiaPudding: return chiaPuddingSteps(recipe: recipe, context: context)
-        case .bakedPeaches: return bakedPeachesSteps(recipe: recipe, context: context)
-        case .coconutCookies: return coconutCookiesSteps(recipe: recipe, context: context)
-        }
     }
 
     // MARK: - Steps

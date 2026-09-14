@@ -11,6 +11,9 @@ def translations() -> dict[str, dict[str, str]]:
         "Almond milk": {"en": "Almond milk", **t(
             "Leche de almendras", "Llet d'ametlla", "Lait d'amande", "Amandelmelk", "Mandelmilch", "杏仁奶", "アーモンドミルク", "Latte di mandorle", "Leite de amêndoa", "Миндальное молоко"
         )},
+        "All-purpose flour": {"en": "All-purpose flour", **t(
+            "Harina de trigo", "Farina de blat", "Farine tout usage", "Bloem", "Weizenmehl", "中筋面粉", "小麦粉", "Farina multiuso", "Farinha de trigo", "Мука общего назначения"
+        )},
         "Apple": {"en": "Apple", **t(
             "Manzana", "Poma", "Pomme", "Appel", "Apfel", "苹果", "りんご", "Mela", "Maçã", "Яблоко"
         )},
@@ -22,6 +25,9 @@ def translations() -> dict[str, dict[str, str]]:
         )},
         "Banana": {"en": "Banana", **t(
             "Plátano", "Plàtan", "Banane", "Banaan", "Banane", "香蕉", "バナナ", "Banana", "Banana", "Банан"
+        )},
+        "Black pepper": {"en": "Black pepper", **t(
+            "Pimienta negra", "Pebre negre", "Poivre noir", "Zwarte peper", "Schwarzer Pfeffer", "黑胡椒", "黒胡椒", "Pepe nero", "Pimenta-preta", "Чёрный перец"
         )},
         "Basil pesto": {"en": "Basil pesto", **t(
             "Pesto de albahaca", "Pestó de alfàbrega", "Pesto au basilic", "Basilicumpesto", "Basilikum-Pesto", "罗勒青酱", "バジルのペスト", "Pesto al basilico", "Pesto de manjericão", "Пesto с базиликом"
@@ -43,6 +49,9 @@ def translations() -> dict[str, dict[str, str]]:
         )},
         "Carrot": {"en": "Carrot", **t(
             "Zanahoria", "Pastanaga", "Carotte", "Wortel", "Karotte", "胡萝卜", "にんじん", "Carota", "Cenoura", "Морковь"
+        )},
+        "Celery": {"en": "Celery", **t(
+            "Apio", "Api", "Céleri", "Selderij", "Sellerie", "芹菜", "セロリ", "Sedano", "Aipo", "Сельдерей"
         )},
         "Cheddar cheese": {"en": "Cheddar cheese", **t(
             "Queso cheddar", "Formatge cheddar", "Fromage cheddar", "Cheddarkaas", "Cheddar-Käse", "切达奶酪", "チェダーチーズ", "Formaggio cheddar", "Queijo cheddar", "Сыр чеддер"
@@ -74,6 +83,9 @@ def translations() -> dict[str, dict[str, str]]:
         "Cumin": {"en": "Cumin", **t(
             "Comino", "Comí", "Cumin", "Komijn", "Kreuzkümmel", "孜然", "クミン", "Cumino", "Cominho", "Зира"
         )},
+        "Dry yeast": {"en": "Dry yeast", **t(
+            "Levadura seca", "Llevat sec", "Levure sèche", "Droge gist", "Trockenhefe", "干酵母", "ドライイースト", "Lievito secco", "Fermento seco", "Сухие дрожжи"
+        )},
         "Dark chocolate": {"en": "Dark chocolate", **t(
             "Chocolate negro", "Xocolata negra", "Chocolat noir", "Pure chocolade", "Zartbitterschokolade", "黑巧克力", "ダークチョコレート", "Cioccolato fondente", "Chocolate negro", "Тёмный шоколад"
         )},
@@ -104,6 +116,9 @@ def translations() -> dict[str, dict[str, str]]:
         "Garlic": {"en": "Garlic", **t(
             "Ajo", "All", "Ail", "Knoflook", "Knoblauch", "大蒜", "にんにく", "Aglio", "Alho", "Чеснок"
         )},
+        "Garlic cloves": {"en": "Garlic cloves", **t(
+            "Dientes de ajo", "Dents d'all", "Gousses d'ail", "Knoflookteentjes", "Knoblauchzehen", "蒜瓣", "にんにく", "Spicchi d'aglio", "Dentes de alho", "Зубчики чеснока"
+        )},
         "Ginger": {"en": "Ginger", **t(
             "Jengibre", "Gingebre", "Gingembre", "Gember", "Ingwer", "姜", "しょうが", "Zenzero", "Gengibre", "Имбирь"
         )},
@@ -115,6 +130,9 @@ def translations() -> dict[str, dict[str, str]]:
         )},
         "Green beans": {"en": "Green beans", **t(
             "Judías verdes", "Mongetes tendres", "Haricots verts", "Sperziebonen", "Grüne Bohnen", "四季豆", "インゲン", "Fagiolini", "Feijão-verde", "Стручковая фасоль"
+        )},
+        "Ground beef": {"en": "Ground beef", **t(
+            "Carne picada", "Carn picada", "Bœuf haché", "Rundergehakt", "Rinderhackfleisch", "牛肉末", "牛ひき肉", "Carne macinata di manzo", "Carne de vaca moída", "Говяжий фарш"
         )},
         "Ground turkey": {"en": "Ground turkey", **t(
             "Pavo molido", "Gall dindi picat", "Dinde hachée", "Kalkoengehakt", "Putenhackfleisch", "火鸡肉末", "七面鳥のひき肉", "Tacchino macinato", "Peru moído", "Фарш из индейки"
@@ -148,6 +166,12 @@ def translations() -> dict[str, dict[str, str]]:
         )},
         "Onion": {"en": "Onion", **t(
             "Cebolla", "Ceba", "Oignon", "Ui", "Zwiebel", "洋葱", "玉ねぎ", "Cipolla", "Cebola", "Лук"
+        )},
+        "Pecorino": {"en": "Pecorino", **t(
+            "Pecorino", "Pecorino", "Pecorino", "Pecorino", "Pecorino", "佩科里诺奶酪", "ペコリーノ", "Pecorino", "Pecorino", "Пекорино"
+        )},
+        "Pancetta": {"en": "Pancetta", **t(
+            "Panceta", "Panceta", "Pancetta", "Pancetta", "Pancetta", "意式培根", "パンチェッタ", "Pancetta", "Pancetta", "Панчетта"
         )},
         "Parmesan": {"en": "Parmesan", **t(
             "Parmesano", "Parmesà", "Parmesan", "Parmezaan", "Parmesan", "帕玛森", "パルメザン", "Parmigiano", "Parmesão", "Пармезан"
@@ -205,6 +229,9 @@ def translations() -> dict[str, dict[str, str]]:
         )},
         "Vegetable broth": {"en": "Vegetable broth", **t(
             "Caldo de verduras", "Brou de verdures", "Bouillon de légumes", "Groentebouillon", "Gemüsebrühe", "蔬菜高汤", "野菜ブイヨン", "Brodo vegetale", "Caldo de legumes", "Овощной бульон"
+        )},
+        "Water": {"en": "Water", **t(
+            "Agua", "Aigua", "Eau", "Water", "Wasser", "水", "水", "Acqua", "Água", "Вода"
         )},
         "Vinegar": {"en": "Vinegar", **t(
             "Vinagre", "Vinagre", "Vinaigre", "Azijn", "Essig", "醋", "酢", "Aceto", "Vinagre", "Уксус"
@@ -778,6 +805,246 @@ def translations() -> dict[str, dict[str, str]]:
         )},
         "Shape into cookies.": {"en": "Shape into cookies.", **t(
             "Forma galletas.", "Forma galetes.", "Formez des biscuits.", "Vorm koekjes.", "Zu Keksen formen.", "整形成曲奇。", "クッキーの形に成形する。", "Dai forma ai biscotti.", "Modele bolachas.", "Сформируйте печенье."
+        )},
+        "Short-grain rice": {"en": "Short-grain rice", **t(
+            "Arroz de grano corto", "Arròs de gra curt", "Riz à grain court", "Korrelrijst", "Kurzkornreis", "短粒米", "短粒米", "Riso a grano corto", "Arroz de grão curto", "Рис короткозёрный"
+        )},
+        "Peas": {"en": "Peas", **t(
+            "Guisantes", "Pèsols", "Petits pois", "Erwten", "Erbsen", "豌豆", "グリーンピース", "Piselli", "Ervilhas", "Горошек"
+        )},
+        "Saffron": {"en": "Saffron", **t(
+            "Azafrán", "Safrà", "Safran", "Saffraan", "Safran", "藏红花", "サフラン", "Zafferano", "Açafrão", "Шафран"
+        )},
+        "Smoked paprika": {"en": "Smoked paprika", **t(
+            "Pimentón ahumado", "Pebre vermell fumat", "Paprika fumé", "Gerookte paprika", "Geräuchertes Paprikapulver", "烟熏红椒粉", "スモークパプリカ", "Paprika affumicata", "Paprica fumada", "Копчёная паприка"
+        )},
+        "Potatoes": {"en": "Potatoes", **t(
+            "Patatas", "Patates", "Pommes de terre", "Aardappelen", "Kartoffeln", "土豆", "じゃがいも", "Patate", "Batatas", "Картофель"
+        )},
+        "White beans": {"en": "White beans", **t(
+            "Alubias blancas", "Mongetes blanques", "Haricots blancs", "Witte bonen", "Weiße Bohnen", "白豆", "白いんげん", "Fagioli bianchi", "Feijão branco", "Белая фасоль"
+        )},
+        "Chorizo": {"en": "Chorizo", **t(
+            "Chorizo", "Xoriço", "Chorizo", "Chorizo", "Chorizo", "西班牙 chorizo", "チョリソー", "Chorizo", "Chouriço", "Чоризо"
+        )},
+        "Seafood Paella": {"en": "Seafood Paella", **t(
+            "Paella de marisco", "Paella de marisc", "Paella aux fruits de mer", "Zeevruchtenpaella", "Meeresfrüchte-Paella", "海鲜饭", "シーフードパエリア", "Paella di mare", "Paella de marisco", "Паэлья с морепродуктами"
+        )},
+        "Catalan-style seafood paella with bomba rice, shellfish, and picada.": {"en": "Catalan-style seafood paella with bomba rice, shellfish, and picada.", **t(
+            "Paella de marisco al estilo catalán con arroz bomba, marisco y picada.", "Paella de marisc a l'estil català amb arròs bomba, marisc i picada.", "Paella aux fruits de mer à la catalane avec riz bomba, fruits de mer et picada.", "Catalaanse zeevruchtenpaella met bombarijst, schelpdieren en picada.", "Katalanische Meeresfrüchte-Paella mit Bomba-Reis, Meeresfrüchten und Picada.", "加泰罗尼亚风味海鲜饭，配邦巴米、贝类和 picada。", "カタルーニャ風のシーフードパエリア、ボンバ米と貝類、ピカーダ入り。", "Paella di mare alla catalana con riso bomba, frutti di mare e picada.", "Paella de marisco ao estilo catalão com arroz bomba, marisco e picada.", "Каталонская паэлья с морепродуктами, рисом бомба и пикадой."
+        )},
+        "Bomba rice": {"en": "Bomba rice", **t(
+            "Arroz bomba", "Arròs bomba", "Riz bomba", "Bombarijst", "Bomba-Reis", "邦巴米", "ボンバ米", "Riso bomba", "Arroz bomba", "Рис бомба"
+        )},
+        "Fish stock": {"en": "Fish stock", **t(
+            "Fumet de pescado", "Fumet de peix", "Fumet de poisson", "Visbouillon", "Fischfond", "鱼高汤", "魚のフォン", "Fumetto di pesce", "Caldo de peixe", "Рыбный фонд"
+        )},
+        "Cuttlefish": {"en": "Cuttlefish", **t(
+            "Sepia", "Sèpia", "Seiche", "Inktvis", "Sepia", "墨鱼", "コウイカ", "Seppia", "Choco", "Каракатица"
+        )},
+        "Large shrimp": {"en": "Large shrimp", **t(
+            "Gambas grandes", "Gambes grans", "Grosses crevettes", "Grote garnalen", "Große Garnelen", "大虾", "大きなエビ", "Gamberi grandi", "Camarão grande", "Крупные креветки"
+        )},
+        "Mussels and clams": {"en": "Mussels and clams", **t(
+            "Mejillones y almejas", "Musclos i cloïsses", "Moules et palourdes", "Mosselen en venusschelpen", "Miesmuscheln und Venusmuscheln", "贻贝和蛤蜊", "ムール貝とアサリ", "Cozze e vongole", "Mexilhões e amêijoas", "Мидии и моллюски"
+        )},
+        "Parsley": {"en": "Parsley", **t(
+            "Perejil", "Julivert", "Persil", "Peterselie", "Petersilie", "欧芹", "パセリ", "Prezzemolo", "Salsa", "Петрушка"
+        )},
+        "Toasted almond": {"en": "Toasted almond", **t(
+            "Almendra tostada", "Ametlla torrada", "Amande grillée", "Geroosterde amandel", "Geröstete Mandel", "烤杏仁", "ローストアーモンド", "Mandorla tostata", "Amêndoa torrada", "Жареный миндаль"
+        )},
+        "Garlic Soup": {"en": "Garlic Soup", **t(
+            "Sopa de ajo", "Sopa d'all", "Soupe à l'ail", "Knoflooksoep", "Knoblauchsuppe", "蒜蓉汤", "にんにくスープ", "Zuppa all'aglio", "Sopa de alho", "Чесночный суп"
+        )},
+        "Spanish sopa de ajo with bread, paprika, and poached egg.": {"en": "Spanish sopa de ajo with bread, paprika, and poached egg.", **t(
+            "Sopa de ajo española con pan, pimentón y huevo poché.", "Sopa d'all espanyola amb pa, pebre vermell i ou pochet.", "Sopa de ajo espagnole avec pain, paprika et œuf poché.", "Spaanse knoflooksoep met brood, paprika en gepocheerd ei.", "Spanische Knoblauchsuppe mit Brot, Paprika und pochiertem Ei.", "西班牙蒜蓉面包汤，配红椒粉和荷包蛋。", "スペインのにんにくスープ、パン、パプリカ、ポーチドエッグ入り。", "Sopa de ajo spagnola con pane, paprika e uovo in camicia.", "Sopa de alho espanhola com pão, paprica e ovo escalfado.", "Испанский чесночный суп с хлебом, паприкой и яйцом пашот."
+        )},
+        "Potato Omelette": {"en": "Potato Omelette", **t(
+            "Tortilla de patatas", "Truita de patates", "Tortilla de pommes de terre", "Aardappelomelet", "Kartoffelomelett", "土豆蛋饼", "トルティージャ・デ・パタタス", "Frittata di patate", "Tortilha de batata", "Картофельная тортилья"
+        )},
+        "Classic tortilla de patatas with potato and onion.": {"en": "Classic tortilla de patatas with potato and onion.", **t(
+            "Clásica tortilla de patatas con patata y cebolla.", "Truita de patates clàssica amb patata i ceba.", "Tortilla de pommes de terre classique avec pommes de terre et oignon.", "Klassieke aardappelomelet met aardappel en ui.", "Klassische Tortilla de Patatas mit Kartoffel und Zwiebel.", "经典西班牙土豆洋葱蛋饼。", "じゃがいもと玉ねぎの定番トルティージャ。", "Classica tortilla de patatas con patate e cipolla.", "Tortilha clássica de batata com batata e cebola.", "Классическая тортилья с картофелем и луком."
+        )},
+        "Gazpacho": {"en": "Gazpacho", **t(
+            "Gazpacho", "Gaspatxo", "Gaspacho", "Gazpacho", "Gazpacho", "西班牙冷汤", "ガスパチョ", "Gazpacho", "Gaspacho", "Гаспачо"
+        )},
+        "Chilled Spanish tomato and vegetable soup.": {"en": "Chilled Spanish tomato and vegetable soup.", **t(
+            "Sopa fría española de tomate y verduras.", "Sopa freda espanyola de tomàquet i verdures.", "Soupe froide espagnole à la tomate et aux légumes.", "Gekoelde Spaanse tomaten-groentesoep.", "Gekühlte spanische Tomaten-Gemüsesuppe.", "西班牙番茄蔬菜冷汤。", "スペイン風の冷製トマト野菜スープ。", "Zuppa fredda spagnola di pomodoro e verdure.", "Sopa fria espanhola de tomate e legumes.", "Холодный испанский томатно-овощной суп."
+        )},
+        "Asturian Bean Stew": {"en": "Asturian Bean Stew", **t(
+            "Fabada asturiana", "Fabada asturiana", "Fabada asturienne", "Asturische bonenstoofpot", "Asturische Bohneneintopf", "阿斯图里亚斯豆炖肠", "ファバダ・アストリアーナ", "Fabada asturiana", "Fabada asturiana", "Фабада астуриана"
+        )},
+        "Hearty fabada with white beans and chorizo.": {"en": "Hearty fabada with white beans and chorizo.", **t(
+            "Contundente fabada con alubias blancas y chorizo.", "Contundent fabada amb mongetes blanques i xoriço.", "Fabada copieuse aux haricots blancs et chorizo.", "Hartige fabada met witte bonen en chorizo.", "Herzhafte Fabada mit weißen Bohnen und Chorizo.", "丰盛的白豆 chorizo 炖菜。", "白いんげんとチョリソーのヘartyファバダ。", "Sostanziosa fabada con fagioli bianchi e chorizo.", "Fabada robusta com feijão branco e chouriço.", "Сытная фабада с белой фасолью и чоризо."
+        )},
+        "Torrijas": {"en": "Torrijas", **t(
+            "Torrijas", "Torrijas", "Torrijas", "Torrijas", "Torrijas", "西班牙法式吐司", "トーリハス", "Torrijas", "Torrijas", "Торрихас"
+        )},
+        "Spanish-style milk toast with cinnamon and honey.": {"en": "Spanish-style milk toast with cinnamon and honey.", **t(
+            "Torrijas al estilo español con canela y miel.", "Torrijas a l'estil espanyol amb canela i mel.", "Torrijas à la manière espagnole avec cannelle et miel.", "Spaanse melktoast met kaneel en honing.", "Spanische Milchtoast mit Zimt und Honig.", "西班牙风味肉桂蜂蜜牛奶吐司。", "シナモンとハチミツのスペイン風トーリハス。", "Torrijas alla spagnola con cannella e miele.", "Torrijas ao estilo espanhol com canela e mel.", "Испанские торрихас с корицей и мёдом."
+        )},
+        "Sear prawns in olive oil for about 1 minute per side. Remove and set aside.": {"en": "Sear prawns in olive oil for about 1 minute per side. Remove and set aside.", **t(
+            "Dora las gambas en aceite de oliva un minuto por cada lado. Retíralas y resérvalas.", "Daura les gambes en oli d'oliva un minut per cada costat. Retira-les i reserva-les.", "Saisissez les crevettes dans l'huile d'olive environ 1 minute de chaque côté. Retirez et réservez.", "Bak garnalen in olijfolie ongeveer 1 minuut per kant. Haal eruit en zet apart.", "Garnelen in Olivenöl etwa 1 Minute pro Seite anbraten. Herausnehmen und beiseitestellen.", "橄榄油中将大虾每面煎约1分钟，取出备用。", "オリーブオイルでエビを片面約1分焼き色を付け、取り出しておく。", "Rosola i gamberi in olio d'oliva per circa 1 minuto per lato. Togli e metti da parte.", "Doure o camarão em azeite cerca de 1 minuto de cada lado. Retire e reserve.", "Обжарьте креветки на оливковом масле около 1 минуты с каждой стороны. Выньте и отложите."
+        )},
+        "Sauté cuttlefish in the same pan until lightly browned and the liquid cooks off.": {"en": "Sauté cuttlefish in the same pan until lightly browned and the liquid cooks off.", **t(
+            "Sofríe la sepia en la misma paella hasta que se dore ligeramente y pierda el agua.", "Sofregeix la sèpia a la mateixa paella fins que es dauri lleugerament i perdi l'aigua.", "Faites revenir la seiche dans la même poêle jusqu'à légère coloration et évaporation du liquide.", "Fruit inktvis in dezelfde pan tot licht bruin en het vocht verdampt.", "Sepia in derselben Pfanne anbraten, bis sie leicht bräunt und die Flüssigkeit verdampft.", "同一锅中炒墨鱼至微黄、水分收干。", "同じパエリア鍋でコウイカを軽く焼き色が付き水分が飛ぶまで炒める。", "Soffriggi la seppia nella stessa padella fino a leggera doratura e evaporazione del liquido.", "Refogue o choco na mesma frigideira até dourar levemente e evaporar o líquido.", "Обжарьте каракатицу в той же сковороде до лёгкой румяности, пока жидкость не испарится."
+        )},
+        "Slowly sauté onion until tender and golden. Add garlic, then grated tomato, and cook until concentrated.": {"en": "Slowly sauté onion until tender and golden. Add garlic, then grated tomato, and cook until concentrated.", **t(
+            "Sofríe la cebolla a fuego lento hasta que esté tierna y dorada. Añade el ajo y, después, el tomate rallado. Cocina hasta que se evapore el agua y quede concentrado.", "Sofregeix la ceba a foc lent fins que estigui tendra i daurada. Afegeix l'all i, després, el tomàquet ratllat. Cou fins que s'evapori l'aigua i quedi concentrat.", "Faites revenir lentement l'oignon jusqu'à tendreté et coloration. Ajoutez l'ail puis la tomate râpée et cuisez jusqu'à concentration.", "Fruit ui langzaam tot zacht en goudbruin. Voeg knoflook en geraspte tomaat toe en kook tot geconcentreerd.", "Zwiebel langsam anbraten, bis sie weich und goldbraun ist. Knoblauch und geriebene Tomate zugeben und einkochen.", "小火慢炒洋葱至软嫩金黄，加入大蒜和擦碎的番茄，煮至水分蒸发、浓稠。", "玉ねぎを弱火で柔らかくきつね色になるまで炒め、にんにくとすりおろしトマトを加えて水分が飛ぶまで煮詰める。", "Soffriggi lentamente la cipolla fino a tenera e dorata. Aggiungi aglio e pomodoro grattugiato e cuoci fino a concentrarsi.", "Refogue a cebola em lume brando até ficar macia e dourada. Adicione alho e tomate ralado e coza até concentrar.", "Медленно обжарьте лук до мягкости и золотистого цвета. Добавьте чеснок и тертый помидор, готовьте до загустения."
+        )},
+        "Stir bomba rice into the sofrito for 1–2 minutes to toast.": {"en": "Stir bomba rice into the sofrito for 1–2 minutes to toast.", **t(
+            "Incorpora el arroz bomba al sofrito y remueve uno o dos minutos para que absorba los sabores.", "Incorpora l'arròs bomba al sofregit i remena un o dos minuts perquè absorbeixi els sabors.", "Incorporez le riz bomba au sofrito et remuez 1 à 2 minutes pour le nacrer.", "Roer bombarijst door het sofrito 1–2 minuten om te toasten.", "Bomba-Reis unterrühren und 1–2 Minuten anrösten.", "将邦巴米加入 sofrito，翻炒1–2分钟。", "ボンバ米をソフリートに加え、1〜2分炒める。", "Incorpora il riso bomba al soffritto e mescola 1–2 minuti per tostarlo.", "Incorpore o arroz bomba ao refogado e mexa 1–2 minutos para tostar.", "Добавьте рис бомба в софрито и помешивайте 1–2 минуты."
+        )},
+        "Pour in boiling fish stock. Add mussels, clams, and reserved cuttlefish.": {"en": "Pour in boiling fish stock. Add mussels, clams, and reserved cuttlefish.", **t(
+            "Vierte el fumet de marisco hirviendo. Añade las almejas, los mejillones y la sepia reservada.", "Aboca el fumet de marisc bullint. Afegeix les cloïsses, els musclos i la sèpia reservada.", "Versez le fumet de poisson bouillant. Ajoutez palourdes, moules et seiche réservée.", "Giet kokend visbouillon erbij. Voeg mosselen, venusschelpen en gereserveerde inktvis toe.", "Kochenden Fischfond angießen. Muscheln, Venusmuscheln und reservierte Sepia zugeben.", "倒入沸腾的鱼高汤，加入蛤蜊、贻贝和备用的墨鱼。", "沸騰した魚のフォンを注ぎ、ムール貝、アサリ、取り置きのコウイカを加える。", "Versa il fumetto di pesce bollente. Aggiungi vongole, cozze e seppia riservata.", "Verta caldo de peixe a ferver. Adicione amêijoas, mexilhões e choco reservado.", "Влейте кипящий рыбный фонд. Добавьте мидии, моллюски и отложенную каракатицу."
+        )},
+        "Cook on high heat for 8 minutes, then low for 8 minutes. Stir in picada (parsley, garlic, almond) mixed with broth midway.": {"en": "Cook on high heat for 8 minutes, then low for 8 minutes. Stir in picada (parsley, garlic, almond) mixed with broth midway.", **t(
+            "Cocina a fuego vivo los primeros 8 minutos y baja a fuego lento los siguientes 8 minutos. Añade la picada disuelta en un poco de caldo a mitad de cocción.", "Cou a foc viu els primers 8 minuts i baixa a foc lent els següents 8 minuts. Afegeix la picada dissolta en un poc de brou a mig cocció.", "Cuisez à feu vif 8 minutes puis à feu doux 8 minutes. Ajoutez la picada diluée dans un peu de bouillon à mi-cuisson.", "Kook 8 minuten op hoog vuur en 8 minuten op laag vuur. Roer halverwege picada (peterselie, knoflook, amandel) met bouillon erdoor.", "8 Minuten bei starker Hitze und 8 Minuten bei schwacher Hitze garen. Picada (Petersilie, Knoblauch, Mandel) mit Brühe zur Hälfte der Garzeit einrühren.", "大火煮8分钟，再小火煮8分钟；中途加入用高汤调开的 picada（欧芹、大蒜、杏仁）。", "強火で8分、弱火で8分煮る。途中でスープに溶かしたピカーダ（パセリ、にんにく、アーモンド）を加える。", "Cuoci a fuoco alto 8 minuti e a fuoco basso 8 minuti. A metà cottura aggiungi la picada sciolta in un po' di brodo.", "Coza em lume alto 8 minutos e em lume brando 8 minutos. Adicione a picada dissolvida em caldo a meio da cozedura.", "Готовьте на сильном огне 8 минут, затем на слабом 8 минут. На середине добавьте пикаду, разведённую в бульоне."
+        )},
+        "Top with reserved prawns in the final minutes. Rest covered for 5 minutes before serving.": {"en": "Top with reserved prawns in the final minutes. Rest covered for 5 minutes before serving.", **t(
+            "Coloca las gambas reservadas por encima en los últimos minutos. Apaga el fuego, tapa con un paño limpio y deja reposar 5 minutos antes de servir.", "Coloca les gambes reservades a sobre en els últims minuts. Apaga el foc, tapa amb un drap net i deixa reposar 5 minuts abans de servir.", "Disposez les crevettes réservées sur le dessus dans les dernières minutes. Couvrez et laissez reposer 5 minutes avant de servir.", "Leg de gereserveerde garnalen er in de laatste minuten op. Laat 5 minuten afgedekt rusten voor het serveren.", "Garnelen in den letzten Minuten darauflegen. Abdecken und 5 Minuten ruhen lassen.", "最后几分钟放上备用大虾，关火盖布静置5分钟后上桌。", "最後の数分で取り置きのエビをのせ、火を止めて布をかけ5分休ませてから提供する。", "Adagia i gamberi riservati negli ultimi minuti. Copri e lascia riposare 5 minuti prima di servire.", "Coloque o camarão reservado por cima nos últimos minutos. Tape e deixe repousar 5 minutos antes de servir.", "В последние минуты выложите креветки сверху. Накройте и дайте отдохнуть 5 минут перед подачей."
+        )},
+        "Slice bread and toast until golden.": {"en": "Slice bread and toast until golden.", **t(
+            "Corta el pan y tuesta hasta dorar.", "Talla el pa i torra fins daurar.", "Tranchez le pain et faites dorer.", "Snijd brood en rooster tot goudbruin.", "Brot schneiden und goldbraun toasten.", "切片面包烤至金黄。", "パンを切ってきつね色にトーストする。", "Affetta il pane e tostalo fino a doratura.", "Corte o pão e toste até dourar.", "Нарежьте хлеб и подрумяньте."
+        )},
+        "Gently sauté sliced garlic in olive oil with smoked paprika.": {"en": "Gently sauté sliced garlic in olive oil with smoked paprika.", **t(
+            "Saltea suavemente el ajo laminado en aceite de oliva con pimentón ahumado.", "Salteja suaument l'all laminat en oli d'oliva amb pebre vermell fumat.", "Faites revenir doucement l'ail émincé dans l'huile d'olive avec paprika fumé.", "Fruit gesneden knoflook zacht in olijfolie met gerookte paprika.", "Geschnittenen Knoblauch in Olivenöl mit Paprikapulver sanft anbraten.", "橄榄油中 gently 炒蒜片并加入烟熏红椒粉。", "スライスしたにんにくをオリーブオイルとスモークパプリカで弱火で炒める。", "Soffriggi delicatamente l'aglio affettato in olio d'oliva con paprika affumicata.", "Refogue suavemente o alho fatiado em azeite com paprica fumada.", "Слегка обжарьте нарезанный чеснок на оливковом масле с копчёной паприкой."
+        )},
+        "Add broth and simmer with bread until softened.": {"en": "Add broth and simmer with bread until softened.", **t(
+            "Añade caldo y cocina con el pan hasta ablandar.", "Afegeix brou i cou amb el pa fins ablanir.", "Ajoutez le bouillon et laissez mijoter avec le pain jusqu'à ramollissement.", "Voeg bouillon toe en laat sudderen met brood tot zacht.", "Brühe zugeben und mit Brot köcheln, bis es weich ist.", "加入高汤与面包炖至软烂。", "スープを加え、パンが柔らかくなるまで煮る。", "Aggiungi brodo e cuoci con il pane finché si ammorbidisce.", "Adicione caldo e coza com o pão até amolecer.", "Добавьте бульон и тушите с хлебом до размягчения."
+        )},
+        "Poach eggs in the soup and serve.": {"en": "Poach eggs in the soup and serve.", **t(
+            "Cuece los huevos en la sopa y sirve.", "Cou els ous a la sopa i serveix.", "Pochez les œufs dans la soupe et servez.", "Pocheer eieren in de soep en serveer.", "Eier in der Suppe pochieren und servieren.", "在汤中 poach 鸡蛋后上桌。", "スープで卵をポーチして盛る。", "Poach le uova nella zuppa e servi.", "Escalde os ovos na sopa e sirva.", "Приготовьте яйца пашот в супе и подавайте."
+        )},
+        "Slowly fry sliced potato and onion in olive oil until tender.": {"en": "Slowly fry sliced potato and onion in olive oil until tender.", **t(
+            "Fríe lentamente patata y cebolla en aceite de oliva hasta ablandar.", "Freg lentament patata i ceba en oli d'oliva fins ablanir.", "Faites frire lentement pommes de terre et oignon dans l'huile d'olive jusqu'à tendreté.", "Bak langzaam aardappel en ui in olijfolie tot gaar.", "Kartoffel und Zwiebel langsam in Olivenöl braten, bis weich.", "橄榄油慢煎土豆和洋葱至软。", "じゃがいもと玉ねぎをオリーブオイルで弱火で柔らかく炒める。", "Friggi lentamente patate e cipolla in olio d'oliva fino a cottura.", "Frite lentamente batata e cebola em azeite até amolecer.", "Медленно обжарьте картофель и лук на оливковом масле до мягкости."
+        )},
+        "Beat eggs and season.": {"en": "Beat eggs and season.", **t(
+            "Bate los huevos y sazona.", "Bate els ous i condimenta.", "Battez les œufs et assaisonnez.", "Klop eieren en breng op smaak.", "Eier verquirlen und würzen.", "打散鸡蛋并调味。", "卵を溶き、味付けする。", "Sbatti le uova e condisci.", "Bata os ovos e tempere.", "Взбейте яйца и приправьте."
+        )},
+        "Mix potatoes with eggs and cook in a pan until nearly set.": {"en": "Mix potatoes with eggs and cook in a pan until nearly set.", **t(
+            "Mezcla patatas con huevo y cocina en sartén hasta casi cuajar.", "Barreja patates amb ou i cou a la paella fins gairebé quallar.", "Mélangez pommes de terre et œufs et cuisez à la poêle jusqu'à presque prise.", "Meng aardappelen met ei en bak in pan tot bijna gestold.", "Kartoffeln mit Eiern mischen und in der Pfanne bis fast fest garen.", "土豆与蛋液混合，平底锅煎至快凝固。", "じゃがいもと卵を混ぜ、フライパンでほぼ固まるまで焼く。", "Mescola patate con uova e cuoci in padella fino a quasi cottura.", "Misture batatas com ovos e coza numa frigideira até quase firmar.", "Смешайте картофель с яйцами и готовьте на сковороде почти до готовности."
+        )},
+        "Flip or cover and finish cooking, then serve warm.": {"en": "Flip or cover and finish cooking, then serve warm.", **t(
+            "Voltea o tapa y termina de cocinar, sirve tibia.", "Gira o tapa i acaba de coure, serveix tèbia.", "Retournez ou couvrez pour finir la cuisson, servez tiède.", "Draai om of dek af, gaar verder en serveer warm.", "Wenden oder abdecken, fertig garen und warm servieren.", "翻面或加盖焖熟，温热上桌。", "ひっくり返すか蓋をして火を通し、温かく盛る。", "Gira o copri e termina la cottura, servi calda.", "Vire ou tape e termine de cozer, sirva morna.", "Переверните или накройте, доготовьте и подавайте тёплой."
+        )},
+        "Roughly chop tomatoes, cucumber, and pepper.": {"en": "Roughly chop tomatoes, cucumber, and pepper.", **t(
+            "Pica tomates, pepino y pimiento.", "Pica tomàquets, cogombre i pebrot.", "Hachez grossièrement tomates, concombre et poivron.", "Hak tomaten, komkommer en paprika grof.", "Tomaten, Gurke und Paprika grob hacken.", "粗略切碎番茄、黄瓜和甜椒。", "トマト、きゅうり、パプリカを粗く切る。", "Trita grossolanamente pomodori, cetriolo e peperone.", "Pique tomates, pepino e pimento.", "Крупно нарежьте помидоры, огурец и перец."
+        )},
+        "Blend with garlic, olive oil, and vinegar until smooth.": {"en": "Blend with garlic, olive oil, and vinegar until smooth.", **t(
+            "Tritura con ajo, aceite de oliva y vinagre hasta quedar suave.", "Tritura amb all, oli d'oliva i vinagre fins quedar suau.", "Mixez avec ail, huile d'olive et vinaigre jusqu'à lisse.", "Mix met knoflook, olijfolie en azijn tot glad.", "Mit Knoblauch, Olivenöl und Essig pürieren.", "与大蒜、橄榄油和醋一起打至顺滑。", "にんにく、オリーブオイル、酢で滑らかにする。", "Frulla con aglio, olio d'oliva e aceto fino a liscio.", "Triture com alho, azeite e vinagre até ficar liso.", "Измельчите с чесноком, оливковым маслом и уксусом до однородности."
+        )},
+        "Chill if desired and serve.": {"en": "Chill if desired and serve.", **t(
+            "Enfría si quieres y sirve.", "Refrigera si vols i serveix.", "Réfrigérez si souhaité et servez.", "Koel indien gewenst en serveer.", "Bei Bedarf kühlen und servieren.", "可按需冷藏后上桌。", "好みで冷やして提供する。", "Raffredda se desideri e servi.", "Arrefieça se desejar e sirva.", "Охладите при желании и подавайте."
+        )},
+        "Rinse beans and simmer with onion, garlic, and smoked paprika.": {"en": "Rinse beans and simmer with onion, garlic, and smoked paprika.", **t(
+            "Enjuaga las alubias y cocina con cebolla, ajo y pimentón ahumado.", "Eixuga les mongetes i cou amb ceba, all i pebre vermell fumat.", "Rincez les haricots et laissez mijoter avec oignon, ail et paprika fumé.", "Spoel bonen en laat sudderen met ui, knoflook en gerookte paprika.", "Bohnen spülen und mit Zwiebel, Knoblauch und Paprika köcheln.", "冲洗豆子，与洋葱、大蒜和烟熏红椒粉炖煮。", "豆を洗い、玉ねぎ、にんにく、スモークパプリカで煮る。", "Sciacqua i fagioli e cuoci con cipolla, aglio e paprika affumicata.", "Enxágue o feijão e coza com cebola, alho e paprica fumada.", "Промойте фасоль и тушите с луком, чесноком и копчёной паприкой."
+        )},
+        "Add chorizo and broth, then cook until creamy.": {"en": "Add chorizo and broth, then cook until creamy.", **t(
+            "Añade chorizo y caldo y cocina hasta quedar cremoso.", "Afegeix xoriço i brou i cou fins quedar cremós.", "Ajoutez chorizo et bouillon, puis cuisez jusqu'à onctuosité.", "Voeg chorizo en bouillon toe en kook tot romig.", "Chorizo und Brühe zugeben und cremig köcheln.", "加入 chorizo 和高汤，煮至浓稠。", "チョリソーとスープを加え、とろみが付くまで煮る。", "Aggiungi chorizo e brodo e cuoci fino a cremoso.", "Adicione chouriço e caldo e coza até cremoso.", "Добавьте чоризо и бульон, готовьте до кремовой консистенции."
+        )},
+        "Warm milk with cinnamon and soak bread slices.": {"en": "Warm milk with cinnamon and soak bread slices.", **t(
+            "Calienta leche con canela y empapa las rebanadas de pan.", "Escalfa llet amb canela i embeu les llesques de pa.", "Chauffez le lait avec cannelle et imbibez les tranches de pain.", "Warm melk met kaneel en week broodplakken.", "Milch mit Zimt erwärmen und Brotscheiben einweichen.", "牛奶加肉桂加热，浸泡面包片。", "牛乳にシナモンを加え温め、パンを浸す。", "Scalda il latte con cannella e inzuppa le fette di pane.", "Aqueça leite com canela e molhe as fatias de pão.", "Подогрейте молоко с корицей и замочите хлеб."
+        )},
+        "Dip soaked bread in beaten egg.": {"en": "Dip soaked bread in beaten egg.", **t(
+            "Pasa el pan empapado por huevo batido.", "Passa el pa embebut per ou batut.", "Passez le pain imbibé dans l'œuf battu.", "Haal doorweekt brood door losgeklopt ei.", "Eingeweichtes Brot in verquirltem Ei wenden.", "将浸湿的面包蘸入蛋液。", "浸したパンを溶き卵にくぐらせる。", "Passa il pane inzuppato nell'uovo sbattuto.", "Passe o pão molhado no ovo batido.", "Окуните пропитанный хлеб в яйцо."
+        )},
+        "Pan-fry in olive oil until golden.": {"en": "Pan-fry in olive oil until golden.", **t(
+            "Fríe en aceite de oliva hasta dorar.", "Freg en oli d'oliva fins daurar.", "Faites dorer à la poêle dans l'huile d'olive.", "Bak in olijfolie tot goudbruin.", "In Olivenöl goldbraun braten.", "橄榄油煎至金黄。", "オリーブオイルできつね色に焼く。", "Friggi in olio d'oliva fino a doratura.", "Frite em azeite até dourar.", "Обжарьте на оливковом масле до золотистого цвета."
+        )},
+        "Dust with cinnamon and drizzle with honey.": {"en": "Dust with cinnamon and drizzle with honey.", **t(
+            "Espolvorea canela y rocía con miel.", "Espolsoreja canela i ruixa amb mel.", "Saupoudrez de cannelle et arrosez de miel.", "Bestrooi met kaneel en besprenkel met honing.", "Mit Zimt bestäuben und Honig darüber träufeln.", "撒肉桂，淋蜂蜜。", "シナモンを振り、はちみつをかける。", "Spolvera di cannella e irrorare con miele.", "Polvilhe canela e regue com mel.", "Посыпьте корицей и полейте мёдом."
+        )},
+        "Ragù Bolognese": {"en": "Ragù Bolognese", **t(
+            "Ragù boloñés", "Ragù bolonyès", "Ragù bolognaise", "Ragù bolognese", "Ragù Bolognese", "肉酱意面", "ボロネーゼ", "Ragù bolognese", "Ragù à bolonhesa", "Рагу болоньезе"
+        )},
+        "Onion Focaccia": {"en": "Onion Focaccia", **t(
+            "Focaccia de cebolla", "Focaccia de ceba", "Focaccia aux oignons", "Uienfocaccia", "Zwiebelfocaccia", "洋葱佛卡夏", "オニオンフォカッチャ", "Focaccia alle cipolle", "Focaccia de cebola", "Фокачча с луком"
+        )},
+        "Shrimp and Zucchini Risotto": {"en": "Shrimp and Zucchini Risotto", **t(
+            "Risotto de gambas y calabacín", "Risotto de gambes i carbassó", "Risotto aux crevettes et courgettes", "Risotto met garnalen en courgette", "Risotto mit Garnelen und Zucchini", "虾仁西葫芦烩饭", "エビとズッキーニのリゾット", "Risotto con gamberi e zucchine", "Risotto de camarão e curgete", "Ризотто с креветками и цуккини"
+        )},
+        "Pasta Carbonara": {"en": "Pasta Carbonara", **t(
+            "Pasta carbonara", "Pasta carbonara", "Pâtes carbonara", "Pasta carbonara", "Pasta Carbonara", "卡博纳拉意面", "カルボナーラ", "Pasta alla carbonara", "Massa à carbonara", "Паста карбонара"
+        )},
+        "Bruschetta": {"en": "Bruschetta", **t(
+            "Bruschetta", "Bruschetta", "Bruschetta", "Bruschetta", "Bruschetta", "意式烤面包", "ブルスケッタ", "Bruschetta", "Bruschetta", "Брускетта"
+        )},
+        "Slow-simmered meat sauce with soffritto served over pasta.": {"en": "Slow-simmered meat sauce with soffritto served over pasta.", **t(
+            "Salsa de carne cocida a fuego lento con sofrito, servida con pasta.", "Salsa de carn cuita a foc lent amb sofregit, servida amb pasta.", "Sauce à la viande mijotée avec soffritto, servie sur des pâtes.", "Langzaam suddervleessaus met soffritto, geserveerd met pasta.", "Langsam geschmorte Fleischsauce mit Soffritto, serviert mit Pasta.", "慢炖肉酱配蔬菜底，佐意面。", "ソフリット入りのじっくり煮込みミートソースをパスタに。", "Salsa di carne cotta lentamente con soffritto, servita con pasta.", "Molho de carne cozido lentamente com refogado, servido com massa.", "Медленно тушёный мясной соус с софрито, подаётся с пастой."
+        )},
+        "Soft oven-baked focaccia topped with sweet onions and olive oil.": {"en": "Soft oven-baked focaccia topped with sweet onions and olive oil.", **t(
+            "Focaccia suave al horno con cebolla dulce y aceite de oliva.", "Focaccia suau al forn amb ceba dolça i oli d'oliva.", "Focaccia moelleuse au four garnie d'oignons et d'huile d'olive.", "Zachte focaccia uit de oven met zoete ui en olijfolie.", "Weiche Ofenfocaccia mit süßen Zwiebeln und Olivenöl.", "软烤佛卡夏，配甜洋葱和橄榄油。", "甘い玉ねぎとオリーブオイルのやわらかいオーブンフォカッチャ。", "Focaccia morbida al forno con cipolle dolci e olio d'oliva.", "Focaccia macia assada com cebola doce e azeite.", "Мягкая фокачча из духовки с луком и оливковым маслом."
+        )},
+        "Creamy risotto with shrimp, zucchini, and parmesan.": {"en": "Creamy risotto with shrimp, zucchini, and parmesan.", **t(
+            "Risotto cremoso con gambas, calabacín y parmesano.", "Risotto cremós amb gambes, carbassó i parmesà.", "Risotto crémeux aux crevettes, courgettes et parmesan.", "Romige risotto met garnalen, courgette en parmezaan.", "Cremiges Risotto mit Garnelen, Zucchini und Parmesan.", "奶油烩饭配虾、西葫芦和帕玛森。", "エビ、ズッキーニ、パルメザンのクリーミーリゾット。", "Risotto cremoso con gamberi, zucchine e parmigiano.", "Risotto cremoso com camarão, curgete e parmesão.", "Кремовое ризотто с креветками, цуккини и пармезаном."
+        )},
+        "Classic Roman pasta with eggs, pancetta, pecorino, and black pepper.": {"en": "Classic Roman pasta with eggs, pancetta, pecorino, and black pepper.", **t(
+            "Pasta romana clásica con huevo, panceta, pecorino y pimienta negra.", "Pasta romana clàssica amb ou, panceta, pecorino i pebre negre.", "Pâtes romaines classiques aux œufs, pancetta, pecorino et poivre noir.", "Klassieke Romeinse pasta met ei, pancetta, pecorino en zwarte peper.", "Klassische römische Pasta mit Eiern, Pancetta, Pecorino und schwarzem Pfeffer.", "经典罗马意面，配鸡蛋、意式培根、佩科里诺和黑胡椒。", "卵、パンチェッタ、ペコリーノ、黒胡椒の定番ローマ風パスタ。", "Classica pasta romana con uova, pancetta, pecorino e pepe nero.", "Massa romana clássica com ovos, pancetta, pecorino e pimenta-preta.", "Классическая римская паста с яйцами, панчеттой, пекорино и чёрным перцем."
+        )},
+        "Toasted bread with fresh tomato, basil, and olive oil.": {"en": "Toasted bread with fresh tomato, basil, and olive oil.", **t(
+            "Pan tostado con tomate fresco, albahaca y aceite de oliva.", "Pa torrat amb tomàquet fresc, alfàbrega i oli d'oliva.", "Pain grillé à la tomate fraîche, basilic et huile d'olive.", "Geroosterd brood met verse tomaat, basilicum en olijfolie.", "Geröstetes Brot mit frischen Tomaten, Basilikum und Olivenöl.", "烤面包配新鲜番茄、罗勒和橄榄油。", "フレッシュトマト、バジル、オリーブオイルのトースト。", "Pane tostato con pomodoro fresco, basilico e olio d'oliva.", "Pão torrado com tomate fresco, manjericão e azeite.", "Поджаренный хлеб со свежими помидорами, базиликом и оливковым маслом."
+        )},
+        "Finely dice onion, carrot, and celery. Mince the garlic.": {"en": "Finely dice onion, carrot, and celery. Mince the garlic.", **t(
+            "Pica fino la cebolla, la zanahoria y el apio. Pica el ajo.", "Pica fina la ceba, la pastanaga i l'api. Pica l'all.", "Hachez finement oignon, carotte et céleri. Hachez l'ail.", "Snijd ui, wortel en selderij fijn. Hak knoflook.", "Zwiebel, Karotte und Sellerie fein würfeln. Knoblauch hacken.", "将洋葱、胡萝卜和芹菜切细丁，大蒜切末。", "玉ねぎ、にんじん、セロリを細かく切り、にんにくをみじん切りにする。", "Trita finemente cipolla, carota e sedano. Trita l'aglio.", "Pique finamente cebola, cenoura e aipo. Pique o alho.", "Мелко нарежьте лук, морковь и сельдерей. Измельчите чеснок."
+        )},
+        "Brown ground beef in olive oil. Add vegetables and cook until softened.": {"en": "Brown ground beef in olive oil. Add vegetables and cook until softened.", **t(
+            "Dora la carne picada en aceite de oliva. Añade las verduras y cocina hasta ablandar.", "Daura la carn picada en oli d'oliva. Afegeix les verdures i cou fins ablanir.", "Faites dorer le bœuf haché dans l'huile d'olive. Ajoutez les légumes et cuisez jusqu'à tendreté.", "Bak rundergehakt bruin in olijfolie. Voeg groenten toe en kook tot zacht.", "Rinderhackfleisch in Olivenöl anbraten. Gemüse zugeben und weich garen.", "橄榄油中将牛肉末煎至 brown，加入蔬菜炒至软。", "オリーブオイルで牛ひき肉に焼き色を付け、野菜を加えて柔らかくする。", "Rosola la carne macinata in olio d'oliva. Aggiungi le verdure e cuoci fino a morbidezza.", "Doure a carne moída em azeite. Adicione os legumes e coza até amolecer.", "Обжарьте фарш на оливковом масле. Добавьте овощи и готовьте до мягкости."
+        )},
+        "Add tomatoes and broth. Simmer until thick, about 45 minutes.": {"en": "Add tomatoes and broth. Simmer until thick, about 45 minutes.", **t(
+            "Añade tomate y caldo. Cocina a fuego lento hasta espesar, unos 45 minutos.", "Afegeix tomàquet i brou. Cou a foc lent fins espessir, uns 45 minuts.", "Ajoutez tomates et bouillon. Mijotez jusqu'à épaississement, environ 45 minutes.", "Voeg tomaten en bouillon toe. Laat sudderen tot dik, ongeveer 45 minuten.", "Tomaten und Brühe zugeben. Etwa 45 Minuten einkochen.", "加入番茄和高汤，小火炖至浓稠，约45分钟。", "トマトとスープを加え、約45分煮込んでとろみを付ける。", "Aggiungi pomodori e brodo. Cuoci a fuoco lento fino a densità, circa 45 minuti.", "Adicione tomate e caldo. Coza em lume brando até engrossar, cerca de 45 minutos.", "Добавьте помидоры и бульон. Тушите до загустения, около 45 минут."
+        )},
+        "Cook pasta, toss with ragù, and serve with parmesan.": {"en": "Cook pasta, toss with ragù, and serve with parmesan.", **t(
+            "Cuece la pasta, mézclala con el ragù y sirve con parmesano.", "Cou la pasta, barreja-la amb el ragù i serveix amb parmesà.", "Cuisez les pâtes, mélangez au ragù et servez avec parmesan.", "Kook pasta, meng met ragù en serveer met parmezaan.", "Pasta kochen, mit Ragù vermengen und mit Parmesan servieren.", "煮意面，拌入肉酱，配帕玛森上桌。", "パスタを茹で、ラグーと和え、パルメザンを添える。", "Cuoci la pasta, condiscila con il ragù e servi con parmigiano.", "Coza a massa, envolva com o ragù e sirva com parmesão.", "Отварите пасту, смешайте с рагу и подавайте с пармезаном."
+        )},
+        "Dissolve yeast in warm water. Mix flour, water, yeast, and olive oil into a dough.": {"en": "Dissolve yeast in warm water. Mix flour, water, yeast, and olive oil into a dough.", **t(
+            "Disuelve la levadura en agua tibia. Mezcla harina, agua, levadura y aceite de oliva hasta formar masa.", "Dissol la llevat en aigua tibia. Barreja farina, aigua, llevat i oli d'oliva fins formar massa.", "Dissolvez la levure dans l'eau tiède. Mélangez farine, eau, levure et huile d'olive en pâte.", "Los gist op in warm water. Meng bloem, water, gist en olijfolie tot een deeg.", "Hefe in warmem Wasser auflösen. Mehl, Wasser, Hefe und Olivenöl zu einem Teig verkneten.", "温水溶解酵母，将面粉、水、酵母和橄榄油揉成面团。", "ぬるま湯で酵母を溶かし、小麦粉、水、酵母、オリーブオイルを混ぜて生地にする。", "Sciogli il lievito in acqua tiepida. Impasta farina, acqua, lievito e olio d'oliva.", "Dissolva o fermento em água morna. Misture farinha, água, fermento e azeite até formar massa.", "Растворите дрожжи в тёплой воде. Смешайте муку, воду, дрожжи и оливковое масло в тесто."
+        )},
+        "Let dough rise until doubled in size.": {"en": "Let dough rise until doubled in size.", **t(
+            "Deja reposar la masa hasta que duplique su tamaño.", "Deixa reposar la massa fins que en doble el volum.", "Laissez lever la pâte jusqu'à doubler de volume.", "Laat het deeg rijzen tot het verdubbeld is.", "Teig gehen lassen, bis er sich verdoppelt hat.", "面团发酵至两倍大。", "生地が2倍になるまで発酵させる。", "Lascia lievitare l'impasto fino a raddoppiare.", "Deixe a massa levedar até dobrar de volume.", "Дайте тесту подняться вдвое."
+        )},
+        "Press dough into an oiled pan. Top with sliced onions and olive oil.": {"en": "Press dough into an oiled pan. Top with sliced onions and olive oil.", **t(
+            "Extiende la masa en una bandeja aceitada. Cubre con cebolla en láminas y aceite de oliva.", "Estén la massa en una safata amb oli. Cobreix amb ceba laminada i oli d'oliva.", "Étalez la pâte dans un plat huilé. Garnissez d'oignons émincés et d'huile d'olive.", "Druk het deeg in een ingevette pan. Bedek met gesneden ui en olijfolie.", "Teig in eine gefettete Form drücken. Mit Zwiebelscheiben und Olivenöl belegen.", "将面团压入抹油的烤盘，铺上洋葱片和橄榄油。", "油を塗った型に生地をのばし、スライスした玉ねぎとオリーブオイルをのせる。", "Stendi l'impasto in una teglia unta. Copri con cipolle affettate e olio d'oliva.", "Estenda a massa numa forma untada. Cubra com cebola fatiada e azeite.", "Раскатайте тесто в смазанную форму. Выложите лук и оливковое масло."
+        )},
+        "Bake at 220°C until golden, about 25 minutes.": {"en": "Bake at 220°C until golden, about 25 minutes.", **t(
+            "Hornea a 220 °C hasta dorar, unos 25 minutos.", "Forneja a 220 °C fins daurar, uns 25 minuts.", "Enfournez à 220 °C jusqu'à dorure, environ 25 minutes.", "Bak op 220 °C tot goudbruin, ongeveer 25 minuten.", "Bei 220 °C goldbraun backen, etwa 25 Minuten.", "220°C烤至金黄，约25分钟。", "220°Cで約25分、きつね色に焼く。", "Inforna a 220 °C fino a doratura, circa 25 minuti.", "Asse a 220 °C até dourar, cerca de 25 minutos.", "Запекайте при 220 °C до золотистого цвета, около 25 минут."
+        )},
+        "Dice zucchini and finely chop onion.": {"en": "Dice zucchini and finely chop onion.", **t(
+            "Corta el calabacín en dados y pica fino la cebolla.", "Talla el carbassó a daus i pica fina la ceba.", "Coupez la courgette en dés et hachez finement l'oignon.", "Snijd courgette in blokjes en hak ui fijn.", "Zucchini würfeln und Zwiebel fein hacken.", "西葫芦切丁，洋葱切细。", "ズッキーニを角切りにし、玉ねぎを細かく切る。", "Taglia a cubetti le zucchine e trita finemente la cipolla.", "Corte a curgete em cubos e pique finamente a cebola.", "Нарежьте цуккини кубиками, лук мелко."
+        )},
+        "Sauté onion in olive oil, then add rice and toast briefly.": {"en": "Sauté onion in olive oil, then add rice and toast briefly.", **t(
+            "Sofríe la cebolla en aceite de oliva y añade el arroz para tostarlo brevemente.", "Sofregeix la ceba en oli d'oliva i afegeix l'arròs per torrar-lo breument.", "Faites revenir l'oignon dans l'huile d'olive, puis ajoutez le riz et nacrez-le.", "Fruit ui in olijfolie, voeg rijst toe en rooster kort.", "Zwiebel in Olivenöl anbraten, Reis zugeben und kurz anrösten.", "橄榄油炒洋葱，加入米饭略炒。", "オリーブオイルで玉ねぎを炒め、米を加えて軽く炒める。", "Soffriggi la cipolla in olio d'oliva, poi aggiungi il riso e tostalo brevemente.", "Refogue a cebola em azeite e adicione o arroz para tostar brevemente.", "Обжарьте лук на оливковом масле, добавьте рис и слегка обжарьте."
+        )},
+        "Add broth gradually, stirring, until rice is creamy and almost tender.": {"en": "Add broth gradually, stirring, until rice is creamy and almost tender.", **t(
+            "Añade el caldo poco a poco, removiendo, hasta que el arroz quede cremoso y casi tierno.", "Afegeix el brou a poc a poc, remenant, fins que l'arròs quedi cremós i gairebé tendre.", "Ajoutez le bouillon progressivement en remuant jusqu'à un riz crémeux et presque tendre.", "Voeg geleidelijk bouillon toe onder roeren tot de rijst romig en bijna gaar is.", "Brühe nach und nach unter Rühren zugeben, bis der Reis cremig und fast gar ist.", "分次加入高汤搅拌，至米饭 creamy 且快熟。", "スープを少しずつ加えながら混ぜ、米がクリーミーでほぼ柔らかくなるまで煮る。", "Aggiungi il brodo gradualmente mescolando fino a cremoso e quasi cotto.", "Adicione o caldo gradualmente, mexendo, até o arroz ficar cremoso e quase macio.", "Постепенно добавляйте бульон, помешивая, пока рис не станет кремовым и почти готовым."
+        )},
+        "Stir in shrimp, zucchini, and parmesan. Cook until shrimp are pink.": {"en": "Stir in shrimp, zucchini, and parmesan. Cook until shrimp are pink.", **t(
+            "Incorpora gambas, calabacín y parmesano. Cocina hasta que las gambas estén rosadas.", "Incorpora gambes, carbassó i parmesà. Cou fins que les gambes estiguin rosades.", "Incorporez crevettes, courgettes et parmesan. Cuisez jusqu'à ce que les crevettes rosissent.", "Roer garnalen, courgette en parmezaan erdoor. Kook tot de garnalen roze zijn.", "Garnelen, Zucchini und Parmesan einrühren. Garen, bis die Garnelen rosa sind.", "加入虾、西葫芦和帕玛森，煮至虾变粉红。", "エビ、ズッキーニ、パルメザンを加え、エビがピンクになるまで加熱する。", "Incorpora gamberi, zucchine e parmigiano. Cuoci finché i gamberi sono rosa.", "Incorpore camarão, curgete e parmesão. Coza até o camarão ficar cor-de-rosa.", "Добавьте креветки, цуккини и пармезан. Готовьте, пока креветки не порозовеют."
+        )},
+        "Cook spaghetti in salted boiling water until al dente.": {"en": "Cook spaghetti in salted boiling water until al dente.", **t(
+            "Cuece los espaguetis en agua hirviendo con sal hasta al dente.", "Cou els espaguetis en aigua bullint amb sal fins al dente.", "Cuisez les spaghetti dans l'eau bouillante salée jusqu'à al dente.", "Kook spaghetti in gezouten kokend water tot al dente.", "Spaghetti in gesalzenem kochendem Wasser al dente kochen.", "盐水煮意大利面至 al dente。", "塩を加えた沸騰した湯でスパゲッティをアルデンテに茹でる。", "Cuoci gli spaghetti in acqua bollente salata fino a al dente.", "Coza o esparguete em água a ferver com sal até al dente.", "Варите спагетти в подсоленной кипящей воде до al dente."
+        )},
+        "Crisp pancetta in olive oil until golden.": {"en": "Crisp pancetta in olive oil until golden.", **t(
+            "Dora la panceta en aceite de oliva hasta que quede crujiente.", "Daura la panceta en oli d'oliva fins quedar cruixent.", "Faites dorer la pancetta dans l'huile d'olive jusqu'à croustillante.", "Bak pancetta knapperig in olijfolie.", "Pancetta in Olivenöl goldbraun und knusprig braten.", "橄榄油将意式培根煎至酥脆金黄。", "オリーブオイルでパンチェッタをきつね色にカリカリに炒める。", "Rosola la pancetta in olio d'oliva fino a doratura croccante.", "Doure a pancetta em azeite até ficar crocante.", "Обжарьте панчетту на оливковом масле до хруста."
+        )},
+        "Whisk eggs with grated pecorino and black pepper.": {"en": "Whisk eggs with grated pecorino and black pepper.", **t(
+            "Bate los huevos con pecorino rallado y pimienta negra.", "Bate els ous amb pecorino ratllat i pebre negre.", "Battez les œufs avec pecorino râpé et poivre noir.", "Klop eieren met geraspte pecorino en zwarte peper.", "Eier mit geriebenem Pecorino und schwarzem Pfeffer verquirlen.", "鸡蛋与擦碎的佩科里诺和黑胡椒搅打。", "卵とすりおろしペコリーノ、黒胡椒を混ぜる。", "Sbatti le uova con pecorino grattugiato e pepe nero.", "Bata os ovos com pecorino ralado e pimenta-preta.", "Взбейте яйца с тёртым пекорино и чёрным перцем."
+        )},
+        "Toss hot pasta with pancetta, then quickly mix in the egg mixture off the heat.": {"en": "Toss hot pasta with pancetta, then quickly mix in the egg mixture off the heat.", **t(
+            "Mezcla la pasta caliente con la panceta y, fuera del fuego, incorpora rápidamente los huevos.", "Barreja la pasta calenta amb la panceta i, fora del foc, incorpora ràpidament els ous.", "Mélangez les pâtes chaudes à la pancetta, puis incorporez vite les œufs hors du feu.", "Meng hete pasta met pancetta en roer snel het eimengsel erdoor buiten het vuur.", "Heiße Pasta mit Pancetta vermengen, dann Eiermischung vom Herd schnell unterrühren.", "热意面与培根拌匀，离火后快速拌入蛋液。", "熱いパスタとパンチェッタを和え、火を止めてから素早く卵液を混ぜる。", "Condisci la pasta calda con la pancetta, poi incorpora velocemente le uova fuori dal fuoco.", "Envolva a massa quente com pancetta e misture rapidamente os ovos fora do lume.", "Смешайте горячую пасту с панчеттой, затем быстро вмешайте яйца вне огня."
+        )},
+        "Dice tomatoes and toss with olive oil, basil, and salt.": {"en": "Dice tomatoes and toss with olive oil, basil, and salt.", **t(
+            "Corta los tomates en dados y mézclalos con aceite de oliva, albahaca y sal.", "Talla els tomàquets a daus i barreja'ls amb oli d'oliva, alfàbrega i sal.", "Coupez les tomates en dés et mélangez avec huile d'olive, basilic et sel.", "Snijd tomaten in blokjes en meng met olijfolie, basilicum en zout.", "Tomaten würfeln und mit Olivenöl, Basilikum und Salz vermengen.", "番茄切丁，与橄榄油、罗勒和盐拌匀。", "トマトを角切りにし、オリーブオイル、バジル、塩で和える。", "Taglia a cubetti i pomodori e condisci con olio d'oliva, basilico e sale.", "Corte os tomates em cubos e envolva com azeite, manjericão e sal.", "Нарежьте помидоры кубиками и смешайте с оливковым маслом, базиликом и солью."
+        )},
+        "Toast bread slices until crisp.": {"en": "Toast bread slices until crisp.", **t(
+            "Tuesta las rebanadas de pan hasta que queden crujientes.", "Tora les llesques de pa fins que quedin cruixents.", "Faites griller les tranches de pain jusqu'à croustillantes.", "Rooster broodplakken tot knapperig.", "Brotscheiben goldbraun toasten.", "面包片烤至酥脆。", "パンのスライスをカリカリにトーストする。", "Tosta le fette di pane fino a croccanti.", "Toaste as fatias de pão até ficarem crocantes.", "Поджарьте хлеб до хруста."
+        )},
+        "Rub warm bread lightly with garlic.": {"en": "Rub warm bread lightly with garlic.", **t(
+            "Frota ligeramente el pan caliente con ajo.", "Frega lleugerament el pa calent amb all.", "Frottez légèrement le pain chaud avec l'ail.", "Wrijf warm brood licht in met knoflook.", "Warmes Brot leicht mit Knoblauch einreiben.", "热面包轻擦大蒜。", "温かいパンににんにくを軽く擦り付ける。", "Strofina leggermente il pane caldo con l'aglio.", "Esfregue levemente o pão quente com alho.", "Слегка натрите тёплый хлеб чесноком."
+        )},
+        "Top with tomato mixture and serve.": {"en": "Top with tomato mixture and serve.", **t(
+            "Cubre con la mezcla de tomate y sirve.", "Cobre amb la barreja de tomàquet i serveix.", "Garnissez de mélange tomate et servez.", "Bedek met tomatenmengsel en serveer.", "Mit Tomatenmischung belegen und servieren.", "铺上番茄混合物后上桌。", "トマトミックスをのせて提供する。", "Guarnisci con il composto di pomodoro e servi.", "Cubra com a mistura de tomate e sirva.", "Выложите томатную смесь сверху и подавайте."
         )},
     }
 

@@ -30,9 +30,8 @@ final class AppSettingsStore {
         AppCategory(id: "low-carbs", label: "Low carbs"),
         AppCategory(id: "no-carbs", label: "No carbs"),
         AppCategory(id: "no-fats", label: "No fats"),
-        AppCategory(id: "quick", label: "Quick"),
         AppCategory(id: "italian", label: "Italian"),
-        AppCategory(id: "meal-prep", label: "Meal prep"),
+        AppCategory(id: "spanish", label: "Spanish"),
         AppCategory(id: "breakfast", label: "Breakfast"),
         AppCategory(id: "dessert", label: "Dessert"),
     ]

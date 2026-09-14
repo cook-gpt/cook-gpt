@@ -72,94 +72,13 @@ extension SampleDataSeeder {
             return makeBakedPeachesRecipe(pool: &pool, context: context)
         case .coconutCookies:
             return makeCoconutCookiesRecipe(pool: &pool, context: context)
+        case .paella, .sopaDeAjo, .tortillaDePatatas, .gazpacho, .fabadaAsturiana, .torrijas:
+            return makeSpanishRecipe(id: id, pool: &pool, context: context)
+        case .raguBolognese, .onionFocaccia, .shrimpZucchiniRisotto, .carbonara, .bruschetta:
+            return makeItalianRecipe(id: id, pool: &pool, context: context)
         default:
             return nil
         }
-    }
-
-    static func rebuildExtendedRecipeSteps(recipe: Recipe, context: ModelContext) -> Bool {
-        switch recipe.title {
-        case "Chickpea Coconut Curry":
-            recipe.steps = chickpeaCurrySteps(recipe: recipe, context: context)
-        case "Rainbow Veggie Stir-Fry":
-            recipe.steps = veggieStirFrySteps(recipe: recipe, context: context)
-        case "Avocado Toast":
-            recipe.steps = avocadoToastSteps(recipe: recipe, context: context)
-        case "Caprese Salad":
-            recipe.steps = capreseSaladSteps(recipe: recipe, context: context)
-        case "Mushroom Risotto":
-            recipe.steps = mushroomRisottoSteps(recipe: recipe, context: context)
-        case "Turkey Meatballs":
-            recipe.steps = turkeyMeatballsSteps(recipe: recipe, context: context)
-        case "Egg White Omelette":
-            recipe.steps = eggWhiteOmeletteSteps(recipe: recipe, context: context)
-        case "Cobb Salad":
-            recipe.steps = cobbSaladSteps(recipe: recipe, context: context)
-        case "Zucchini Noodles with Marinara":
-            recipe.steps = zucchiniNoodlesSteps(recipe: recipe, context: context)
-        case "Grilled Lemon Chicken":
-            recipe.steps = grilledChickenSteps(recipe: recipe, context: context)
-        case "Garlic Steak Bites":
-            recipe.steps = steakBitesSteps(recipe: recipe, context: context)
-        case "Shrimp Scampi":
-            recipe.steps = shrimpScampiSteps(recipe: recipe, context: context)
-        case "Spinach Egg Muffins":
-            recipe.steps = eggMuffinsSteps(recipe: recipe, context: context)
-        case "Tuna Salad Bowl":
-            recipe.steps = tunaSaladSteps(recipe: recipe, context: context)
-        case "Steamed Veggie Medley":
-            recipe.steps = steamedVeggiesSteps(recipe: recipe, context: context)
-        case "Berry Smoothie Bowl":
-            recipe.steps = berrySmoothieBowlSteps(recipe: recipe, context: context)
-        case "Baked Cod with Herbs":
-            recipe.steps = bakedCodSteps(recipe: recipe, context: context)
-        case "Rice and Black Beans":
-            recipe.steps = riceAndBeansSteps(recipe: recipe, context: context)
-        case "Cucumber Dill Salad":
-            recipe.steps = cucumberSaladSteps(recipe: recipe, context: context)
-        case "Margherita Flatbread":
-            recipe.steps = margheritaFlatbreadSteps(recipe: recipe, context: context)
-        case "Pesto Pasta":
-            recipe.steps = pestoPastaSteps(recipe: recipe, context: context)
-        case "Chicken Burrito Bowl":
-            recipe.steps = burritoBowlSteps(recipe: recipe, context: context)
-        case "Quinoa Power Salad":
-            recipe.steps = quinoaSaladSteps(recipe: recipe, context: context)
-        case "Yogurt Berry Parfait":
-            recipe.steps = yogurtParfaitSteps(recipe: recipe, context: context)
-        case "Chocolate Avocado Mousse":
-            recipe.steps = chocolateMousseSteps(recipe: recipe, context: context)
-        case "Apple Cinnamon Crumble":
-            recipe.steps = appleCrumbleSteps(recipe: recipe, context: context)
-        case "Vanilla Chia Pudding":
-            recipe.steps = chiaPuddingSteps(recipe: recipe, context: context)
-        case "Baked Cinnamon Peaches":
-            recipe.steps = bakedPeachesSteps(recipe: recipe, context: context)
-        case "Coconut Almond Cookies":
-            recipe.steps = coconutCookiesSteps(recipe: recipe, context: context)
-        default:
-            return false
-        }
-        return true
-    }
-
-    static func applyExtendedCookingTools(recipe: Recipe) -> Bool {
-        switch recipe.title {
-        case "Chickpea Coconut Curry", "Rainbow Veggie Stir-Fry", "Mushroom Risotto", "Turkey Meatballs",
-             "Egg White Omelette", "Zucchini Noodles with Marinara", "Grilled Lemon Chicken", "Garlic Steak Bites",
-             "Shrimp Scampi", "Spinach Egg Muffins", "Baked Cod with Herbs", "Rice and Black Beans",
-             "Margherita Flatbread", "Pesto Pasta", "Chicken Burrito Bowl", "Apple Cinnamon Crumble",
-             "Baked Cinnamon Peaches", "Coconut Almond Cookies":
-            recipe.cookingTools = cookingTools(.pan)
-        case "Avocado Toast", "Caprese Salad", "Cobb Salad", "Tuna Salad Bowl", "Steamed Veggie Medley",
-             "Cucumber Dill Salad", "Quinoa Power Salad", "Yogurt Berry Parfait", "Chocolate Avocado Mousse":
-            recipe.cookingTools = []
-        case "Berry Smoothie Bowl", "Vanilla Chia Pudding":
-            recipe.cookingTools = cookingTools(.fridge)
-        default:
-            return false
-        }
-        return true
     }
 
     // MARK: - Recipes
@@ -384,7 +303,7 @@ extension SampleDataSeeder {
             ingredients: [
                 (3, "units", pool.ingredient("Zucchini", category: .produce)),
                 (400, "g", pool.ingredient("Tomatoes", category: .produce)),
-                (2, "cloves", pool.ingredient("Garlic", category: .produce)),
+                (2, "units", pool.ingredient("Garlic cloves", category: .produce)),
             ],
             steps: zucchiniNoodlesSteps(recipe: recipe, context: context),
             context: context
@@ -434,7 +353,7 @@ extension SampleDataSeeder {
             ingredients: [
                 (400, "g", pool.ingredient("Steak", category: .protein)),
                 (2, "tbsp", pool.ingredient("Butter", category: .dairy)),
-                (3, "cloves", pool.ingredient("Garlic", category: .produce)),
+                (3, "units", pool.ingredient("Garlic cloves", category: .produce)),
             ],
             steps: steakBitesSteps(recipe: recipe, context: context),
             context: context
@@ -458,7 +377,7 @@ extension SampleDataSeeder {
             recipe: recipe,
             ingredients: [
                 (300, "g", pool.ingredient("Shrimp", category: .protein)),
-                (3, "cloves", pool.ingredient("Garlic", category: .produce)),
+                (3, "units", pool.ingredient("Garlic cloves", category: .produce)),
                 (2, "tbsp", pool.ingredient("Butter", category: .dairy)),
             ],
             steps: shrimpScampiSteps(recipe: recipe, context: context),

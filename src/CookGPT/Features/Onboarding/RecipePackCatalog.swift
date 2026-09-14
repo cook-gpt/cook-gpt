@@ -45,6 +45,17 @@ enum SampleRecipeID: String, CaseIterable, Hashable {
     case chiaPudding
     case bakedPeaches
     case coconutCookies
+    case paella
+    case sopaDeAjo
+    case tortillaDePatatas
+    case gazpacho
+    case fabadaAsturiana
+    case torrijas
+    case raguBolognese
+    case onionFocaccia
+    case shrimpZucchiniRisotto
+    case carbonara
+    case bruschetta
 }
 
 struct RecipePackDefinition: Identifiable, Hashable {
@@ -108,29 +119,22 @@ enum RecipePackCatalog {
             categoryID: "no-fats",
             label: "No fats",
             summary: "Fresh Greek salad with lemon dressing.",
-            systemImage: "drop.slash",
+            systemImage: "circle.slash",
             recipeIDs: [.greekSalad, .steamedVeggies, .tunaSalad, .bakedCod, .cucumberSalad, .eggWhiteOmelette]
-        ),
-        RecipePackDefinition(
-            categoryID: "quick",
-            label: "Quick",
-            summary: "Fast breakfasts, pastas, and weeknight meals.",
-            systemImage: "bolt.fill",
-            recipeIDs: [.aglioOlio, .scrambledEggs, .greekSalad, .overnightOats, .tomatoSoup, .bananaNiceCream]
         ),
         RecipePackDefinition(
             categoryID: "italian",
             label: "Italian",
-            summary: "Garlic pasta and tomato basil soup.",
+            summary: "Bolognese, focaccia, risotto, carbonara, and classic Italian dishes.",
             systemImage: "fork.knife",
-            recipeIDs: [.aglioOlio, .tomatoSoup, .capreseSalad, .mushroomRisotto, .margheritaFlatbread, .pestoPasta]
+            recipeIDs: [.raguBolognese, .onionFocaccia, .shrimpZucchiniRisotto, .carbonara, .aglioOlio, .bruschetta]
         ),
         RecipePackDefinition(
-            categoryID: "meal-prep",
-            label: "Meal prep",
-            summary: "Make-ahead bowls, soups, and oats.",
-            systemImage: "takeoutbag.and.cup.and.straw.fill",
-            recipeIDs: [.chickenBowl, .lentilSoup, .overnightOats, .burritoBowl, .quinoaSalad, .eggMuffins]
+            categoryID: "spanish",
+            label: "Spanish",
+            summary: "Paella, gazpacho, tortilla, fabada, and classic Spanish dishes.",
+            systemImage: "fork.knife",
+            recipeIDs: [.paella, .sopaDeAjo, .tortillaDePatatas, .gazpacho, .fabadaAsturiana, .torrijas]
         ),
         RecipePackDefinition(
             categoryID: "breakfast",
