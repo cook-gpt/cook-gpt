@@ -42,8 +42,7 @@ enum SampleDataSeeder {
             return
         }
 
-        let profile = DietProfile(name: "Balanced", dietType: .balanced, isActive: true)
-        context.insert(profile)
+        DietProfileSeeder.seedIfNeeded(context: context)
 
         let groceryList = GroceryList(name: "Shopping list")
         context.insert(groceryList)

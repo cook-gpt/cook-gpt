@@ -4,6 +4,7 @@
 //  Category filter chips, compact selection, and searchable picker.
 //
 
+import SwiftData
 import SwiftUI
 
 struct RecipeCategorySelectionSection: View {
@@ -50,12 +51,18 @@ struct RecipeCategorySelectionSection: View {
 struct RecipeCategoryPickerContent: View {
     @Binding var selectedCategoryIDs: Set<String>
     @Environment(AppSettingsStore.self) private var settings
+    @Query(sort: \Recipe.title) private var recipes: [Recipe]
     @State private var searchText = ""
+
+    private var orderedCategories: [AppCategory] {
+        let byID = Dictionary(uniqueKeysWithValues: settings.allCategories.map { ($0.id, $0) })
+        return settings.categoryIDsInDisplayOrder().compactMap { byID[$0] }
+    }
 
     private var filteredCategories: [AppCategory] {
         let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !query.isEmpty else { return settings.allCategories }
-        return settings.allCategories.filter { category in
+        guard !query.isEmpty else { return orderedCategories }
+        return orderedCategories.filter { category in
             category.label.localizedCaseInsensitiveContains(query)
                 || category.id.localizedCaseInsensitiveContains(query)
         }
@@ -67,24 +74,23 @@ struct RecipeCategoryPickerContent: View {
                 ContentUnavailableView.search(text: searchText)
             } else {
                 ForEach(filteredCategories) { category in
-                    Button {
-                        toggle(category.id)
-                    } label: {
-                        HStack {
-                            Text(category.label)
-                            Spacer()
-                            if selectedCategoryIDs.contains(category.id) {
-                                Image(systemName: "checkmark")
-                                    .font(.body.weight(.semibold))
-                                    .foregroundStyle(Color.accentColor)
-                            }
-                        }
-                    }
-                    .foregroundStyle(.primary)
+                    RecipeCategoryChecklistRow(
+                        label: category.label,
+                        isSelected: selectedCategoryIDs.contains(category.id),
+                        recipeCount: recipeCount(for: category.id),
+                        onToggle: { toggle(category.id) }
+                    )
                 }
             }
         }
         .searchable(text: $searchText, prompt: "Search categories")
+        .onAppear {
+            settings.ensureCategoriesExist(tagIDs: Set(recipes.flatMap(\.tags)))
+        }
+    }
+
+    private func recipeCount(for categoryID: String) -> Int {
+        recipes.count { $0.tags.contains(categoryID) }
     }
 
     private func toggle(_ categoryID: String) {
@@ -93,6 +99,34 @@ struct RecipeCategoryPickerContent: View {
         } else {
             selectedCategoryIDs.insert(categoryID)
         }
+    }
+}
+
+struct RecipeCategoryChecklistRow: View {
+    let label: String
+    let isSelected: Bool
+    let recipeCount: Int
+    let onToggle: () -> Void
+
+    var body: some View {
+        Button(action: onToggle) {
+            HStack(spacing: 12) {
+                Image(systemName: isSelected ? "checkmark.circle.fill" : "circle")
+                    .font(.title3)
+                    .foregroundStyle(isSelected ? .green : .secondary)
+
+                Text(label)
+
+                Spacer(minLength: 8)
+
+                Text(String(format: String(localized: "Recipes: %lld"), recipeCount))
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+            .padding(.vertical, 2)
+        }
+        .buttonStyle(.plain)
+        .foregroundStyle(.primary)
     }
 }
 

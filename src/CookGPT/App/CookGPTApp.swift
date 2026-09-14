@@ -33,6 +33,7 @@ struct CookGPTApp: App {
                     } else {
                         SampleDataSeeder.seedMinimalInstallIfNeeded(context: context)
                     }
+                    DietProfileSeeder.seedIfNeeded(context: context)
 
                     let recipeDescriptor = FetchDescriptor<Recipe>()
                     let recipes = (try? context.fetch(recipeDescriptor)) ?? []

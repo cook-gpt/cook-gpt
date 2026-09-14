@@ -11,48 +11,62 @@ struct MealPlanRequest {
     let startDate: Date
     let numberOfDays: Int
     let servings: Int
-    let dietType: DietType
+    let dietProfileID: UUID
     let mealSlots: [MealSlot]
 }
 
 enum MealPlanner {
-    static func canOpenMealPlanner(from recipes: [Recipe]) -> Bool {
+    static func canOpenMealPlanner(
+        from recipes: [Recipe],
+        globalRules: GlobalMealPlanningRules = .default
+    ) -> Bool {
         guard !recipes.isEmpty else { return false }
 
+        let balanced = DietProfile.balancedPreset()
         return MealSlot.allCases.contains { slot in
-            !eligibleRecipes(dietType: .balanced, from: recipes, for: slot).isEmpty
+            !eligibleRecipes(profile: balanced, globalRules: globalRules, from: recipes, for: slot).isEmpty
         }
     }
 
     static func requiresExclusiveLunchOrDinner(
-        dietType: DietType,
-        from recipes: [Recipe]
+        profile: DietProfile,
+        from recipes: [Recipe],
+        globalRules: GlobalMealPlanningRules = .default
     ) -> Bool {
         let lunchDinnerIDs = Set(
-            eligibleRecipes(dietType: dietType, from: recipes, for: .lunch).map(\.id)
+            eligibleRecipes(profile: profile, globalRules: globalRules, from: recipes, for: .lunch).map(\.id)
         )
         return lunchDinnerIDs.count == 1
     }
 
-    static func availableDietTypes(
+    static func availableDietProfiles(
         from recipes: [Recipe],
-        for mealSlots: [MealSlot]
-    ) -> [DietType] {
-        DietType.allCases.filter { dietType in
-            canPlanMeals(dietType: dietType, from: recipes, for: mealSlots)
-                && (dietType == .balanced || hasMinimumCategoryVariety(dietType: dietType, from: recipes, for: mealSlots))
+        profiles: [DietProfile],
+        for mealSlots: [MealSlot],
+        globalRules: GlobalMealPlanningRules = .default
+    ) -> [DietProfile] {
+        profiles.filter { profile in
+            canPlanMeals(profile: profile, globalRules: globalRules, from: recipes, for: mealSlots)
+                && (!profile.requiresCategoryVariety
+                    || hasMinimumCategoryVariety(
+                        profile: profile,
+                        globalRules: globalRules,
+                        from: recipes,
+                        for: mealSlots
+                    ))
         }
     }
 
     static func canPlanMeals(
-        dietType: DietType,
+        profile: DietProfile,
+        globalRules: GlobalMealPlanningRules = .default,
         from recipes: [Recipe],
         for mealSlots: [MealSlot]
     ) -> Bool {
         guard !mealSlots.isEmpty else { return false }
 
         guard mealSlots.allSatisfy({ slot in
-            !eligibleRecipes(dietType: dietType, from: recipes, for: slot).isEmpty
+            !eligibleRecipes(profile: profile, globalRules: globalRules, from: recipes, for: slot).isEmpty
         }) else {
             return false
         }
@@ -60,19 +74,24 @@ enum MealPlanner {
         let lunchAndDinner = mealSlots.contains(.lunch) && mealSlots.contains(.dinner)
         guard lunchAndDinner else { return true }
 
-        let lunchIDs = Set(eligibleRecipes(dietType: dietType, from: recipes, for: .lunch).map(\.id))
-        let dinnerIDs = Set(eligibleRecipes(dietType: dietType, from: recipes, for: .dinner).map(\.id))
+        let lunchIDs = Set(
+            eligibleRecipes(profile: profile, globalRules: globalRules, from: recipes, for: .lunch).map(\.id)
+        )
+        let dinnerIDs = Set(
+            eligibleRecipes(profile: profile, globalRules: globalRules, from: recipes, for: .dinner).map(\.id)
+        )
         return lunchIDs.union(dinnerIDs).count >= 2
     }
 
     static func hasMinimumCategoryVariety(
-        dietType: DietType,
+        profile: DietProfile,
+        globalRules: GlobalMealPlanningRules = .default,
         from recipes: [Recipe],
         for mealSlots: [MealSlot]
     ) -> Bool {
         let eligibleIDs = Set(
             mealSlots.flatMap { slot in
-                eligibleRecipes(dietType: dietType, from: recipes, for: slot).map(\.id)
+                eligibleRecipes(profile: profile, globalRules: globalRules, from: recipes, for: slot).map(\.id)
             }
         )
 
@@ -87,34 +106,28 @@ enum MealPlanner {
     }
 
     static func eligibleRecipes(
-        dietType: DietType,
+        profile: DietProfile,
+        globalRules: GlobalMealPlanningRules = .default,
         from recipes: [Recipe],
         for mealSlot: MealSlot
     ) -> [Recipe] {
-        let excluded = AppSettingsStore.mealPlannerExcludedCategoryIDs
-        let breakfastCategoryID = AppSettingsStore.breakfastCategoryID
+        let mandatoryBlocks = DietRulesEvaluator.mandatoryBlocks(
+            global: globalRules,
+            profile: profile,
+            for: mealSlot
+        )
+        let forbidden = DietRulesEvaluator.forbiddenCategoryIDs(
+            global: globalRules,
+            profile: profile,
+            for: mealSlot
+        )
 
-        let slotFiltered = recipes.filter { recipe in
-            let tags = Set(recipe.tags)
-            guard tags.isDisjoint(with: excluded) else { return false }
-
-            switch mealSlot {
-            case .breakfast:
-                return tags.contains(breakfastCategoryID)
-            case .lunch, .dinner:
-                return !tags.contains(breakfastCategoryID)
-            }
-        }
-
-        let categories = Set(dietType.preferredCategoryIDs)
-
-        let filtered: [Recipe]
-        if categories.isEmpty {
-            filtered = slotFiltered
-        } else {
-            filtered = slotFiltered.filter { recipe in
-                !Set(recipe.tags).isDisjoint(with: categories)
-            }
+        let filtered = recipes.filter { recipe in
+            DietRulesEvaluator.recipeMatches(
+                tags: Set(recipe.tags),
+                mandatoryBlocks: mandatoryBlocks,
+                forbidden: forbidden
+            )
         }
 
         return filtered.sorted { lhs, rhs in
@@ -145,16 +158,17 @@ enum MealPlanner {
         startingAt startDate: Date,
         numberOfDays: Int,
         servings: Int,
-        dietType: DietType,
+        profile: DietProfile,
         mealSlots: [MealSlot],
         recipes: [Recipe],
-        context: ModelContext
+        context: ModelContext,
+        globalRules: GlobalMealPlanningRules = .default
     ) {
         guard !mealSlots.isEmpty else { return }
 
         let orderedMealSlots = mealSlots.sorted { $0.displayOrder < $1.displayOrder }
         let candidatesBySlot = Dictionary(uniqueKeysWithValues: orderedMealSlots.map { slot in
-            (slot, eligibleRecipes(dietType: dietType, from: recipes, for: slot))
+            (slot, eligibleRecipes(profile: profile, globalRules: globalRules, from: recipes, for: slot))
         })
 
         guard candidatesBySlot.values.contains(where: { !$0.isEmpty }) else { return }

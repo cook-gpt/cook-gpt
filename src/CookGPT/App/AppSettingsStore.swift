@@ -17,8 +17,11 @@ struct AppCategory: Identifiable, Codable, Hashable {
 final class AppSettingsStore {
     static let shared = AppSettingsStore()
 
-    static let mealPlannerExcludedCategoryIDs: Set<String> = ["dessert"]
     static let breakfastCategoryID = "breakfast"
+    static let dessertCategoryID = "dessert"
+
+    /// Always present for diet rules; hidden from the Recipes filter bar unless explicitly enabled.
+    static let essentialCategoryIDs: Set<String> = [breakfastCategoryID, dessertCategoryID]
 
     static let defaultCategories: [AppCategory] = [
         AppCategory(id: "vegan", label: "Vegan"),
@@ -44,6 +47,7 @@ final class AppSettingsStore {
         static let measurementSystem = "appSettings.measurementSystem"
         static let recipeFilterActiveCategoryIDs = "appSettings.recipeFilterActiveCategoryIDs"
         static let hasCompletedOnboarding = "appSettings.hasCompletedOnboarding"
+        static let globalMealPlanningRules = "appSettings.globalMealPlanningRules"
     }
 
     var appTheme: AppTheme = .system {
@@ -105,6 +109,10 @@ final class AppSettingsStore {
     /// Shows the onboarding overlay again without changing starter data.
     private(set) var shouldPresentOnboarding = false
 
+    var globalMealPlanningRules: GlobalMealPlanningRules = .default {
+        didSet { persistGlobalMealPlanningRules() }
+    }
+
     var allCategories: [AppCategory] {
         categories
     }
@@ -151,13 +159,19 @@ final class AppSettingsStore {
         }
         categories = Self.loadCategories(hasCompletedOnboarding: hasCompletedOnboarding)
         recipeFilterActiveCategoryIDs = Self.loadRecipeFilterActiveCategoryIDs()
+        ensureEssentialCategoriesExist()
+        globalMealPlanningRules = Self.loadGlobalMealPlanningRules()
     }
 
     func applyImportedRecipeCategories(
         selectedPackCategoryIDs: [String],
         recipeTagIDs: Set<String>
     ) {
-        ensureCategoriesExist(tagIDs: recipeTagIDs.union(Set(selectedPackCategoryIDs)))
+        ensureCategoriesExist(
+            tagIDs: recipeTagIDs
+                .union(Set(selectedPackCategoryIDs))
+                .union(Self.essentialCategoryIDs)
+        )
 
         let activeOrdered = Self.uniquePreservingOrder(selectedPackCategoryIDs).filter { id in
             categories.contains { $0.id == id }
@@ -169,7 +183,12 @@ final class AppSettingsStore {
         reorderCategories(to: activeOrdered + inactive)
     }
 
+    func ensureEssentialCategoriesExist() {
+        ensureCategoriesExist(tagIDs: Self.essentialCategoryIDs)
+    }
+
     func ensureCategoriesExist(tagIDs: Set<String>) {
+        let tagIDs = tagIDs.union(Self.essentialCategoryIDs)
         guard !tagIDs.isEmpty else { return }
 
         var existingIDs = Set(categories.map(\.id))
@@ -232,6 +251,8 @@ final class AppSettingsStore {
         measurementSystem = MeasurementSystem.preferredForCurrentLocale
         categories = []
         recipeFilterActiveCategoryIDs = []
+        ensureEssentialCategoriesExist()
+        globalMealPlanningRules = .default
         hasCompletedOnboarding = false
         shouldPresentOnboarding = false
     }
@@ -241,11 +262,10 @@ final class AppSettingsStore {
         guard !allIDs.isEmpty else { return [] }
 
         if recipeFilterActiveCategoryIDs.isEmpty {
-            return allIDs
+            return allIDs.filter { !Self.essentialCategoryIDs.contains($0) }
         }
 
-        var activeIDs = recipeFilterActiveCategoryIDs.filter { allIDs.contains($0) }
-        return activeIDs
+        return recipeFilterActiveCategoryIDs.filter { allIDs.contains($0) }
     }
 
     func inactiveRecipeFilterCategoryIDs() -> [String] {
@@ -291,6 +311,17 @@ final class AppSettingsStore {
         tags.map { label(forCategoryID: $0) }
     }
 
+    func selectionLabel(forCategoryIDs categoryIDs: Set<String>) -> String {
+        switch categoryIDs.count {
+        case 0:
+            String(localized: "None")
+        case 1:
+            label(forCategoryID: categoryIDs.first!)
+        default:
+            String(format: String(localized: "%lld selected"), categoryIDs.count)
+        }
+    }
+
     @discardableResult
     func addCategory(label: String) -> Bool {
         let trimmed = label.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -312,6 +343,7 @@ final class AppSettingsStore {
     }
 
     func removeCategory(id: String) {
+        guard !Self.essentialCategoryIDs.contains(id) else { return }
         categories.removeAll { $0.id == id }
         if !recipeFilterActiveCategoryIDs.isEmpty {
             setRecipeFilterActiveCategoryIDs(
@@ -385,19 +417,25 @@ final class AppSettingsStore {
     private static func loadHasCompletedOnboarding() -> Bool {
         UserDefaults.standard.bool(forKey: Keys.hasCompletedOnboarding)
     }
+
+    private static func loadGlobalMealPlanningRules() -> GlobalMealPlanningRules {
+        guard let data = UserDefaults.standard.data(forKey: Keys.globalMealPlanningRules),
+              let decoded = try? JSONDecoder().decode(GlobalMealPlanningRules.self, from: data) else {
+            return .default
+        }
+        return decoded
+    }
+
+    private func persistGlobalMealPlanningRules() {
+        if let data = try? JSONEncoder().encode(globalMealPlanningRules) {
+            UserDefaults.standard.set(data, forKey: Keys.globalMealPlanningRules)
+        }
+    }
 }
 
 enum AppMetadata {
     static let privacyPolicyURL = URL(string: "https://cook-gpt.pages.dev/privacy")!
     static let sourceCodeURL = URL(string: "https://github.com/cook-gpt/cook-gpt")!
-
-    static var advancedProFeaturesStatus: String {
-        String(localized: "Coming soon")
-    }
-
-    static var advancedSectionFooter: String {
-        String(localized: "Additional pro features are planned for a future update. The current version is free and includes no in-app purchases or subscriptions.")
-    }
 
     static var shareAttribution: String {
         String(localized: "Made with CookGPT: Gourmet Plan & Taste")

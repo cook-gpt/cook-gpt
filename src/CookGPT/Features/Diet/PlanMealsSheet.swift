@@ -18,12 +18,13 @@ struct PlanMealsSheet: View {
     let initialServings: Int?
     let onPlan: (MealPlanRequest) -> Void
 
+    @Query(sort: \DietProfile.name) private var allDietProfiles: [DietProfile]
     @Query(sort: \Recipe.title) private var recipes: [Recipe]
 
     @State private var selectedStartDate: Date
     @State private var selectedNumberOfDays: Int
     @State private var servings = 1
-    @State private var selectedDietType: DietType
+    @State private var selectedProfileID: UUID
     @State private var includeBreakfast = false
     @State private var includeLunch = true
     @State private var includeDinner = true
@@ -46,10 +47,14 @@ struct PlanMealsSheet: View {
         _selectedStartDate = State(initialValue: MealScheduleCalendar.startOfDay(startDate))
         _selectedNumberOfDays = State(initialValue: numberOfDays)
         _servings = State(initialValue: initialServings ?? AppSettingsStore.shared.defaultPlannerServings)
-        _selectedDietType = State(initialValue: profile.dietType)
+        _selectedProfileID = State(initialValue: profile.id)
         _includeBreakfast = State(initialValue: includedMealSlots.contains(.breakfast))
         _includeLunch = State(initialValue: includedMealSlots.contains(.lunch))
         _includeDinner = State(initialValue: includedMealSlots.contains(.dinner))
+    }
+
+    private var selectedProfile: DietProfile? {
+        allDietProfiles.first { $0.id == selectedProfileID }
     }
 
     private var selectedMealSlots: [MealSlot] {
@@ -64,14 +69,22 @@ struct PlanMealsSheet: View {
         return slots
     }
 
-    private var availableDietTypes: [DietType] {
-        MealPlanner.availableDietTypes(from: recipes, for: selectedMealSlots)
+    private var availableDietProfiles: [DietProfile] {
+        MealPlanner.availableDietProfiles(
+            from: recipes,
+            profiles: allDietProfiles,
+            for: selectedMealSlots,
+            globalRules: settings.globalMealPlanningRules
+        )
     }
 
     private var eligibleRecipesDescription: String {
-        selectedMealSlots.map { slot in
+        guard let selectedProfile else { return "" }
+
+        return selectedMealSlots.map { slot in
             let count = MealPlanner.eligibleRecipes(
-                dietType: selectedDietType,
+                profile: selectedProfile,
+                globalRules: settings.globalMealPlanningRules,
                 from: recipes,
                 for: slot
             ).count
@@ -81,23 +94,32 @@ struct PlanMealsSheet: View {
     }
 
     private var canEnableBreakfastPlanning: Bool {
-        !MealPlanner.eligibleRecipes(
-            dietType: selectedDietType,
+        guard let selectedProfile else { return false }
+
+        return !MealPlanner.eligibleRecipes(
+            profile: selectedProfile,
+            globalRules: settings.globalMealPlanningRules,
             from: recipes,
             for: .breakfast
         ).isEmpty
     }
 
     private var requiresExclusiveLunchOrDinner: Bool {
-        MealPlanner.requiresExclusiveLunchOrDinner(
-            dietType: selectedDietType,
-            from: recipes
+        guard let selectedProfile else { return false }
+
+        return MealPlanner.requiresExclusiveLunchOrDinner(
+            profile: selectedProfile,
+            from: recipes,
+            globalRules: settings.globalMealPlanningRules
         )
     }
 
     private var canPlan: Bool {
-        MealPlanner.canPlanMeals(
-            dietType: selectedDietType,
+        guard let selectedProfile else { return false }
+
+        return MealPlanner.canPlanMeals(
+            profile: selectedProfile,
+            globalRules: settings.globalMealPlanningRules,
             from: recipes,
             for: selectedMealSlots
         )
@@ -136,12 +158,12 @@ struct PlanMealsSheet: View {
         NavigationStack {
             Form {
                 Section("Diet") {
-                    Picker("Type", selection: $selectedDietType) {
-                        ForEach(availableDietTypes, id: \.self) { dietType in
-                            Text(dietType.label).tag(dietType)
+                    Picker("Diet", selection: $selectedProfileID) {
+                        ForEach(availableDietProfiles, id: \.id) { dietProfile in
+                            Text(dietProfile.name).tag(dietProfile.id)
                         }
                     }
-                    Text("Rated recipes are prioritized using a mix of star rating and difficulty. Recipes are matched to your diet type. More diet types appear when at least one category has two or more matching recipes. Breakfast recipes are used only for breakfast. Dessert recipes are excluded.")
+                    Text("Rated recipes are prioritized using a mix of star rating and difficulty. Recipes are matched using your diet rules and the general meal rules in Settings. More diets appear when at least one category has two or more matching recipes.")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
@@ -152,9 +174,9 @@ struct PlanMealsSheet: View {
                     Toggle("Dinner", isOn: dinnerBinding)
                 } footer: {
                     if requiresExclusiveLunchOrDinner {
-                        Text("Only one lunch or dinner recipe is available for this diet type, so choose lunch or dinner.")
+                        Text("Only one lunch or dinner recipe is available for this diet, so choose lunch or dinner.")
                     } else {
-                        Text("Choose which meals to plan each day. Breakfast uses only recipes tagged Breakfast. Lunch and dinner never use breakfast recipes. Lunch and dinner on the same day always use different recipes when possible.")
+                        Text("Choose which meals to plan each day. General meal rules and diet rules apply to each slot. Lunch and dinner on the same day always use different recipes when possible.")
                     }
                 }
 
@@ -209,16 +231,16 @@ struct PlanMealsSheet: View {
                 } else {
                     servings = settings.defaultPlannerServings
                 }
-                syncSelectedDietType()
+                syncSelectedProfile()
                 applyMealSlotConstraints()
             }
-            .onChange(of: selectedDietType) { _, _ in
-                syncSelectedDietType()
+            .onChange(of: selectedProfileID) { _, _ in
+                syncSelectedProfile()
                 applyMealSlotConstraints()
             }
-            .onChange(of: includeBreakfast) { _, _ in syncSelectedDietType() }
-            .onChange(of: includeLunch) { _, _ in syncSelectedDietType() }
-            .onChange(of: includeDinner) { _, _ in syncSelectedDietType() }
+            .onChange(of: includeBreakfast) { _, _ in syncSelectedProfile() }
+            .onChange(of: includeLunch) { _, _ in syncSelectedProfile() }
+            .onChange(of: includeDinner) { _, _ in syncSelectedProfile() }
             .alert(
                 "Breakfast planning unavailable",
                 isPresented: $showBreakfastUnavailableAlert
@@ -304,18 +326,18 @@ struct PlanMealsSheet: View {
         }
     }
 
-    private func syncSelectedDietType() {
-        let available = availableDietTypes
+    private func syncSelectedProfile() {
+        let available = availableDietProfiles
         guard !available.isEmpty else { return }
 
-        if available.contains(selectedDietType) {
+        if available.contains(where: { $0.id == selectedProfileID }) {
             return
         }
 
-        if available.contains(profile.dietType) {
-            selectedDietType = profile.dietType
+        if available.contains(where: { $0.id == profile.id }) {
+            selectedProfileID = profile.id
         } else {
-            selectedDietType = available[0]
+            selectedProfileID = available[0].id
         }
     }
 
@@ -325,7 +347,7 @@ struct PlanMealsSheet: View {
                 startDate: selectedStartDate,
                 numberOfDays: selectedNumberOfDays,
                 servings: servings,
-                dietType: selectedDietType,
+                dietProfileID: selectedProfileID,
                 mealSlots: selectedMealSlots
             )
         )

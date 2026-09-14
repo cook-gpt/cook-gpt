@@ -24,6 +24,8 @@ struct DietRootView: View {
     @Query(filter: #Predicate<DietProfile> { $0.isActive == true })
     private var activeProfiles: [DietProfile]
 
+    @Query(sort: \DietProfile.name) private var dietProfiles: [DietProfile]
+
     @Query(sort: \Recipe.title) private var recipes: [Recipe]
     @Query(sort: \ScheduledMeal.day) private var scheduledMeals: [ScheduledMeal]
     @Environment(\.modelContext) private var modelContext
@@ -338,14 +340,19 @@ struct DietRootView: View {
             let recipeDescriptor = FetchDescriptor<Recipe>(sortBy: [SortDescriptor(\.title)])
             let recipes = (try? modelContext.fetch(recipeDescriptor)) ?? []
 
+            guard let profile = dietProfiles.first(where: { $0.id == request.dietProfileID }) else {
+                return
+            }
+
             MealPlanner.planMeals(
                 startingAt: request.startDate,
                 numberOfDays: request.numberOfDays,
                 servings: request.servings,
-                dietType: request.dietType,
+                profile: profile,
                 mealSlots: request.mealSlots,
                 recipes: recipes,
-                context: modelContext
+                context: modelContext,
+                globalRules: settings.globalMealPlanningRules
             )
 
             syncMealSlotCache()
@@ -394,7 +401,7 @@ struct DietRootView: View {
         List {
             if let profile = activeProfile {
                 Section("Diet") {
-                    LabeledContent("Type", value: profile.dietType.label)
+                    LabeledContent("Diet", value: profile.name)
                 }
             }
 
@@ -659,8 +666,12 @@ struct DietRootView: View {
     }
 
     private var defaultPlanMealSlots: Set<MealSlot> {
-        let dietType = activeProfile?.dietType ?? .balanced
-        if MealPlanner.requiresExclusiveLunchOrDinner(dietType: dietType, from: recipes) {
+        let profile = activeProfile ?? DietProfile.balancedPreset()
+        if MealPlanner.requiresExclusiveLunchOrDinner(
+            profile: profile,
+            from: recipes,
+            globalRules: settings.globalMealPlanningRules
+        ) {
             return [.lunch]
         }
         return [.lunch, .dinner]

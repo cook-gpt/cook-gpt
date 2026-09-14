@@ -37,6 +37,7 @@ struct RecipeCategoryFilterEditorSheet: View {
                                 isActive: activeCategoryIDs.contains(categoryID),
                                 recipeCount: recipeCount(for: categoryID),
                                 isEditing: isEditing,
+                                canDelete: !AppSettingsStore.essentialCategoryIDs.contains(categoryID),
                                 onToggleActive: { toggleCategory(categoryID) },
                                 onDelete: { deleteCategory(categoryID) }
                             )
@@ -54,7 +55,7 @@ struct RecipeCategoryFilterEditorSheet: View {
                     if isEditing {
                         Text("Drag to set the order shown on Recipes. Tap the red button to delete a category.")
                     } else {
-                        Text("Checked categories appear in the Recipes filter bar.")
+                        Text("Visible categories appear in the Recipes filter bar.")
                     }
                 }
             }
@@ -132,6 +133,8 @@ struct RecipeCategoryFilterEditorSheet: View {
     }
 
     private func deleteCategory(_ categoryID: String) {
+        guard !AppSettingsStore.essentialCategoryIDs.contains(categoryID) else { return }
+
         for recipe in recipes where recipe.tags.contains(categoryID) {
             recipe.tags.removeAll { $0 == categoryID }
         }
@@ -147,7 +150,11 @@ struct RecipeCategoryFilterEditorSheet: View {
         settings.reorderCategories(to: orderedCategoryIDs)
 
         let orderedActive = orderedCategoryIDs.filter { activeCategoryIDs.contains($0) }
-        if orderedActive.count == settings.allCategories.count {
+        let defaultActiveIDs = Set(
+            orderedCategoryIDs.filter { !AppSettingsStore.essentialCategoryIDs.contains($0) }
+        )
+
+        if Set(orderedActive) == defaultActiveIDs {
             settings.setRecipeFilterActiveCategoryIDs([])
         } else {
             settings.setRecipeFilterActiveCategoryIDs(orderedActive)
@@ -160,24 +167,31 @@ private struct RecipeCategoryFilterRow: View {
     let isActive: Bool
     let recipeCount: Int
     let isEditing: Bool
+    let canDelete: Bool
     let onToggleActive: () -> Void
     let onDelete: () -> Void
 
     var body: some View {
         HStack(spacing: 12) {
             if isEditing {
-                Button(role: .destructive, action: onDelete) {
-                    Image(systemName: "minus.circle.fill")
-                        .font(.title3)
-                        .foregroundStyle(.red)
+                if canDelete {
+                    Button(role: .destructive, action: onDelete) {
+                        Image(systemName: "minus.circle.fill")
+                            .font(.title3)
+                            .foregroundStyle(.red)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel("Delete \(label)")
+                } else {
+                    Color.clear
+                        .frame(width: 28, height: 28)
+                        .accessibilityHidden(true)
                 }
-                .buttonStyle(.plain)
-                .accessibilityLabel("Delete \(label)")
             } else {
                 Button(action: onToggleActive) {
-                    Image(systemName: isActive ? "checkmark.circle.fill" : "circle")
+                    Image(systemName: isActive ? "eye" : "eye.slash")
                         .font(.title3)
-                        .foregroundStyle(isActive ? .green : .secondary)
+                        .foregroundStyle(isActive ? .blue : .red)
                 }
                 .buttonStyle(.plain)
                 .accessibilityLabel(isActive ? "Hide \(label) from filter bar" : "Show \(label) in filter bar")

@@ -7,6 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-09-14
+
+### Added
+
+- **Custom diets (Settings → Advanced → Diets)** — add, edit, and delete diet profiles with mandatory and forbidden recipe categories; optional per-meal overrides for breakfast, lunch, and dinner (e.g. low-carb dinners on a keto plan)
+- **General meal rules** — global forbidden categories (default: dessert) and per-slot mandatory/forbidden rules for breakfast, lunch, and dinner (default: breakfast requires Breakfast tag; lunch and dinner forbid Breakfast)
+- **Default diet from list** — swipe right on a diet in Settings to make it the default
+- **Essential categories** — Breakfast and Dessert always exist after reset or first launch for diet rules, but stay hidden from the Recipes filter bar until enabled
+
+### Changed
+
+- **Settings** — removed “Pro features coming soon”; meal planning now uses custom diet profiles and general meal rules instead of fixed diet types
+- **Diet editor** — “Active diet” renamed to “Default diet”; tab bar hidden while editing a diet or picking its categories
+- **Category rules UI** — mandatory/forbidden pickers use the checklist layout with `Recipes: N` counts; single selections show the category name; ✓ saves changes and back discards
+- **Edit categories** — visibility toggles use a blue eye (visible) and red crossed-out eye (hidden) instead of checkmarks
+- **Recipe category sheet** — ✕ and ✓ toolbar icons instead of Cancel/Save labels
+- **Meal overrides** — empty per-meal custom rules are turned off automatically when saving a diet
+
 ## [1.0.1] - 2026-09-13
 
 ### Added

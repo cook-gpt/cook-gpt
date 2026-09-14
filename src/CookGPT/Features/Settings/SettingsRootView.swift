@@ -23,6 +23,7 @@ struct SettingsRootView: View {
             SettingsStepperSection(settings: settings)
             SettingsMenuPickerSection(settings: settings)
             SettingsNavigationSection(settings: settings)
+            SettingsAdvancedSection()
             SettingsInformationSection()
             SettingsLinksSection()
             SettingsTutorialSection()
@@ -168,19 +169,38 @@ private struct SettingsNavigationSection: View {
     }
 }
 
+// MARK: - Advanced
+
+private struct SettingsAdvancedSection: View {
+    var body: some View {
+        Section {
+            NavigationLink {
+                DietSettingsRootView()
+            } label: {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Diets")
+                    Text("Custom meal-planning rules and general breakfast, lunch, and dinner rules")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+        } header: {
+            Text("Advanced")
+        } footer: {
+            Text("Create diets such as keto or low-carb plans using mandatory and forbidden recipe categories.")
+        }
+    }
+}
+
 // MARK: - Information
 
 private struct SettingsInformationSection: View {
     var body: some View {
         Section {
-            LabeledContent("Pro features", value: AppMetadata.advancedProFeaturesStatus)
             LabeledContent("Version", value: AppMetadata.version)
             LabeledContent("Language", value: AppMetadata.languageName)
         } footer: {
-            VStack(alignment: .leading, spacing: 8) {
-                Text(AppMetadata.advancedSectionFooter)
-                Text("Change language in Settings → CookGPT → Language.")
-            }
+            Text("Change language in Settings → CookGPT → Language.")
         }
     }
 }
