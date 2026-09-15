@@ -153,7 +153,6 @@ private struct SettingsLinksSection: View {
     var body: some View {
         Section {
             Link("Privacy Policy", destination: AppMetadata.privacyPolicyURL)
-            Link("Source Code", destination: AppMetadata.sourceCodeURL)
         }
     }
 }
