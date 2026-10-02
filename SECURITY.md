@@ -2,7 +2,7 @@
 
 ## Reporting a vulnerability
 
-Contact [@xarlizard](https://github.com/xarlizard) or use [GitHub Security Advisories](https://github.com/cook-gpt/cook-gpt/security/advisories).
+Contact [@charlite](https://github.com/charlite) or use [GitHub Security Advisories](https://github.com/cook-gpt/cook-gpt/security/advisories).
 
 ## Scope
 

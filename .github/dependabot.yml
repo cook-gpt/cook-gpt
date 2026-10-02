@@ -5,7 +5,7 @@ updates:
     schedule:
       interval: "weekly"
     assignees:
-      - xarlizard
+      - charlite
     commit-message:
       prefix: "ci"
       include: "scope"

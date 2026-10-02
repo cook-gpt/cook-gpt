@@ -2,7 +2,7 @@ export const GITHUB_ORG = 'cook-gpt';
 
 export const GITHUB_REPO = 'cook-gpt/cook-gpt';
 
-export const GITHUB_OWNER = 'xarlizard';
+export const GITHUB_OWNER = 'charlite';
 
 export const GITHUB_ORG_URL = `https://github.com/${GITHUB_ORG}`;
 

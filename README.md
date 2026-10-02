@@ -23,7 +23,7 @@
 
 <hr>
 
-Built by [xarlizard](https://github.com/xarlizard). Open source under [MIT](LICENSE).
+Built by [charlite](https://github.com/charlite). Open source under [MIT](LICENSE).
 
 ## Features
 

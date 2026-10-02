@@ -14,4 +14,4 @@ timestamp: 2026-08-25T00:00:00Z
 
 The repository ships community docs, GitHub automation, and an Xcode project scaffold. Application features are added incrementally under `src/` and documented in `specs/features/`.
 
-Maintained by [xarlizard](https://github.com/xarlizard).
+Maintained by [charlite](https://github.com/charlite).

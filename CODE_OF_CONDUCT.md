@@ -2,7 +2,7 @@
 
 ## Enforcement
 
-Report issues to [@xarlizard](https://github.com/xarlizard).
+Report issues to [@charlite](https://github.com/charlite).
 
 Adapted from [Contributor Covenant](https://www.contributor-covenant.org/version/2/0/code_of_conduct.html) v2.0.
 

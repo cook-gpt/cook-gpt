@@ -6,7 +6,7 @@ Guide for maintainers and coding agents working on **cook-gpt/cook-gpt**.
 
 **cook-gpt** is an app that guides you through cooking recipes, health diets, and groceries management. The iOS client lives under `src/`.
 
-Maintained by [xarlizard](https://github.com/xarlizard).
+Maintained by [charlite](https://github.com/charlite).
 
 ## First steps
 
