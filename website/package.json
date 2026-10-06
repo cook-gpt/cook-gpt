@@ -50,11 +50,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cook-gpt/cook-gpt.git"
+    "url": "git+https://github.com/cook-gpt/.github.git"
   },
   "homepage": "https://cook-gpt.pages.dev",
   "bugs": {
-    "url": "https://github.com/cook-gpt/cook-gpt/issues"
+    "url": "https://github.com/cook-gpt/.github/issues"
   },
   "keywords": [
     "cook-gpt",

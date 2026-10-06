@@ -57,18 +57,18 @@
   },
   "footer": {
     "tagline": "Recetas, planificación de comidas y compras — diseñado para iOS.",
-    "openSource": "Código abierto en GitHub",
     "copyright": "Copyright © {{year}} CookGPT. Todos los derechos reservados.",
     "columns": {
       "product": "Producto",
       "legal": "Legal",
-      "openSource": "Código abierto"
+      "github": "Código abierto"
     },
     "links": {
       "org": "Organización en GitHub",
       "repo": "Repositorio",
       "author": "@{{author}}"
-    }
+    },
+    "github": "Código abierto en GitHub"
   },
   "privacy": {
     "eyebrow": "Legal",
@@ -127,14 +127,8 @@
       "groceries": "Compras — listas dinámicas a partir de tu plan de comidas",
       "settings": "Ajustes — tema, categorías, unidades, desayuno y restablecer datos"
     },
-    "repoDocsTitle": "Repositorio",
-    "repoDocsDescription": "$t(app.name) es de código abierto. La configuración de desarrollo y las guías de contribución están en GitHub.",
-    "links": {
-      "readme": "README",
-      "contributing": "Contribuir",
-      "changelog": "Registro de cambios",
-      "security": "Política de seguridad"
-    },
-    "viewOnGitHub": "Ver repositorio en GitHub"
+    "githubTitle": "GitHub",
+    "githubDescription": "Follow the public organization on GitHub. Application source is not published.",
+    "viewOrgOnGitHub": "View organization on GitHub"
   }
 }

@@ -6,7 +6,6 @@ import {
   GITHUB_ORG_URL,
   GITHUB_OWNER,
   GITHUB_PROFILE_URL,
-  REPO_URL,
 } from '@/utils/releases';
 
 function GitHubIcon({ className }: { className?: string }) {
@@ -82,10 +81,9 @@ export function SiteFooter() {
           />
 
           <FooterColumn
-            title={t('footer.columns.openSource')}
+            title={t('footer.columns.github')}
             links={[
               { type: 'external', href: GITHUB_ORG_URL, label: t('footer.links.org') },
-              { type: 'external', href: REPO_URL, label: t('footer.links.repo') },
               {
                 type: 'external',
                 href: GITHUB_PROFILE_URL,
@@ -100,13 +98,13 @@ export function SiteFooter() {
             {t('footer.copyright', { year })}
           </p>
           <a
-            href={GITHUB_PROFILE_URL}
+            href={GITHUB_ORG_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 text-[11px] text-muted-foreground transition-colors hover:text-foreground"
           >
             <GitHubIcon className="size-3.5" />
-            <span>{t('footer.openSource')}</span>
+            <span>{t('footer.github')}</span>
           </a>
         </div>
       </div>

@@ -7,7 +7,7 @@
 ## 2026-08-25
 
 * **Specs**: Added platform, app shell, data models, recipes, diet, groceries, and MVP implementation specs (05–11).
-* **Rebrand**: Initialized from @open-templates template as **cook-gpt** by charlite. SwiftUI iOS app scaffold added.
+* **Rebrand**: **cook-gpt** product repository established by charlite. SwiftUI iOS app scaffold added.
 
 ## 2026-07-15
 

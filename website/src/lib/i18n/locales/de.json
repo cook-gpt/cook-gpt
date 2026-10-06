@@ -74,30 +74,24 @@
       "groceries": "Einkauf — dynamische Listen aus deinem Essensplan",
       "settings": "Einstellungen — Design, Kategorien, Einheiten, Frühstück und Daten zurücksetzen"
     },
-    "repoDocsTitle": "Repository",
-    "repoDocsDescription": "$t(app.name) ist Open Source. Entwicklungssetup und Beitragsrichtlinien findest du auf GitHub.",
-    "links": {
-      "readme": "README",
-      "contributing": "Mitwirken",
-      "changelog": "Änderungsprotokoll",
-      "security": "Sicherheitsrichtlinie"
-    },
-    "viewOnGitHub": "Repository auf GitHub ansehen"
+    "githubTitle": "GitHub",
+    "githubDescription": "Follow the public organization on GitHub. Application source is not published.",
+    "viewOrgOnGitHub": "View organization on GitHub"
   },
   "footer": {
     "tagline": "Rezepte, Essensplanung und Einkäufe — für iOS entwickelt.",
-    "openSource": "Open Source auf GitHub",
     "copyright": "Copyright © {{year}} CookGPT. Alle Rechte vorbehalten.",
     "columns": {
       "product": "Produkt",
       "legal": "Rechtliches",
-      "openSource": "Open Source"
+      "github": "Open Source"
     },
     "links": {
       "org": "GitHub-Organisation",
       "repo": "Repository",
       "author": "@{{author}}"
-    }
+    },
+    "github": "Open Source auf GitHub"
   },
   "privacy": {
     "eyebrow": "Rechtliches",
@@ -123,8 +117,8 @@
         "body": "Der App-Store-Link führt zu Apple. GitHub-Links führen zu GitHub. Keine weiteren Dienste."
       },
       {
-        "title": "Open Source",
-        "body": "$t(app.name) ist Open Source. Code auf GitHub einsehbar."
+        "title": "GitHub",
+        "body": "Links to GitHub on this site point to the public organization page at github.com/cook-gpt, not to private application source code."
       },
       {
         "title": "Änderungen",

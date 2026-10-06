@@ -8,7 +8,7 @@ When Dependabot opens a pull request, this workflow amends the latest commit mes
 
 ## Runtime owner resolution
 
-Uses GitHub Actions context (same pattern as [npm-package-template](https://github.com/open-templates/npm-package-template)):
+Uses GitHub Actions context:
 
 - `github.repository_owner` — login name
 - `github.event.repository.owner.id` — noreply email id

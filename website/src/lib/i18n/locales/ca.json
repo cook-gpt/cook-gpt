@@ -74,30 +74,24 @@
       "groceries": "Compra — llistes dinàmiques del teu pla de menjars",
       "settings": "Configuració — tema, categories, unitats, esmorzar i restablir dades"
     },
-    "repoDocsTitle": "Repositori",
-    "repoDocsDescription": "$t(app.name) és de codi obert. La configuració de desenvolupament i les guies de contribució són a GitHub.",
-    "links": {
-      "readme": "README",
-      "contributing": "Contribuir",
-      "changelog": "Registre de canvis",
-      "security": "Política de seguretat"
-    },
-    "viewOnGitHub": "Veure el repositori a GitHub"
+    "githubTitle": "GitHub",
+    "githubDescription": "Follow the public organization on GitHub. Application source is not published.",
+    "viewOrgOnGitHub": "View organization on GitHub"
   },
   "footer": {
     "tagline": "Receptes, planificació de menjars i compra — dissenyat per a iOS.",
-    "openSource": "Codi obert a GitHub",
     "copyright": "Copyright © {{year}} CookGPT. Tots els drets reservats.",
     "columns": {
       "product": "Producte",
       "legal": "Legal",
-      "openSource": "Codi obert"
+      "github": "Codi obert"
     },
     "links": {
       "org": "Organització a GitHub",
       "repo": "Repositori",
       "author": "@{{author}}"
-    }
+    },
+    "github": "Codi obert a GitHub"
   },
   "privacy": {
     "eyebrow": "Legal",

@@ -74,30 +74,24 @@
       "groceries": "购物 — 根据餐食计划生成动态清单",
       "settings": "设置 — 主题、分类、单位、早餐选项和数据重置"
     },
-    "repoDocsTitle": "代码仓库",
-    "repoDocsDescription": "$t(app.name) 是开源项目，开发设置和贡献指南见 GitHub。",
-    "links": {
-      "readme": "README",
-      "contributing": "贡献指南",
-      "changelog": "更新日志",
-      "security": "安全政策"
-    },
-    "viewOnGitHub": "在 GitHub 上查看仓库"
+    "githubTitle": "GitHub",
+    "githubDescription": "Follow the public organization on GitHub. Application source is not published.",
+    "viewOrgOnGitHub": "View organization on GitHub"
   },
   "footer": {
     "tagline": "食谱、膳食规划与购物清单 — 为 iOS 设计。",
-    "openSource": "GitHub 开源",
     "copyright": "Copyright © {{year}} CookGPT. 保留所有权利。",
     "columns": {
       "product": "产品",
       "legal": "法律",
-      "openSource": "开源"
+      "github": "开源"
     },
     "links": {
       "org": "GitHub 组织",
       "repo": "代码库",
       "author": "@{{author}}"
-    }
+    },
+    "github": "GitHub 开源"
   },
   "privacy": {
     "eyebrow": "法律",

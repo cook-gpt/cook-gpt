@@ -74,30 +74,24 @@
       "groceries": "Покупки — динамические списки из плана питания",
       "settings": "Настройки — тема, категории, единицы, завтрак и сброс данных"
     },
-    "repoDocsTitle": "Репозиторий",
-    "repoDocsDescription": "$t(app.name) с открытым исходным кодом. Настройка разработки и руководства по участию — на GitHub.",
-    "links": {
-      "readme": "README",
-      "contributing": "Участие",
-      "changelog": "История изменений",
-      "security": "Политика безопасности"
-    },
-    "viewOnGitHub": "Открыть репозиторий на GitHub"
+    "githubTitle": "GitHub",
+    "githubDescription": "Follow the public organization on GitHub. Application source is not published.",
+    "viewOrgOnGitHub": "View organization on GitHub"
   },
   "footer": {
     "tagline": "Рецепты, планирование питания и покупки — для iOS.",
-    "openSource": "Открытый код на GitHub",
     "copyright": "Copyright © {{year}} CookGPT. Все права защищены.",
     "columns": {
       "product": "Продукт",
       "legal": "Правовая информация",
-      "openSource": "Открытый код"
+      "github": "Открытый код"
     },
     "links": {
       "org": "Организация GitHub",
       "repo": "Репозиторий",
       "author": "@{{author}}"
-    }
+    },
+    "github": "Открытый код на GitHub"
   },
   "privacy": {
     "eyebrow": "Правовая информация",
