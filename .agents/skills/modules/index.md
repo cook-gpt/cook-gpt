@@ -21,4 +21,4 @@ Optional deep-dive recreation guides. Prefer the skill packs in the parent folde
 ## See also
 
 * [docs/architecture.md](../../../docs/architecture.md)
-* [specs/features/](../../../specs/features/)
+* [specs/app-ios/features/](../../../specs/app-ios/features/)

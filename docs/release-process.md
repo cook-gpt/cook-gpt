@@ -8,13 +8,13 @@ CookGPT uses [semantic versioning](https://semver.org/): `MAJOR.MINOR.PATCH`.
 
 | Location | Field |
 |----------|-------|
-| `src/CookGPT.xcodeproj/project.pbxproj` | `MARKETING_VERSION` |
-| `src/CookGPT.xcodeproj/project.pbxproj` | `CURRENT_PROJECT_VERSION` (build number) |
+| `src/app-ios/CookGPT/CookGPT.xcodeproj/project.pbxproj` | `MARKETING_VERSION` |
+| `src/app-ios/CookGPT/CookGPT.xcodeproj/project.pbxproj` | `CURRENT_PROJECT_VERSION` (build number) |
 | `website/src/utils/releases.ts` | `APP_STORE_URL`, promotional text |
 
 ## Pre-release checklist
 
-1. Update specs under `specs/features/` if behavior changed
+1. Update specs under `specs/app-ios/features/` if behavior changed
 2. Update [CHANGELOG.md](../CHANGELOG.md)
 3. Run the app on a device or simulator and smoke-test all four tabs
 4. Verify cooking timers and Live Activity on a physical device when timer behavior changed

@@ -8,27 +8,20 @@ OKF knowledge bundle for the cook-gpt iOS app — recipe guidance, health diets,
 
 ## Documentation
 
-* [README.md](README.md) - quick start
-* [INSTRUCTIONS.md](INSTRUCTIONS.md) - governance and agent workflow
+* [README.md](README.md) — quick start
+* [INSTRUCTIONS.md](INSTRUCTIONS.md) — governance and agent workflow
 
-## Features
+## iOS app
 
-* [01 — Purpose](specs/features/01-purpose.md) - app goals
-* [05 — Platform and architecture](specs/features/05-platform-and-architecture.md) - iOS 26.6, SwiftUI, SwiftData
-* [06 — App shell](specs/features/06-app-shell.md) - tab navigation
-* [07 — Data models](specs/features/07-data-models.md) - SwiftData domain
-* [08 — Recipes](specs/features/08-recipes.md) - browse and cooking mode
-* [09 — Diet and nutrition](specs/features/09-diet-and-nutrition.md) - goals and meal logging
-* [10 — Groceries and pantry](specs/features/10-groceries-and-pantry.md) - shopping and inventory
-* [11 — MVP implementation](specs/features/11-mvp-implementation.md) - v0.2.0 scope
-* [12 — Localization](specs/features/12-localization.md) - supported languages and string catalogs
+* [specs/app-ios/features/index.md](specs/app-ios/features/index.md)
+* [src/app-ios/README.md](src/app-ios/README.md)
 
 ## Skills
 
-* [.cursor/rules.md](.cursor/rules.md) — Cursor editing rules
-* [.agents/skills/README.md](.agents/skills/README.md) — Skill packs (Xcode MCP, spec-first, domain guides)
-* [.agents/skills/xcode-tools/SKILL.md](.agents/skills/xcode-tools/SKILL.md) — Build, test, Apple docs via Xcode MCP
+* [.cursor/rules.md](.cursor/rules.md)
+* [.agents/skills/README.md](.agents/skills/README.md)
+* [.agents/skills/xcode-tools/SKILL.md](.agents/skills/xcode-tools/SKILL.md)
 
 ## History
 
-* [specs/log.md](specs/log.md)
+* [specs/app-ios/log.md](specs/app-ios/log.md)

@@ -10,7 +10,7 @@ Maintained by [charlite](https://github.com/charlite).
 
 ## First steps
 
-1. Open `src/CookGPT.xcodeproj` in Xcode and run the app.
+1. Open `src/app-ios/CookGPT/CookGPT.xcodeproj` in Xcode and run the app.
 2. Edit [`.github/dependabot.yml`](.github/dependabot.yml) when you add package ecosystems (e.g. Swift Package Manager).
 3. Never commit secrets; use `.env.example` only when backend services are added.
 
@@ -22,7 +22,7 @@ Use `feat:`, `fix:`, `docs:` prefixes. Group changes per release — see [Keep a
 
 1. Read **INSTRUCTIONS.md** (this file), [docs/README.md](docs/README.md), and [.cursor/rules.md](.cursor/rules.md)
 2. Read [.agents/skills/README.md](.agents/skills/README.md), [.agents/skills/xcode-tools/SKILL.md](.agents/skills/xcode-tools/SKILL.md), and [.agents/skills/localization/SKILL.md](.agents/skills/localization/SKILL.md) when changing UI strings
-3. Add numbered concepts under `specs/features/` when adding user-visible behavior
+3. Add numbered concepts under `specs/app-ios/features/` when adding user-visible behavior
 4. Use conventional commits for features/fixes destined for CHANGELOG
 
 ---

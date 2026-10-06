@@ -13,9 +13,9 @@ CookGPT is spec-driven. Do not implement user-visible behavior without an update
 ## Before coding
 
 1. Read [INSTRUCTIONS.md](../../INSTRUCTIONS.md) and [docs/README.md](../../docs/README.md).
-2. Find or create a spec under `specs/features/`.
+2. Find or create a spec under `specs/app-ios/features/`.
 3. Link the spec from [index.md](../../index.md) if it is new.
-4. Confirm scope matches [specs/features/11-mvp-implementation.md](../../specs/features/11-mvp-implementation.md) when relevant.
+4. Confirm scope matches [specs/app-ios/features/11-mvp-implementation.md](../../specs/app-ios/features/11-mvp-implementation.md) when relevant.
 
 ## Spec file format
 
@@ -34,7 +34,7 @@ timestamp: 2026-08-25T00:00:00Z
 ## Implementation checklist
 
 - [ ] Spec updated or added
-- [ ] Code in the correct feature folder under `src/CookGPT/Features/`
+- [ ] Code in the correct feature folder under `src/app-ios/CookGPT/Features/`
 - [ ] SwiftData changes include `schemaVersion` bump if needed
 - [ ] `docs/` updated when setup or architecture changes
 - [ ] [CHANGELOG.md](../../CHANGELOG.md) entry for user-facing changes

@@ -9,7 +9,7 @@ git clone https://github.com/cook-gpt/cook-gpt.git
 cd cook-gpt
 ```
 
-Open `src/CookGPT.xcodeproj` in **Xcode 26** (iOS **26.5** deployment target) to build and run the iOS app.
+Open `src/app-ios/CookGPT/CookGPT.xcodeproj` in **Xcode 26** (iOS **26.5** deployment target) to build and run the iOS app.
 
 ## Code structure
 
@@ -17,15 +17,15 @@ The iOS app lives under `src/`. Each Swift source file starts with a short heade
 
 | Path | Responsibility |
 |------|----------------|
-| `src/CookGPT/App/` | App entry, `AppSettingsStore`, sample data seeding, factory reset |
-| `src/CookGPT/Features/Recipes/` | Recipe list, detail, editor, step timers, sharing |
-| `src/CookGPT/Features/Diet/` | Meals tab: schedule views, manual scheduling, auto planning |
-| `src/CookGPT/Features/Groceries/` | Shopping list UI, import from schedule/recipe, aggregation |
-| `src/CookGPT/Features/Settings/` | Theme, planner options, categories/units, about |
-| `src/CookGPT/Models/` | SwiftData `@Model` types and shared enums |
-| `src/CookGPT/Shared/` | Calendar helpers, timer audio, formatting, reusable UI |
-| `src/CookGPT/LiveActivity/` | Timer Live Activity manager (main app) |
-| `src/CookGPTTimerLiveActivity/` | Widget extension for Lock Screen / Dynamic Island |
+| `src/app-ios/CookGPT/CookGPT/App/` | App entry, `AppSettingsStore`, sample data seeding, factory reset |
+| `src/app-ios/CookGPT/CookGPT/Features/Recipes/` | Recipe list, detail, editor, step timers, sharing |
+| `src/app-ios/CookGPT/CookGPT/Features/Diet/` | Meals tab: schedule views, manual scheduling, auto planning |
+| `src/app-ios/CookGPT/CookGPT/Features/Groceries/` | Shopping list UI, import from schedule/recipe, aggregation |
+| `src/app-ios/CookGPT/CookGPT/Features/Settings/` | Theme, planner options, categories/units, about |
+| `src/app-ios/CookGPT/CookGPT/Models/` | SwiftData `@Model` types and shared enums |
+| `src/app-ios/CookGPT/CookGPT/Shared/` | Calendar helpers, timer audio, formatting, reusable UI |
+| `src/app-ios/CookGPT/CookGPT/LiveActivity/` | Timer Live Activity manager (main app) |
+| `src/app-ios/CookGPT/CookGPTTimerLiveActivity/` | Widget extension for Lock Screen / Dynamic Island |
 
 **Conventions**
 
@@ -35,7 +35,7 @@ The iOS app lives under `src/`. Each Swift source file starts with a short heade
 - **Live Activity** — `CookingTimerAttributes.swift` is duplicated in the main app and widget extension targets; keep both files in sync.
 - **Website** — Marketing site is in `website/` (React + Vite); run `bun run build` from that folder to verify changes.
 
-Feature specs and architecture notes live in `specs/features/`. See [docs/README.md](docs/README.md) for the full documentation index.
+Feature specs and architecture notes live in `specs/app-ios/features/`. See [docs/README.md](docs/README.md) for the full documentation index.
 
 ## Pull requests
 

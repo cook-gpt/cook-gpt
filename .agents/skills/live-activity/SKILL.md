@@ -14,8 +14,8 @@ Cooking step timers use **ActivityKit** with a widget extension target.
 
 | Target | Path |
 |--------|------|
-| Main app manager | `src/CookGPT/LiveActivity/` |
-| Widget extension | `src/CookGPTTimerLiveActivity/` |
+| Main app manager | `src/app-ios/CookGPT/LiveActivity/` |
+| Widget extension | `src/app-ios/CookGPT/CookGPTTimerLiveActivity/` |
 
 ## Critical rule
 
@@ -23,7 +23,7 @@ Cooking step timers use **ActivityKit** with a widget extension target.
 
 ## Workflow
 
-1. Update the feature spec under `specs/features/` if timer behavior changes.
+1. Update the feature spec under `specs/app-ios/features/` if timer behavior changes.
 2. Edit manager code in the main app target.
 3. Mirror attribute/widget UI changes in the extension target.
 4. Test on a **physical device** — Live Activity and Dynamic Island do not fully behave in Simulator.
@@ -31,7 +31,7 @@ Cooking step timers use **ActivityKit** with a widget extension target.
 
 ## Audio
 
-Timer alarm sounds are handled in `src/CookGPT/Shared/` (see `TimerAlarmSoundInstaller`). Notification sounds require `.caf` in the Library Sounds directory.
+Timer alarm sounds are handled in `src/app-ios/CookGPT/Shared/` (see `TimerAlarmSoundInstaller`). Notification sounds require `.caf` in the Library Sounds directory.
 
 ## See also
 

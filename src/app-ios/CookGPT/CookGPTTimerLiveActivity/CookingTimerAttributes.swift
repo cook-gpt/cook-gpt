@@ -3,7 +3,7 @@
 //
 //  ActivityAttributes payload for the timer Live Activity widget.
 //
-//  Keep in sync with src/CookGPT/LiveActivity/CookingTimerAttributes.swift.
+//  Keep in sync with src/app-ios/CookGPT/CookGPT/LiveActivity/CookingTimerAttributes.swift.
 //
 
 import ActivityKit

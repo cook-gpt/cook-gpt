@@ -7,7 +7,7 @@ description: >-
 
 # SwiftData — CookGPT
 
-All persistence is on-device SwiftData. Entry point: `src/CookGPT/Models/ModelContainer+CookGPT.swift`.
+All persistence is on-device SwiftData. Entry point: `src/app-ios/CookGPT/Models/ModelContainer+CookGPT.swift`.
 
 ## Schema versioning
 
@@ -21,7 +21,7 @@ Do **not** bump `schemaVersion` for additive optional fields that SwiftData can 
 
 ## Model conventions
 
-- Models live in `src/CookGPT/Models/`
+- Models live in `src/app-ios/CookGPT/Models/`
 - Shared enums used by models stay alongside models or in dedicated files in the same folder
 - Views use `@Query` with explicit sort/filter; avoid fetching entire tables when a predicate suffices
 - User preferences **do not** belong in SwiftData — use `AppSettingsStore` (UserDefaults)
@@ -35,4 +35,4 @@ Do **not** bump `schemaVersion` for additive optional fields that SwiftData can 
 ## See also
 
 - [docs/architecture.md](../../docs/architecture.md)
-- [specs/features/07-data-models.md](../../specs/features/07-data-models.md)
+- [specs/app-ios/features/07-data-models.md](../../specs/app-ios/features/07-data-models.md)

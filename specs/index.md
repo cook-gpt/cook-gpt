@@ -1,5 +1,7 @@
-# Moved
+# Specifications
 
-The OKF bundle root is at the repository root.
+Authoritative product behavior for the iOS app:
 
-**Start here:** [index.md](../index.md)
+* [app-ios/features/index.md](app-ios/features/index.md)
+
+OKF bundle root: [index.md](../index.md)

@@ -11,7 +11,7 @@ CookGPT ships eleven languages and supports per-app language selection in **Sett
 
 ## Before changing strings
 
-1. Read [specs/features/12-localization.md](../../../specs/features/12-localization.md).
+1. Read [specs/app-ios/features/12-localization.md](../../../specs/app-ios/features/12-localization.md).
 2. Confirm the English key does not already exist in `scripts/translation_data.py`.
 
 ## Adding or updating a string
@@ -30,7 +30,7 @@ CookGPT ships eleven languages and supports per-app language selection in **Sett
    python3 scripts/generate_localizations.py
    ```
 
-   This writes `src/CookGPT/<locale>.lproj/Localizable.strings` and removes any legacy `Localizable.xcstrings`.
+   This writes `src/app-ios/CookGPT/<locale>.lproj/Localizable.strings` and removes any legacy `Localizable.xcstrings`.
 
 3. Use the string in Swift:
    - **SwiftUI** — `Text("My new label")` (auto-localized when key matches catalog).
@@ -53,10 +53,10 @@ CookGPT ships eleven languages and supports per-app language selection in **Sett
 |------|------|
 | `scripts/translation_data.py` | Source of truth for translations |
 | `scripts/generate_localizations.py` | Builds `.xcstrings` files |
-| `src/CookGPT/<locale>.lproj/Localizable.strings` | Generated UI strings per locale |
-| `src/CookGPT/<locale>.lproj/InfoPlist.strings` | Generated display name per locale |
-| `src/CookGPT/App/AppSettingsStore.swift` | `label(forCategoryID:)` localizes default categories |
-| `src/CookGPT/Features/Onboarding/RecipePackCatalog.swift` | `localizedLabel` / `localizedSummary` |
+| `src/app-ios/CookGPT/<locale>.lproj/Localizable.strings` | Generated UI strings per locale |
+| `src/app-ios/CookGPT/<locale>.lproj/InfoPlist.strings` | Generated display name per locale |
+| `src/app-ios/CookGPT/App/AppSettingsStore.swift` | `label(forCategoryID:)` localizes default categories |
+| `src/app-ios/CookGPT/Features/Onboarding/RecipePackCatalog.swift` | `localizedLabel` / `localizedSummary` |
 
 ## Verify
 

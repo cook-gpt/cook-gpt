@@ -22,7 +22,7 @@ timestamp: 2026-09-13T00:00:00Z
 | `pt` | Portuguese |
 | `ru` | Russian |
 
-All locales are declared in `src/CookGPT.xcodeproj` `knownRegions`.
+All locales are declared in `src/app-ios/CookGPT/CookGPT.xcodeproj` `knownRegions`.
 
 ## User-facing behavior
 
@@ -34,8 +34,8 @@ All locales are declared in `src/CookGPT.xcodeproj` `knownRegions`.
 
 | Asset | Path | Purpose |
 |-------|------|---------|
-| UI strings | `src/CookGPT/<locale>.lproj/Localizable.strings` | Per-locale UI strings (~230 keys) |
-| App name | `src/CookGPT/<locale>.lproj/InfoPlist.strings` | `CFBundleDisplayName` |
+| UI strings | `src/app-ios/CookGPT/<locale>.lproj/Localizable.strings` | Per-locale UI strings (~230 keys) |
+| App name | `src/app-ios/CookGPT/<locale>.lproj/InfoPlist.strings` | `CFBundleDisplayName` |
 | Translation source | `scripts/translation_data.py` | English key → locale map |
 | Generator | `scripts/generate_localizations.py` | Regenerates all `.lproj` files |
 

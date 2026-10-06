@@ -42,7 +42,7 @@ Requires **Xcode 26** and **iOS 26.5** (iPhone or iPad).
 ```bash
 git clone https://github.com/cook-gpt/cook-gpt.git
 cd cook-gpt
-open "src/CookGPT.xcodeproj"
+open "src/app-ios/CookGPT/CookGPT.xcodeproj"
 ```
 
 Select a simulator or device, then **Run** (⌘R).
@@ -51,14 +51,14 @@ Select a simulator or device, then **Run** (⌘R).
 
 | Path | Purpose |
 |------|---------|
-| `src/CookGPT/App/` | Entry point, settings store, sample data, reset |
-| `src/CookGPT/Features/` | Recipes, Meals (Diet), Groceries, Settings screens |
-| `src/CookGPT/Models/` | SwiftData domain models and enums |
-| `src/CookGPT/Shared/` | Calendar, timers, formatting, reusable UI |
-| `src/CookGPT/LiveActivity/` | Timer Live Activity (main app side) |
-| `src/CookGPTTimerLiveActivity/` | Widget extension for Lock Screen / Dynamic Island |
+| `src/app-ios/CookGPT/CookGPT/App/` | Entry point, settings store, sample data, reset |
+| `src/app-ios/CookGPT/CookGPT/Features/` | Recipes, Meals (Diet), Groceries, Settings screens |
+| `src/app-ios/CookGPT/CookGPT/Models/` | SwiftData domain models and enums |
+| `src/app-ios/CookGPT/CookGPT/Shared/` | Calendar, timers, formatting, reusable UI |
+| `src/app-ios/CookGPT/CookGPT/LiveActivity/` | Timer Live Activity (main app side) |
+| `src/app-ios/CookGPT/CookGPTTimerLiveActivity/` | Widget extension for Lock Screen / Dynamic Island |
 | `website/` | Marketing site (React + Vite, Cloudflare Pages) |
-| `specs/features/` | Numbered feature specs |
+| `specs/app-ios/features/` | Numbered feature specs |
 
 Each Swift source file includes a header comment describing its role. Key types use `///` documentation where helpful.
 
@@ -77,7 +77,7 @@ All recipes, meals, and grocery data stay **on device** (SwiftData). No account 
 | [docs/app-store-connect.md](docs/app-store-connect.md) | App Store listing copy |
 | [.cursor/rules.md](.cursor/rules.md) | Cursor AI editing rules |
 | [.agents/skills/README.md](.agents/skills/README.md) | Agent skills catalog |
-| [specs/features/](specs/features/) | Feature specifications |
+| [specs/app-ios/features/](specs/app-ios/features/) | Feature specifications |
 | [CHANGELOG.md](CHANGELOG.md) | Release history |
 
 ## License
