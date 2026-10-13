@@ -17,7 +17,11 @@
 <br/>
 <br/>
 
-<img src=".github/screenshot.png" width="824" alt="CookGPT app screenshot" style="border-radius: 5px;"/><br/>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/screenshot_dark.png"/>
+  <source media="(prefers-color-scheme: light)" srcset=".github/screenshot.png"/>
+  <img src=".github/screenshot.png" width="824" alt="CookGPT app screenshot" style="border-radius: 5px;"/>
+</picture><br/>
 
 </div>
 
