@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 77;
+	objectVersion = 110;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -23,14 +23,12 @@
 /* Begin PBXCopyFilesBuildPhase section */
 		FA820692303E0DAC001C4C24 /* Embed Foundation Extensions */ = {
 			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
 			dstPath = "";
-			dstSubfolderSpec = 13;
+			dstSubfolder = PlugIns;
 			files = (
 				FA820690303E0DAC001C4C24 /* CookGPTTimerLiveActivity.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -78,17 +76,13 @@
 /* Begin PBXFrameworksBuildPhase section */
 		FA81067E303E0DAB001C4C24 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		FA82067E303E0DAB001C4C24 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
@@ -132,8 +126,6 @@
 				FA810683303E0DAB001C4C24 /* CookGPT */,
 			);
 			name = CookGPT;
-			packageProductDependencies = (
-			);
 			productName = CookGPT;
 			productReference = FA810681303E0DAB001C4C24 /* CookGPT.app */;
 			productType = "com.apple.product-type.application";
@@ -148,14 +140,10 @@
 			);
 			buildRules = (
 			);
-			dependencies = (
-			);
 			fileSystemSynchronizedGroups = (
 				FA820683303E0DAB001C4C24 /* CookGPTTimerLiveActivity */,
 			);
 			name = CookGPTTimerLiveActivity;
-			packageProductDependencies = (
-			);
 			productName = CookGPTTimerLiveActivity;
 			productReference = FA820681303E0DAB001C4C24 /* CookGPTTimerLiveActivity.appex */;
 			productType = "com.apple.product-type.app-extension";
@@ -197,7 +185,7 @@
 			);
 			mainGroup = FA810678303E0DAB001C4C24;
 			minimizedProjectReferenceProxies = 1;
-			preferredProjectObjectVersion = 77;
+			preferredProjectObjectVersion = 110;
 			productRefGroup = FA810682303E0DAB001C4C24 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -211,34 +199,26 @@
 /* Begin PBXResourcesBuildPhase section */
 		FA81067F303E0DAB001C4C24 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		FA82067F303E0DAB001C4C24 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		FA81067D303E0DAB001C4C24 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		FA82067D303E0DAB001C4C24 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
 			files = (
 			);
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
@@ -251,7 +231,7 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
-		FA81068A303E0DAC001C4C24 /* Debug */ = {
+		FA81068A303E0DAC001C4C24 /* Debug configuration for PBXProject "CookGPT" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -315,7 +295,7 @@
 			};
 			name = Debug;
 		};
-		FA81068B303E0DAC001C4C24 /* Release */ = {
+		FA81068B303E0DAC001C4C24 /* Release configuration for PBXProject "CookGPT" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
@@ -372,7 +352,7 @@
 			};
 			name = Release;
 		};
-		FA81068D303E0DAC001C4C24 /* Debug */ = {
+		FA81068D303E0DAC001C4C24 /* Debug configuration for PBXNativeTarget "CookGPT" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -411,7 +391,7 @@
 			};
 			name = Debug;
 		};
-		FA81068E303E0DAC001C4C24 /* Release */ = {
+		FA81068E303E0DAC001C4C24 /* Release configuration for PBXNativeTarget "CookGPT" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -450,7 +430,7 @@
 			};
 			name = Release;
 		};
-		FA82068D303E0DAC001C4C24 /* Debug */ = {
+		FA82068D303E0DAC001C4C24 /* Debug configuration for PBXNativeTarget "CookGPTTimerLiveActivity" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -476,7 +456,7 @@
 			};
 			name = Debug;
 		};
-		FA82068E303E0DAC001C4C24 /* Release */ = {
+		FA82068E303E0DAC001C4C24 /* Release configuration for PBXNativeTarget "CookGPTTimerLiveActivity" */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -508,28 +488,25 @@
 		FA81067C303E0DAB001C4C24 /* Build configuration list for PBXProject "CookGPT" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				FA81068A303E0DAC001C4C24 /* Debug */,
-				FA81068B303E0DAC001C4C24 /* Release */,
+				FA81068A303E0DAC001C4C24 /* Debug configuration for PBXProject "CookGPT" */,
+				FA81068B303E0DAC001C4C24 /* Release configuration for PBXProject "CookGPT" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		FA81068C303E0DAC001C4C24 /* Build configuration list for PBXNativeTarget "CookGPT" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				FA81068D303E0DAC001C4C24 /* Debug */,
-				FA81068E303E0DAC001C4C24 /* Release */,
+				FA81068D303E0DAC001C4C24 /* Debug configuration for PBXNativeTarget "CookGPT" */,
+				FA81068E303E0DAC001C4C24 /* Release configuration for PBXNativeTarget "CookGPT" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 		FA82068C303E0DAC001C4C24 /* Build configuration list for PBXNativeTarget "CookGPTTimerLiveActivity" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				FA82068D303E0DAC001C4C24 /* Debug */,
-				FA82068E303E0DAC001C4C24 /* Release */,
+				FA82068D303E0DAC001C4C24 /* Debug configuration for PBXNativeTarget "CookGPTTimerLiveActivity" */,
+				FA82068E303E0DAC001C4C24 /* Release configuration for PBXNativeTarget "CookGPTTimerLiveActivity" */,
 			);
-			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
