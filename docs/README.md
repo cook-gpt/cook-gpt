@@ -40,7 +40,8 @@ Structured forms under [`.github/ISSUE_TEMPLATE/`](../.github/ISSUE_TEMPLATE/). 
 
 | Document | Summary |
 |----------|---------|
-| [App Store Connect copy](app-store-connect.md) | Promotional text and full app description for App Store Connect |
+| [App Store Connect copy](app-store-connect.md) | Promotional text and full app description for App Store Connect (English U.S.) |
+| [App Store Connect copy (español)](app-store-connect-es.md) | Same listing copy in Spanish for the Spain App Store |
 
 ## Architecture decision records
 
@@ -69,4 +70,4 @@ See the [repository README](../README.md) and [INSTRUCTIONS.md](../INSTRUCTIONS.
 
 ## Docs index
 
-**README** | [Development](development.md) | [Architecture](architecture.md) | [Release process](release-process.md) | [App Store Connect copy](app-store-connect.md) | [ADR template](adr/000-template.md) | [Dependabot commit signer](dependabot-signature-workflow.md) | [Bug report](bug-report-issue-template.md) | [Feature request](feature-request-issue-template.md) | [Documentation issue](documentation-issue-template.md) | [Pull request template](pull-request-template.md)
+**README** | [Development](development.md) | [Architecture](architecture.md) | [Release process](release-process.md) | [App Store Connect copy](app-store-connect.md) | [App Store Connect (es)](app-store-connect-es.md) | [ADR template](adr/000-template.md) | [Dependabot commit signer](dependabot-signature-workflow.md) | [Bug report](bug-report-issue-template.md) | [Feature request](feature-request-issue-template.md) | [Documentation issue](documentation-issue-template.md) | [Pull request template](pull-request-template.md)

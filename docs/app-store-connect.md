@@ -4,6 +4,8 @@ Source of truth for **CookGPT - Gourmet Plan & Taste** ([App Store](https://apps
 
 Paste into **App Store Connect → Apps → CookGPT → App Information / Version Information** (English U.S.).
 
+Spanish (Spain) copy: [app-store-connect-es.md](app-store-connect-es.md)
+
 | Field | Limit |
 |-------|-------|
 | Promotional Text | 170 characters |
