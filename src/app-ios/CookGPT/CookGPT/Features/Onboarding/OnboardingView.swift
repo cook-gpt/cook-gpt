@@ -29,7 +29,10 @@ struct OnboardingView: View {
                 Color.black.opacity(0.42)
                     .ignoresSafeArea()
 
-                onboardingCard(recipePackScrollHeight: recipePackScrollHeight(for: geometry.size.height))
+                onboardingCard(
+                    recipePackScrollHeight: recipePackScrollHeight(for: geometry.size.height),
+                    maxCardWidth: geometry.size.width
+                )
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
         }
@@ -44,7 +47,7 @@ struct OnboardingView: View {
         min(max(screenHeight * 0.36, 300), 380)
     }
 
-    private func onboardingCard(recipePackScrollHeight: CGFloat) -> some View {
+    private func onboardingCard(recipePackScrollHeight: CGFloat, maxCardWidth: CGFloat) -> some View {
         VStack(spacing: 0) {
             stepIndicator
                 .padding(.top, 20)
@@ -67,7 +70,7 @@ struct OnboardingView: View {
                 .padding(.horizontal, 20)
                 .padding(.vertical, 16)
         }
-        .frame(maxWidth: 420)
+        .frame(maxWidth: min(420, max(280, maxCardWidth - 48)))
         .background(.regularMaterial)
         .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
         .overlay {

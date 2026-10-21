@@ -32,7 +32,7 @@ struct RecipesRootView: View {
     @Environment(AppSettingsStore.self) private var settings
     @Environment(AppNavigationStore.self) private var navigation
 
-    @State private var navigationPath = NavigationPath()
+    @State private var selectedRecipeID: UUID?
     @State private var isAddingRecipe = false
     @State private var recipeToEdit: Recipe?
     @State private var recipeForCategories: Recipe?
@@ -135,7 +135,7 @@ struct RecipesRootView: View {
     }
 
     var body: some View {
-        NavigationStack(path: $navigationPath) {
+        NavigationSplitView {
         Group {
             if settings.isResettingData {
                 ProgressView("Resetting app data…")
@@ -147,7 +147,7 @@ struct RecipesRootView: View {
                     subtitle: "Tap + to add your first recipe."
                 )
             } else {
-                List {
+                List(selection: $selectedRecipeID) {
                     Section {
                         RecipeCategoryFilterBar(
                             selectedCategoryID: $selectedCategoryFilter,
@@ -255,12 +255,11 @@ struct RecipesRootView: View {
                 self.selectedCategoryFilter = nil
             }
         }
-        .navigationDestination(for: UUID.self) { recipeID in
-            if let recipe = recipes.first(where: { $0.id == recipeID }) {
-                RecipeDetailView(recipe: recipe)
-            }
+        } detail: {
+            recipeDetailColumn
         }
-        }
+        .navigationSplitViewStyle(.balanced)
+        .navigationSplitViewColumnWidth(min: 300, ideal: 360)
         .onAppear {
             settings.ensureCategoriesExist(tagIDs: Set(recipes.flatMap(\.tags)))
             navigateToPendingRecipeIfNeeded()
@@ -295,10 +294,24 @@ struct RecipesRootView: View {
         }
     }
 
+    @ViewBuilder
+    private var recipeDetailColumn: some View {
+        if let selectedRecipeID,
+           let recipe = recipes.first(where: { $0.id == selectedRecipeID })
+        {
+            RecipeDetailView(recipe: recipe)
+        } else {
+            ContentUnavailableView(
+                "Select a recipe",
+                systemImage: "book.closed",
+                description: Text("Choose a recipe from the list to view steps and timers.")
+            )
+        }
+    }
+
     private func navigateToPendingRecipeIfNeeded() {
         guard let recipeID = navigation.consumePendingRecipeNavigation() else { return }
-        navigationPath = NavigationPath()
-        navigationPath.append(recipeID)
+        selectedRecipeID = recipeID
     }
 
     @ViewBuilder
@@ -308,9 +321,8 @@ struct RecipesRootView: View {
             isInProgress: cookingSession.isInProgress(recipe: recipe)
         )
 
-        NavigationLink(value: display.id) {
-            RecipeRowView(display: display)
-        }
+        RecipeRowView(display: display)
+            .tag(display.id)
         .swipeActions(edge: .leading, allowsFullSwipe: false) {
             Button {
                 recipeForRating = recipe
@@ -399,6 +411,9 @@ struct RecipesRootView: View {
             },
             onDidFinish: { deletedRecipeID in
                 pendingDeleteRecipeIDs.remove(deletedRecipeID)
+                if selectedRecipeID == deletedRecipeID {
+                    selectedRecipeID = nil
+                }
             }
         )
     }
@@ -436,9 +451,7 @@ private struct RecipeSearchBar: View {
 }
 
 #Preview {
-    NavigationStack {
-        RecipesRootView()
-    }
+    RecipesRootView()
     .environment(CookingSessionManager.shared)
     .environment(AppSettingsStore.shared)
     .modelContainer(try! CookGPTModelContainer.make())

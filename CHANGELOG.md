@@ -18,6 +18,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Settings** — theme and units live in one section with a concise metric vs imperial footer; alarm sound moved directly below units
 - **Settings** — removed default servings (always 1), week start (always Monday), and reset tutorial from the screen
 
+## [1.1.1] - 2026-10-21
+
+### Changed
+
+- **iOS 27** deployment target and **iPhone Duo** adaptive layout (Recipes `NavigationSplitView`, fold-safe tab shell)
+
 ## [1.1.0] - 2026-09-14
 
 ### Added
@@ -109,6 +115,7 @@ First App Store release of **CookGPT - Gourmet Plan & Taste**.
 
 ## Repository documents
 
+[1.1.1]: https://github.com/cook-gpt/cook-gpt/compare/v1.1.0...v1.1.1
 [1.0.1]: https://github.com/cook-gpt/cook-gpt/compare/v1.0.0...v1.0.1
 
 [README](README.md) | [INSTRUCTIONS](INSTRUCTIONS.md) | **CHANGELOG** | [CONTRIBUTING](CONTRIBUTING.md) | [SECURITY](SECURITY.md) | [CODE_OF_CONDUCT](CODE_OF_CONDUCT.md)

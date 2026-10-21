@@ -11,3 +11,4 @@
 * [10 — Groceries and pantry](10-groceries-and-pantry.md)
 * [11 — MVP implementation](11-mvp-implementation.md)
 * [12 — Localization](12-localization.md)
+* [13 — iPhone Duo and iOS 27](13-iphone-duo.md)

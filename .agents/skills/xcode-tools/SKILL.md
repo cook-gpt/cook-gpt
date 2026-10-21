@@ -17,7 +17,7 @@ Use the **xcode-tools** MCP server (`user-xcode-tools` in Cursor) instead of raw
 |---------|-------|
 | Project | `src/app-ios/CookGPT/CookGPT.xcodeproj` |
 | Scheme | `CookGPT` |
-| Platform | iOS 26.5+ (iPhone / iPad simulator or device) |
+| Platform | iOS 27+ (iPhone, iPhone Duo, iPad simulator or device) |
 | Widget scheme | `CookGPTTimerLiveActivity` |
 
 ## When to use MCP vs shell

@@ -49,6 +49,7 @@ struct ContentView: View {
                 }
             }
         }
+        .cookGPTDivisionSafeContent()
         .preferredColorScheme(settings.appTheme.colorScheme)
         .id(settings.contentResetID)
         .onOpenURL { url in

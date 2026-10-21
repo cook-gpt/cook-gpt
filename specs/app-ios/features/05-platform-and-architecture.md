@@ -10,12 +10,14 @@ timestamp: 2026-08-25T00:00:00Z
 
 | Platform | Minimum version | Notes |
 |----------|-----------------|-------|
-| iOS | **26.5** | Primary client; iPhone and iPad (`TARGETED_DEVICE_FAMILY = 1,2`). Matches Xcode 26.6 SDK simulator runtime. |
-| macOS | **26.5** | Catalyst or native Mac target deferred; architecture must not block a future Mac app |
+| iOS | **27.0** | Primary client; iPhone, **iPhone Duo**, and iPad (`TARGETED_DEVICE_FAMILY = 1,2`). Build with Xcode 27 SDK. |
+| macOS | **27.0** | Catalyst or native Mac target deferred; architecture must not block a future Mac app |
 
 Xcode project: `src/app-ios/CookGPT/CookGPT.xcodeproj` (inner `CookGPT/` source folder).
 
-Toolchain: **Xcode 26.6** (Swift 5, `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`).
+Toolchain: **Xcode 27** (Swift 5, `SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor`).
+
+iPhone Duo specifics: [13 — iPhone Duo and iOS 27](13-iphone-duo.md).
 
 ## Technology choices
 

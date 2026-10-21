@@ -1,5 +1,9 @@
 # Directory Update Log
 
+## 2026-10-21
+
+* **iPhone Duo / iOS 27:** Deployment target 27.0; `NavigationSplitView` on Recipes; `cookGPTDivisionSafeContent()`; spec [13-iphone-duo.md](features/13-iphone-duo.md).
+
 ## 2026-09-13
 
 * **Localization**: Added spec [12-localization.md](features/12-localization.md); eleven-language support via `Localizable.xcstrings` and per-app language picker in iOS Settings; agent skill at `.agents/skills/localization/SKILL.md`.

@@ -9,7 +9,7 @@ git clone https://github.com/cook-gpt/cook-gpt.git
 cd cook-gpt
 ```
 
-Open `src/app-ios/CookGPT/CookGPT.xcodeproj` in **Xcode 26** (iOS **26.5** deployment target) to build and run the iOS app.
+Open `src/app-ios/CookGPT/CookGPT.xcodeproj` in **Xcode 27** (iOS **27** deployment target) to build and run the iOS app.
 
 ## Code structure
 

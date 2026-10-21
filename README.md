@@ -41,7 +41,7 @@ Landing site: [cook-gpt.pages.dev](https://cook-gpt.pages.dev)
 
 ## Quick start
 
-Requires **Xcode 26** and **iOS 26.5** (iPhone or iPad).
+Requires **Xcode 27** and **iOS 27** (iPhone, iPhone Duo, or iPad).
 
 ```bash
 git clone https://github.com/cook-gpt/cook-gpt.git
